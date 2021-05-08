@@ -6,6 +6,10 @@ Note: PacBack currently does not support any of the below features besides listi
 # Installation
 Since PacBack manages package managers PacBack is not accessible in any package manager. Instead simply clone this repo and run the `path/to/pacback-repo/bin/pacback.sh` shell script.
 
+```shell
+git clone https://github.com/williamMBDK/pacback.git
+```
+
 You may optionally add `path/to/pacback-repo/bin` to your path and then the command `pacback` will be accessible.
 ```shell
 export PATH="/path/to/pacback-repo/bin:$PATH"
