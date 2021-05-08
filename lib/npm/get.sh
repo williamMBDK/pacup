@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 regex="(└──|├──) (.*)@(.*)"
 output=$(npm list -g --depth=0 | tail -n 3 | head -n 2)
 echo "$output" | while read line ; do

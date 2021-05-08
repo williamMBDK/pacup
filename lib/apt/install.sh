@@ -1,3 +1,4 @@
+#!/bin/sh
 if [ "$#" -eq 2 ]; then
 	sudo apt install $1=$2
 else

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 regex="(.*)==(.*)"
 list=( $(pip freeze --user) )
 for item in ${list[@]}; do

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 regex="^info \"(.*)@(.*)\""
 items=$(yarn global list 2> /dev/null | grep -P "info")
 echo "$items" | while read line ; do
