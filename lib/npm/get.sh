@@ -1,6 +1,6 @@
-#!/bin/sh
-regex="(└──|├──) (.*)@(.*)"
-output=$(npm list -g --depth=0 | tail -n 3 | head -n 2)
+#!/bin/bash
+regex="(\+--|\`--|└──|├──) (.*)@(.*)"
+output=$(npm list -g -depth=0 | tail -n +2 | head -n -1)
 echo "$output" | while read line ; do
 	[[ $line =~ $regex ]]
 	package="${BASH_REMATCH[2]}"

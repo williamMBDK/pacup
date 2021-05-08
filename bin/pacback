@@ -22,4 +22,5 @@ case $SUBCMD in
         ;;
     *)
         wrong_subcommand $SUBCMD
+        exit 1
 esac

@@ -53,6 +53,12 @@ while :; do
         -?*)
             wrong_option $1
             ;;
+        --?*)
+            wrong_option $1
+            ;;
+        "")
+            break
+            ;;
         *)
             wrong_package_manager $1
             ;;
