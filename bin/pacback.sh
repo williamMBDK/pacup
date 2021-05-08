@@ -4,12 +4,30 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # ht
 
 SUBCMD=$1
 
+function showhelp {
+    if (ls $SCRIPT_DIR/../man/pacback.1 >> /dev/null 2>&1) || (ls $SCRIPT_DIR/../man/pacback.txt >> /dev/null 2>&1); then
+        echo heythere
+        $SCRIPT_DIR/../man/makeman.sh
+    fi
+    if command -v man > /dev/null; then
+        man $SCRIPT_DIR/../man/pacback.1
+    else
+        cat $SCRIPT_DIR/../man/pacback.txt
+    fi
+}
+
 case $SUBCMD in
     list)
         shift
         $SCRIPT_DIR/../lib/list.sh "$@"
+        exit
+        ;;
+    -h|-\?|--help)
+        showhelp
+        exit
         ;;
     *)
-        show_help
+        showhelp
+        exit 1
         ;;
 esac

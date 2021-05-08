@@ -13,6 +13,7 @@ YARN=0
 YAY=0
 
 QUIET=0
+VERBOSE=0
 
 # https://gist.github.com/deshion/10d3cb5f88a21671e17a
 while :; do
@@ -23,6 +24,9 @@ while :; do
             ;;
         -q|--quiet)
             QUIET=1
+            ;;
+        -v|--verbose)
+            VERBOSE=1
             ;;
         all)
             ALL=1
@@ -64,7 +68,7 @@ function get_packages {
     if $SCRIPT_DIR/$1/exists.sh; then
         print "${GREEN}EXPLICITLY INSTALLED PACKAGES FOR ${1^^}${NOCOLOR}"
         $SCRIPT_DIR/$1/get.sh
-    else
+    elif test $VERBOSE -eq 1; then
         print "${YELLOW}SKIPPING ${1^^} (NOT INSTALLED OR NOT IN PATH)${NOCOLOR}"
     fi
 }
