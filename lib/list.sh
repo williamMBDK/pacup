@@ -43,7 +43,7 @@ while :; do
             YARN=1
             ;;
         yay)
-            YARN=1
+            YAY=1
             ;;
         -?*)
             printf 'WARNING: Unknown option (ignored): %s\n' "$1" >&2
