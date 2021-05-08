@@ -3,6 +3,14 @@
 
 Note: PacBack currently does not support any of the below features besides listing explicitly installed packages.
 
+# Installation
+Since PacBack manages package managers PacBack is not accessible in any package manager. Instead simply clone this repo and run the `path/to/pacback-repo/bin/pacback.sh` shell script.
+
+You may optionally add `path/to/pacback-repo/bin` to your path and then the command `pacback` will be accessible.
+```shell
+export PATH="/path/to/pacback-repo/bin:$PATH"
+```
+
 # The (initial) concept 
 You will create a config file for each of your package managers.
 A config file will contain a list of package configurations, consisting of a package name, an optional version number and a list of tags. By default each package configuration will have the *all* tag, and a unique tag which is *package@version* (or *package* if version is not specified).
