@@ -2,6 +2,7 @@
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
 
+source $SCRIPT_DIR/util.sh
 source $SCRIPT_DIR/color.sh
 
 ALL=0
@@ -19,7 +20,7 @@ VERBOSE=0
 while :; do
     case $1 in
         -h|-\?|--help)
-            show_help
+            showhelp
             exit
             ;;
         -q|--quiet)
@@ -50,10 +51,11 @@ while :; do
             YAY=1
             ;;
         -?*)
-            printf 'WARNING: Unknown option (ignored): %s\n' "$1" >&2
+            wrong_option $1
             ;;
         *)
-            break
+            wrong_package_manager $1
+            ;;
     esac
     shift
 done
