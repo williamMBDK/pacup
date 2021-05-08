@@ -16,9 +16,12 @@ function wrong_subcommand {
     printf "${RED}ERROR: Unknown subcommand: %s\n${NOCOLOR}" "$1" >&2
 }
 
+function config_path_not_exist {
+    printf "${RED}ERROR: Configuration path does not exist: %s\n${NOCOLOR}" "$1" >&2
+}
+
 function showhelp {
     if (ls $SCRIPT_DIR/../man/pacback.1 >> /dev/null 2>&1) || (ls $SCRIPT_DIR/../man/pacback.txt >> /dev/null 2>&1); then
-        echo heythere
         $SCRIPT_DIR/../man/makeman.sh
     fi
     if command -v man > /dev/null; then
@@ -26,4 +29,14 @@ function showhelp {
     else
         cat $SCRIPT_DIR/../man/pacback.txt
     fi
+}
+
+function get_package_managers {
+    ls -d $SCRIPT_DIR/package-managers/*/ | while read folder ; do
+        echo -n "$(basename $folder) "
+    done
+}
+
+function get_package_manager_pattern {
+    get_package_managers | sed 's/ /|/g'
 }
