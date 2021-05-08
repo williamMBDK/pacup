@@ -10,7 +10,7 @@ Creating a config file for a given package manager is easy since PacBack has bui
 
 Then you should use github or any other git host to backup your config files (or another way of backing up the config files).
 
-Then on each of your linux machines (desktop, laptop, work computer, server ...) you can simply pull the config files and install the packages it specifies using PacBack. Optionally you can create a machine specific config file, where you for each package managers specify which tags should be installed (or more precisely for each specified tag the corresponding package configuration will be installed). You can also specify tags that should not be installed (these will take presedence). Then PacBack will install only those package configurations specified by the tags. For example you could have *dev* tag specifying packages used for software development, and only have these dev packages be installed on you work machine and laptop.
+Then on each of your linux machines (desktop, laptop, work computer, server, ...) you can simply pull the config files and install the packages it specifies using PacBack. Optionally you can create a machine specific config file, where you for each package managers specify which tags should be installed (or more precisely for each specified tag the corresponding package configuration will be installed). You can also specify tags that should not be installed (these will take presedence). Then PacBack will install only those package configurations specified by the tags. For example you could have *dev* tag specifying packages used for software development, and only have these dev packages be installed on you work machine and laptop.
 
 When you wish to add a new package you can either manually add it to a config file or install it and then sync to the config file.
 
@@ -35,21 +35,27 @@ PacBack is very interactive and will handle all sorts of edge cases with duplica
     More will be added.
 
     Here *global* refers to the global installation of packages, since some of these package managers can be used for project package management.
-* Compatible with the POSIX shell configuration (todo), and can thus run on nearly any linux distribution (todo: does there exist distros it cannot run on?)
+* Compatible with the POSIX shell specification (todo), and can thus run on nearly any linux distribution (todo: does there exist distros it cannot run on?)
 
 # Configuration 
 ## Package manager config files
 This is the config files that specifies the list of package configurations for each of your package managers.
 ### Location
+Todo
 ### Format
+Todo
 * Can contain duplicate packages (packages with different versions).
 ## Machine specific config files
 This is the configuration files that specifies which packages a specific linux machine should have installed for each package manager.
 ### Location
+Todo
 ### Format
+Todo
 * Cannot contain duplicate packages.
 
 # Contributing
 Feel free to contribute.
+
 I especially need advice and help on testing the shell code, which I think will be quite inconvenient.
+
 \- William
