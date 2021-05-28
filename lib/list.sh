@@ -73,9 +73,9 @@ function print {
 }
 
 function get_packages {
-    if $SCRIPT_DIR/$1/exists.sh; then
+    if $SCRIPT_DIR/package-managers/$1/exists.sh; then
         print "${GREEN}EXPLICITLY INSTALLED PACKAGES FOR ${1^^}${NOCOLOR}"
-        $SCRIPT_DIR/$1/get.sh
+        $SCRIPT_DIR/package-managers/$1/get.sh
     elif test $VERBOSE -eq 1; then
         print "${YELLOW}SKIPPING ${1^^} (NOT INSTALLED OR NOT IN PATH)${NOCOLOR}"
     fi
