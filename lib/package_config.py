@@ -71,7 +71,7 @@ class PackageFactory:
         pac.init_with_string(input_string)
         return pac
 
-class PackageList:
+class TaggedPackageList:
     def __init__(self):
         self.tagged_packages : list[TaggedPackage] = []
         self.has_been_initialized : bool = False
@@ -96,10 +96,10 @@ class PackageList:
 
 class PackageListFactory:
     @staticmethod
-    def create_list_from_filename(filename) -> PackageList:
+    def create_list_from_filename(filename) -> TaggedPackageList:
         with open(filename) as file:
             content = file.read()
-            paclist = PackageList()
+            paclist = TaggedPackageList()
             paclist.init_with_file_content(content)
             return paclist
 
@@ -171,7 +171,7 @@ class Configuration:
             seen.add(key)
             self.configuration_elements.append(element)
 
-    def get_matching_packages(self, package_list : PackageList) -> list[Package]:
+    def get_matching_packages(self, package_list : TaggedPackageList) -> list[Package]:
         packages = set()
         tags = {}
         tags["all"] = set((tagged_package.name, tagged_package.version) for tagged_package in package_list.tagged_packages)
