@@ -1,6 +1,7 @@
 __all__ = ["PackageListFactory", "ConfigurationFactory"]
 
 from typing import Optional
+import copy
 
 class Package:
     def __init__(self):
@@ -19,6 +20,11 @@ class Package:
             self.version = item[item.index("@")+1:]
         else:
             self.name = item
+        self.has_been_initialized = True
+
+    def init_with_values(self, name, version):
+        self.name = name
+        self.version = version
         self.has_been_initialized = True
 
     def __str__(self):
@@ -51,6 +57,12 @@ class PackageFactory:
     def create_package_from_string(input_string) -> Package:
         pac = Package()
         pac.init_with_string(input_string)
+        return pac
+
+    @staticmethod
+    def create_package_from_values(name : str, version : str) -> Package:
+        pac = Package()
+        pac.init_with_values(name, version)
         return pac
 
     @staticmethod
@@ -158,6 +170,41 @@ class Configuration:
                 raise ValueError("content contains duplicate rule")
             seen.add(key)
             self.configuration_elements.append(element)
+
+    def get_matching_packages(self, package_list : PackageList) -> list[Package]:
+        packages = set()
+        tags = {}
+        tags["all"] = set((tagged_package.name, tagged_package.version) for tagged_package in package_list.tagged_packages)
+        for tagged_package in package_list.tagged_packages:
+            for tag in tagged_package.tags:
+                if tag not in tags: tags[tag] = set()
+                tags[tag].add((tagged_package.name, tagged_package.version))
+        for element in self.configuration_elements:
+            if element.modifier == "+":
+                if element.type == "pac": packages.add((element.package.name, element.package.version))
+                elif element.type == "tag": packages += tags[element.tag]
+        flagged_names = set()
+        for element in self.configuration_elements:
+            if element.modifier == "-":
+                if element.type == "pac":
+                    to_remove = (element.package.name, element.package.version)
+                    if to_remove[1] == None: flagged_names.add(to_remove[0])
+                    if to_remove in packages: packages.remove(to_remove)
+                elif element.type == "tag":
+                    for to_remove in tags[element.tag]:
+                        to_remove = (element.package.name, element.package.version)
+                        if to_remove[1] == None: flagged_names.add(to_remove[0])
+                        if to_remove in packages: packages.remove(to_remove)
+        result : list[Package] = []
+        for pac in packages:
+            if pac[0] not in flagged_names:
+                result.append(PackageFactory.create_package_from_values(pac[0], pac[1]))
+        names = set()
+        for package in result:
+            if package.name in names:
+                raise ValueError("invalid package list")
+            names.add(package.name)
+        return result
 
 class ConfigurationFactory:
     @staticmethod
