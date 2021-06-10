@@ -152,6 +152,10 @@ class ConfigurationElement:
         elif self.type == "pac": return self.package
         else: raise Exception("element does not have a value")
 
+    def has_value(self):
+        assert(self.has_been_initialized)
+        return ConfigurationElement.valid_value_types.count(self.type) == 1
+
 class ConfigurationElementFactory:
     
     @staticmethod
@@ -166,18 +170,22 @@ class Configuration:
         self.has_been_initialized : bool = False
 
     def init_with_file_content(self, content : str):
-        lines = content.split()
+        lines = content.split("\n")
         seen = set()
         for line in lines:
             if len(line.split()) == 0: continue
             element = ConfigurationElementFactory.create_configuration_element_from_string(line)
-            key = (element.modifier, element.type, str(element.get_value()))
+            key = (
+                element.modifier,
+                element.type,
+                str(element.get_value()) if element.has_value() else ""
+            )
             if key in seen:
                 raise ValueError("content contains duplicate rule")
             seen.add(key)
             self.configuration_elements.append(element)
 
-    def get_matching_packages(self, package_list : TaggedPackageList) -> list[Package]:
+    def get_matching_packages(self, package_list : TaggedPackageList): #  -> list[Package]:
         packages = set()
         tags = {}
         tags["all"] = set((tagged_package.name, tagged_package.version) for tagged_package in package_list.tagged_packages)
@@ -188,7 +196,8 @@ class Configuration:
         for element in self.configuration_elements:
             if element.modifier == "+":
                 if element.type == "pac": packages.add((element.package.name, element.package.version))
-                elif element.type == "tag": packages += tags[element.tag]
+                elif element.type == "tag": packages.update(tags[element.tag])
+                elif element.type == "all": packages.update(tags["all"])
         flagged_names = set()
         for element in self.configuration_elements:
             if element.modifier == "-":
@@ -198,9 +207,10 @@ class Configuration:
                     if to_remove in packages: packages.remove(to_remove)
                 elif element.type == "tag":
                     for to_remove in tags[element.tag]:
-                        to_remove = (element.package.name, element.package.version)
                         if to_remove[1] == None: flagged_names.add(to_remove[0])
                         if to_remove in packages: packages.remove(to_remove)
+                elif element.type == "all":
+                    return []
         result : list[Package] = []
         for pac in packages:
             if pac[0] not in flagged_names:
