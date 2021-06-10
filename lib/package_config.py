@@ -78,10 +78,10 @@ class TaggedPackageList:
 
     def init_with_file_content(self, content : str):
         assert(not self.has_been_initialized)
-        lines = content.split()
+        lines = content.split("\n")
         seen = set()
         for line in lines:
-            if line == "": continue
+            if len(line.split()) == 0: continue
             pac = PackageFactory.create_tagged_package_from_string(line)
             key = (pac.name, pac.version)
             if key in seen:
@@ -150,6 +150,7 @@ class ConfigurationElement:
         assert(self.has_been_initialized)
         if self.type == "tag": return self.tag
         elif self.type == "pac": return self.package
+        else: raise Exception("element does not have a value")
 
 class ConfigurationElementFactory:
     
@@ -168,7 +169,7 @@ class Configuration:
         lines = content.split()
         seen = set()
         for line in lines:
-            if line == "": continue
+            if len(line.split()) == 0: continue
             element = ConfigurationElementFactory.create_configuration_element_from_string(line)
             key = (element.modifier, element.type, str(element.get_value()))
             if key in seen:
