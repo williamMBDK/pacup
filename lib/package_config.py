@@ -1,7 +1,6 @@
 __all__ = ["PackageListFactory", "ConfigurationFactory"]
 
 from typing import Optional
-import copy
 
 class Package:
     def __init__(self):
@@ -23,6 +22,7 @@ class Package:
         self.has_been_initialized = True
 
     def init_with_values(self, name, version):
+        assert(not self.has_been_initialized)
         self.name = name
         self.version = version
         self.has_been_initialized = True
@@ -94,14 +94,19 @@ class TaggedPackageList:
         assert(self.has_been_initialized)
         return "\n".join(map(str, self.tagged_packages))
 
-class PackageListFactory:
+class TaggedPackageListFactory:
     @staticmethod
     def create_list_from_filename(filename) -> TaggedPackageList:
         with open(filename) as file:
             content = file.read()
-            paclist = TaggedPackageList()
-            paclist.init_with_file_content(content)
-            return paclist
+            return TaggedPackageListFactory.create_list_from_content(content)
+
+    @staticmethod
+    def create_list_from_content(content) -> TaggedPackageList:
+        paclist = TaggedPackageList()
+        paclist.init_with_file_content(content)
+        return paclist
+
 
 class ConfigurationElement:
 
@@ -211,6 +216,11 @@ class ConfigurationFactory:
     def create_configuration_from_filename(filename) -> Configuration:
         with open(filename) as file:
             content = file.read()
-            config = Configuration()
-            config.init_with_file_content(content)
-            return config
+            return ConfigurationFactory.create_configuration_from_content(content)
+
+    @staticmethod
+    def create_configuration_from_content(content) -> Configuration:
+        config = Configuration()
+        config.init_with_file_content(content)
+        return config
+

@@ -1,3 +1,1 @@
-import package_config
-
-t = package_config.Configuration()
+from package_config import ConfigurationFactory, PackageListFactory
