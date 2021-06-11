@@ -1,5 +1,6 @@
 import unittest
 from configuration.tagged_package_list import TaggedPackageList
+from configuration.package import PackageFactory
 
 class TestTaggedPackageList(unittest.TestCase):
     def setUp(self):
@@ -33,3 +34,18 @@ class TestTaggedPackageList(unittest.TestCase):
         except ValueError:
             err = True
         self.assertTrue(err)
+
+    def test_contains(self):
+        self.package_list.init_with_file_content(
+            """
+            a@1
+            a
+            c@1
+            """
+        )
+        self.assertTrue(self.package_list.contains(PackageFactory.create_package_from_values("a", "1")))
+        self.assertTrue(self.package_list.contains(PackageFactory.create_package_from_values("a", None)))
+        self.assertTrue(self.package_list.contains(PackageFactory.create_package_from_values("c", "1")))
+        self.assertFalse(self.package_list.contains(PackageFactory.create_package_from_values("b", "1")))
+        self.assertFalse(self.package_list.contains(PackageFactory.create_package_from_values("b", None)))
+        self.assertFalse(self.package_list.contains(PackageFactory.create_package_from_values("a", "2")))

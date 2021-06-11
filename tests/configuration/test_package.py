@@ -86,6 +86,20 @@ class TestPackage(unittest.TestCase):
             err = True
         self.assertTrue(err)
 
+    def test_eq(self):
+        pac1 = Package()
+        pac1.init_with_string("a@1")
+        pac2 = Package()
+        pac2.init_with_values("a","1")
+        self.assertTrue(pac1 == pac2)
+
+    def test_eq_none(self):
+        pac1 = Package()
+        pac1.init_with_string("a")
+        pac2 = Package()
+        pac2.init_with_values("a", None)
+        self.assertTrue(pac1 == pac2)
+
 class TestTaggedPackage(unittest.TestCase):
     def setUp(self):
         self.package = TaggedPackage()

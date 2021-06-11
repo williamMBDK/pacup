@@ -23,42 +23,31 @@ class Configuration:
             seen.add(key)
             self.configuration_elements.append(element)
 
-    def get_matching_packages(self, package_list : TaggedPackageList): #  -> list[Package]:
-        packages = set()
-        # getting tags
-        tags = {}
-        for tagged_package in package_list.tagged_packages:
-            for tag in tagged_package.tags:
-                if tag not in tags: tags[tag] = set()
-                tags[tag].add((tagged_package.name, tagged_package.version))
+    def get_matching_packages(self, package_list : TaggedPackageList) -> list[Package]:
+        packages : set[Package] = set()
+        tags = package_list.get_tag_map()
+        def remove_package(to_remove : Package):
+            if to_remove in packages: packages.remove(to_remove)
         for element in self.configuration_elements:
             if element.modifier == "+":
-                if element.type == "pac": packages.add((element.package.name, element.package.version))
-                elif element.type == "tag": packages.update(tags[element.tag])
-                elif element.type == "all": packages.update(set((tagged_package.name, tagged_package.version) for tagged_package in package_list.tagged_packages))
-        flagged_names = set()
-        for element in self.configuration_elements:
-            if element.modifier == "-":
                 if element.type == "pac":
-                    to_remove = (element.package.name, element.package.version)
-                    if to_remove[1] == None: flagged_names.add(to_remove[0])
-                    if to_remove in packages: packages.remove(to_remove)
+                    if not package_list.contains(element.package.copy()): raise ValueError("{} not in tagged package list".format(element.package))
+                    packages.add(element.package.copy())
+                elif element.type == "tag": packages.update(tags[str(element.tag)])
+                elif element.type == "all": packages.update(set(tagged_package.copy_as_package() for tagged_package in package_list.tagged_packages))
+            else:
+                if element.type == "pac":
+                    if not package_list.contains(element.package.copy()): raise ValueError("{} not in tagged package list".format(element.package))
+                    remove_package(element.package.copy())
                 elif element.type == "tag":
-                    for to_remove in tags[element.tag]:
-                        if to_remove[1] == None: flagged_names.add(to_remove[0])
-                        if to_remove in packages: packages.remove(to_remove)
-                elif element.type == "all":
-                    return []
-        result : list[Package] = []
-        for pac in packages:
-            if pac[0] not in flagged_names:
-                result.append(PackageFactory.create_package_from_values(pac[0], pac[1]))
+                    for package in tags[str(element.tag)]: remove_package(package)
+                elif element.type == "all": packages = set()
         names = set()
-        for package in result:
+        for package in packages:
             if package.name in names:
                 raise ValueError("invalid package list")
             names.add(package.name)
-        return result
+        return list(packages)
 
 class ConfigurationFactory:
     @staticmethod

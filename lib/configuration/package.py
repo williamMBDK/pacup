@@ -31,6 +31,15 @@ class Package:
             return "{}@{}".format(self.name, self.version)
         else:
             return self.name
+    
+    def copy(self):
+        return PackageFactory.create_package_from_values(self.name, self.version)
+
+    def  __eq__(self, other):
+        return self.name == other.name and self.version == other.version
+
+    def __hash__(self):
+        return hash(self.name) * hash(self.version) # not sure if this is good?
 
 class TaggedPackage(Package):
     def __init__(self):
@@ -45,9 +54,19 @@ class TaggedPackage(Package):
         super().init_with_string(items[0])
         self.tags = items[1:]
 
+    def init_with_values(self, name, version, tags):
+        super().init_with_values(name, version)
+        self.tags = tags
+
     def __str__(self):
         assert(self.has_been_initialized)
         return "{} ({})".format(super().__str__(), " ".join(self.tags))
+
+    def copy(self):
+        return PackageFactory.create_tagged_package_from_values(self.name, self.version, self.tags.copy())
+
+    def copy_as_package(self):
+        return super().copy()
 
 class PackageFactory:
     
@@ -58,7 +77,7 @@ class PackageFactory:
         return pac
 
     @staticmethod
-    def create_package_from_values(name : str, version : str) -> Package:
+    def create_package_from_values(name : str, version : Optional[str]) -> Package:
         pac = Package()
         pac.init_with_values(name, version)
         return pac
@@ -67,4 +86,10 @@ class PackageFactory:
     def create_tagged_package_from_string(input_string) -> TaggedPackage:
         pac = TaggedPackage()
         pac.init_with_string(input_string)
+        return pac
+
+    @staticmethod
+    def create_tagged_package_from_values(name, version, tags) -> TaggedPackage:
+        pac = TaggedPackage()
+        pac.init_with_values(name, version, tags)
         return pac

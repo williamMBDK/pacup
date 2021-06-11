@@ -1,4 +1,4 @@
-from configuration.package import PackageFactory, TaggedPackage
+from configuration.package import PackageFactory, TaggedPackage, Package
 
 class TaggedPackageList:
     def __init__(self):
@@ -23,12 +23,18 @@ class TaggedPackageList:
         assert(self.has_been_initialized)
         return "\n".join(map(str, self.tagged_packages))
     
-    def get_tag_map(self):
+    def get_tag_map(self) -> dict[str, set[Package]]:
+        assert(self.has_been_initialized)
         tags = {}
         for tagged_package in self.tagged_packages:
             for tag in tagged_package.tags:
                 if tag not in tags: tags[tag] = set()
-                tags[tag].add((tagged_package.name, tagged_package.version))
+                tags[tag].add(PackageFactory.create_package_from_values(tagged_package.name, tagged_package.version))
+        return tags
+    
+    def contains(self, package : Package):
+        # can be optimized
+        return package in self.tagged_packages
 
 class TaggedPackageListFactory:
     @staticmethod

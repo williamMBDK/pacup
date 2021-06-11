@@ -64,7 +64,7 @@ class TestConfiguration(unittest.TestCase):
             """
         )
         packages = self.config.get_matching_packages(package_list)
-        self.assertEqual(2, len(packages))
+        self.assertEqual(3, len(packages))
 
     def test_get_matching_packages_pacs_version(self):
         package_list = TaggedPackageList()
