@@ -1,9 +1,10 @@
 #!/bin/sh
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
-
-source $SCRIPT_DIR/util.sh
-source $SCRIPT_DIR/color.sh
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+source $SCRIPT_DIR/utility/util.sh
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+source $SCRIPT_DIR/utility/color.sh
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 ALL=0
 APT=0
@@ -15,6 +16,7 @@ YAY=0
 
 QUIET=0
 VERBOSE=0
+COUNT=0
 
 # https://gist.github.com/deshion/10d3cb5f88a21671e17a
 while :; do
@@ -28,6 +30,9 @@ while :; do
             ;;
         -v|--verbose)
             VERBOSE=1
+            ;;
+        -c|--count)
+            COUNT=1
             ;;
         all)
             ALL=1
@@ -74,8 +79,13 @@ function print {
 
 function get_packages {
     if $SCRIPT_DIR/package-managers/$1/exists.sh; then
-        print "${GREEN}EXPLICITLY INSTALLED PACKAGES FOR ${1^^}${NOCOLOR}"
-        $SCRIPT_DIR/package-managers/$1/get.sh
+        if test $COUNT -eq 0; then
+            print "${GREEN}EXPLICITLY INSTALLED PACKAGES FOR ${1^^}${NOCOLOR}"
+            $SCRIPT_DIR/package-managers/$1/get.sh
+        else
+            count=$($SCRIPT_DIR/package-managers/$1/get.sh | wc -l)
+            print "${GREEN}NUMBER OF EXPLICITLY INSTALLED PACKAGES FOR ${1^^}${NOCOLOR}: $count"
+        fi
     elif test $VERBOSE -eq 1; then
         print "${YELLOW}SKIPPING ${1^^} (NOT INSTALLED OR NOT IN PATH)${NOCOLOR}"
     fi

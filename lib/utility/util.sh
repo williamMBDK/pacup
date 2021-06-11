@@ -1,8 +1,9 @@
 #!/bin/sh
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 source $SCRIPT_DIR/color.sh
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 function wrong_option {
     printf "${YELLOW}WARNING: Unknown option (ignored): %s\n${NOCOLOR}" "$1" >&2
