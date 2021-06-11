@@ -22,6 +22,13 @@ class TaggedPackageList:
     def __str__(self):
         assert(self.has_been_initialized)
         return "\n".join(map(str, self.tagged_packages))
+    
+    def get_tag_map(self):
+        tags = {}
+        for tagged_package in self.tagged_packages:
+            for tag in tagged_package.tags:
+                if tag not in tags: tags[tag] = set()
+                tags[tag].add((tagged_package.name, tagged_package.version))
 
 class TaggedPackageListFactory:
     @staticmethod

@@ -1,1 +1,1 @@
-python3 -m unittest tests.test_$1 -v
+PYTHONPATH=lib python3 -m unittest tests.$1 -v

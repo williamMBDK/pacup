@@ -1,6 +1,9 @@
 {
-    "executionEnvironments": [{
-        "root" : "./lib"
-    }],
+    //"executionEnvironments": [{
+    //    "root" : "./lib"
+    // }],
+    "extraPaths": [
+        "./lib"
+    ],
     "pythonVersion" : "3.9"
 }

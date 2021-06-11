@@ -1,1 +1,1 @@
-python3 -m unittest discover -s tests -v
+PYTHONPATH=lib python3 -m unittest discover -s . -v

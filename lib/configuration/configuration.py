@@ -25,8 +25,8 @@ class Configuration:
 
     def get_matching_packages(self, package_list : TaggedPackageList): #  -> list[Package]:
         packages = set()
+        # getting tags
         tags = {}
-        tags["all"] = set((tagged_package.name, tagged_package.version) for tagged_package in package_list.tagged_packages)
         for tagged_package in package_list.tagged_packages:
             for tag in tagged_package.tags:
                 if tag not in tags: tags[tag] = set()
@@ -35,7 +35,7 @@ class Configuration:
             if element.modifier == "+":
                 if element.type == "pac": packages.add((element.package.name, element.package.version))
                 elif element.type == "tag": packages.update(tags[element.tag])
-                elif element.type == "all": packages.update(tags["all"])
+                elif element.type == "all": packages.update(set((tagged_package.name, tagged_package.version) for tagged_package in package_list.tagged_packages))
         flagged_names = set()
         for element in self.configuration_elements:
             if element.modifier == "-":
