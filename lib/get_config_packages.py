@@ -42,8 +42,10 @@ except ValueError:
 matched_packages = []
 try:
     matched_packages = config.get_matching_packages(taggedlist)
-except ValueError:
+except ValueError as e:
     print("{}ERROR: incomplete config{}".format(TermColors.RED, TermColors.NOCOLOR))
+    print("Interpreter output:")
+    print("  ", e)
     exit(1)
 
 print("{}MATCHED PACKAGES{}".format(TermColors.GREEN, TermColors.NOCOLOR))

@@ -33,13 +33,16 @@ class Configuration:
                 if element.type == "pac":
                     if not package_list.contains(element.package.copy()): raise ValueError("{} not in tagged package list".format(element.package))
                     packages.add(element.package.copy())
-                elif element.type == "tag": packages.update(tags[str(element.tag)])
+                elif element.type == "tag":
+                    if element.tag not in tags: continue
+                    packages.update(tags[str(element.tag)])
                 elif element.type == "all": packages.update(set(tagged_package.copy_as_package() for tagged_package in package_list.tagged_packages))
             else:
                 if element.type == "pac":
                     if not package_list.contains(element.package.copy()): raise ValueError("{} not in tagged package list".format(element.package))
                     remove_package(element.package.copy())
                 elif element.type == "tag":
+                    if element.tag not in tags: continue
                     for package in tags[str(element.tag)]: remove_package(package)
                 elif element.type == "all": packages = set()
         names = set()

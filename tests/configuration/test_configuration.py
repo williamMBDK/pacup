@@ -122,3 +122,21 @@ class TestConfiguration(unittest.TestCase):
         def test():
             self.config.get_matching_packages(package_list)
         self.assertRaises(ValueError, test)
+
+    def test_get_matching_packages_invalid_tag(self):
+        package_list = TaggedPackageList()
+        package_list.init_with_file_content(
+            """
+            a gaming
+            b gaming coding
+            b@2 coding
+            c gaming
+            """
+        )
+        self.config.init_with_file_content(
+            """
+            - tag sdf
+            """
+        )
+        packages = self.config.get_matching_packages(package_list)
+        self.assertEqual(0, len(packages))
