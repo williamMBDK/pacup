@@ -41,6 +41,10 @@ class Package:
     def __hash__(self):
         return hash(self.name) * hash(self.version) # not sure if this is good?
 
+    def __lt__(self, other):
+        if self.name == other.name: return self.version < other.version
+        return self.name < other.name
+
 class TaggedPackage(Package):
     def __init__(self):
         super().__init__()

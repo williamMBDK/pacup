@@ -47,7 +47,7 @@ class Configuration:
             if package.name in names:
                 raise ValueError("invalid package list")
             names.add(package.name)
-        return list(packages)
+        return sorted(list(packages))
 
 class ConfigurationFactory:
     @staticmethod

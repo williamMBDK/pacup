@@ -13,6 +13,11 @@ case $SUBCMD in
         $SCRIPT_DIR/../lib/list.sh "$@"
         exit
         ;;
+    config)
+        shift
+        $SCRIPT_DIR/../lib/get_config_packages.py "$@"
+        exit
+        ;;
     -h|-\?|--help)
         showhelp
         exit
