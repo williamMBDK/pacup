@@ -41,12 +41,7 @@ do
     esac
 done
 
-echo Config: $CONFIG
-echo Paclist: $PACLIST
-echo Manager: $PACMANAGER
-echo Quiet: $QUIET
-
-$SCRIPT_DIR/config-match.py -q -c $CONFIG -p $PACLIST | while read -r package ; do
+$SCRIPT_DIR/config-match.py -q -c $CONFIG -l $PACLIST | while read -r package ; do
     if test $QUIET -eq 0; then
         echo Installing package with $PACMANAGER: $package
     fi

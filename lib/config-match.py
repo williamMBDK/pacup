@@ -4,19 +4,24 @@ import sys
 from configuration.configuration import ConfigurationFactory
 from configuration.tagged_package_list import TaggedPackageListFactory, TaggedPackageList
 from utility.color import TermColors
+from getopt import getopt
 
-if len(sys.argv) != 3:
-    print("{}ERROR: expected 2 arguments (path-to-config path-to-package-list){}".format(TermColors.RED, TermColors.NOCOLOR))
-    exit(1)
+opts, _ = getopt(sys.argv[1:], "qc:l:", ["quiet", "configuration=", "package-list="])
 
-configname = sys.argv[1]
-listname = sys.argv[2]
+QUIET=False
+CONFIG=None
+PACLIST=None
+
+for o, a in opts:
+    if o in ("-q", "--quiet"): QUIET = True
+    elif o in ("-c", "--configuration"): CONFIG = a
+    elif o in ("-l", "--package-list"): PACLIST = a
 
 config = None
 taggedlist = TaggedPackageList()
 
 try:
-    config = ConfigurationFactory.create_configuration_from_filename(configname)
+    config = ConfigurationFactory.create_configuration_from_filename(CONFIG)
 except FileNotFoundError:
     print("{}ERROR: config path does not exist{}".format(TermColors.RED, TermColors.NOCOLOR))
     exit(1)
@@ -28,7 +33,7 @@ except ValueError:
     exit(1)
 
 try:
-    taggedlist = TaggedPackageListFactory.create_list_from_filename(listname)
+    taggedlist = TaggedPackageListFactory.create_list_from_filename(PACLIST)
 except FileNotFoundError:
     print("{}ERROR: package list path does not exist{}".format(TermColors.RED, TermColors.NOCOLOR))
     exit(1)
@@ -48,7 +53,7 @@ except ValueError as e:
     print("  ", e)
     exit(1)
 
-print("{}MATCHED PACKAGES{}".format(TermColors.GREEN, TermColors.NOCOLOR))
+if not QUIET: print("{}MATCHED PACKAGES{}".format(TermColors.GREEN, TermColors.NOCOLOR))
 for package in matched_packages:
     print(package)
 
