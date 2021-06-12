@@ -1,2 +1,5 @@
 + all
 - pac neovide-bin
+- pac yay
++ pac yarn
+- pac yarn
