@@ -13,6 +13,10 @@ function wrong_package_manager {
     printf "${YELLOW}WARNING: Unknown package manager (ignored): %s\n${NOCOLOR}" "$1" >&2
 }
 
+function err_option_value {
+    printf "${RED}ERROR: Unknown option value for %s: %s\n${NOCOLOR}" "$1" "$2" >&2
+}
+
 function wrong_subcommand {
     printf "${RED}ERROR: Unknown subcommand: %s\n${NOCOLOR}" "$1" >&2
 }

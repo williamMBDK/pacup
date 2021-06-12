@@ -41,6 +41,18 @@ do
     esac
 done
 
+# check that a valid package manager were given
+valid_package_manager=0
+for package_manager in $(get_package_managers); do
+    if [ "$package_manager" = $PACMANAGER ]; then
+        valid_package_manager=1
+    fi
+done
+if test $valid_package_manager -eq 0; then
+    err_option_value "-p | --package-manager" "$PACMANAGER"
+    exit 1
+fi
+
 $SCRIPT_DIR/config-match.py -q -c $CONFIG -l $PACLIST | while read -r package ; do
     if test $QUIET -eq 0; then
         echo Installing package with $PACMANAGER: $package
