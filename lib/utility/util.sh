@@ -21,6 +21,16 @@ function wrong_subcommand {
     printf "${RED}ERROR: Unknown subcommand: %s\n${NOCOLOR}" "$1" >&2
 }
 
+function print_warning {
+    printf "${YELLOW}WARNING: %s\n${NOCOLOR}" "$1" >&2
+}
+function print_error {
+    printf "${RED}ERROR: %s\n${NOCOLOR}" "$1" >&2
+}
+function print_info {
+    printf "${CYAN}INFO: %s\n${NOCOLOR}" "$1"
+}
+
 function config_path_not_exist {
     printf "${RED}ERROR: Configuration path does not exist: %s\n${NOCOLOR}" "$1" >&2
 }

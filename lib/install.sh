@@ -53,8 +53,14 @@ if test $valid_package_manager -eq 0; then
     exit 1
 fi
 
-$SCRIPT_DIR/config-match.py -q -c $CONFIG -l $PACLIST | while read -r package ; do
-    if test $QUIET -eq 0; then
-        echo Installing package with $PACMANAGER: $package
+$SCRIPT_DIR/config-match.py -q -c $CONFIG -l $PACLIST | while read -r packageandversion ; do
+    if ! $SCRIPT_DIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
+        if test $QUIET -eq 0; then
+            echo Installing package with $PACMANAGER: $packageandversion
+        fi
+    else
+        if test $QUIET -eq 0; then
+            print_info "Skipping $packageandversion"
+        fi
     fi
 done

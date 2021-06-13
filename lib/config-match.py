@@ -55,5 +55,6 @@ except ValueError as e:
 
 if not QUIET: print("{}MATCHED PACKAGES{}".format(TermColors.GREEN, TermColors.NOCOLOR))
 for package in matched_packages:
-    print(package)
+    if package.version: print(package.name, package.version)
+    else: print(package.name)
 
