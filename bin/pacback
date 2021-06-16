@@ -7,13 +7,18 @@ SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
 SUBCMD=$1
 
 case $SUBCMD in
+    backup)
+        shift
+        $SCRIPT_DIR/../lib/backup.sh "$@"
+        exit
+        ;;
     clear-cache)
         rm -r "$HOME/.cache/pacback" 2> /dev/null
         exit 0
         ;;
     config-match)
         shift
-        $SCRIPT_DIR/../lib/config-match.sh "$@"
+        $SCRIPT_DIR/../lib/config_match.sh "$@"
         exit
         ;;
     install)
