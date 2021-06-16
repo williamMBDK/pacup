@@ -10,9 +10,10 @@ PACMANAGER=0
 PACLIST=0
 QUIET=0
 OUTPUT=0
+WITH_VERSION=0
 
 # get arguments
-PARSED_ARGUMENTS=$(getopt -n pacback-backup -o p:l:o:q -l package-manager:,package-list:,output:,quiet -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacback-backup -o p:l:o:qv -l package-manager:,package-list:,output:,quiet,with-version -- "$@")
 eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in
@@ -31,6 +32,10 @@ while :; do
             ;;
         -q | --quiet)
             QUIET=1
+            shift
+            ;;
+        -v | --with-version)
+            WITH_VERSION=1
             shift
             ;;
         --)
@@ -53,7 +58,11 @@ packages_in_paclist=$($SCRIPT_DIR/run_module.sh "configuration.get_packages_in_l
 packages_to_add=$(IFS=$'\n'
 for packageandversion in $explicits; do
     if ! is_package_in_list "$packages_in_paclist" "$packageandversion" ; then
-        get_packageversion_name "$packageandversion"
+        if [ $WITH_VERSION = 1 ]; then
+            printf "$packageandversion\n"
+        else
+            get_packageversion_name "$packageandversion"
+        fi
     fi
 done)
 
