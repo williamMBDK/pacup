@@ -45,15 +45,8 @@ if test $PACLIST = 0; then
 fi
 
 # get matches
-matches=$($SCRIPT_DIR/config-match.py $CONFIG $PACLIST)
-exit_code=$?
-# test for any errors
-if test $exit_code = 0; then
-    if test $QUIET = 0; then
-        print_success "MATCHED PACKAGES"
-    fi
-    printf "$matches"
-else
-    print_error "$matches"
-    exit $exit_code
+get_matches_and_handle_errors $CONFIG $PACLIST # will exit on error
+if test $QUIET = 0; then
+    print_success "MATCHED PACKAGES"
 fi
+printf "$matches"

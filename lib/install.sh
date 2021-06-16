@@ -65,14 +65,7 @@ if ! is_valid_package_manager $PACMANAGER; then
 fi
 
 # get matching packages
-matches=$($SCRIPT_DIR/config-match.py $CONFIG $PACLIST)
-exit_code=$?
-
-# handle error during matching
-if test $exit_code != 0; then
-    print_error "$matches"
-    exit $exit_code
-fi
+get_matches_and_handle_errors $CONFIG $PACLIST # set $matches
 
 # install matching packages
 (IFS=$'\n'

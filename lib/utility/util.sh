@@ -89,3 +89,17 @@ function is_valid_package_manager {
     done
     return $valid_package_manager
 }
+
+# other
+function get_matches_and_handle_errors {
+    CONFIG=$1
+    PACLIST=$2
+    matches=$($SCRIPT_DIR/config-match.py $CONFIG $PACLIST)
+    exit_code=$?
+
+    # handle error during matching
+    if test $exit_code != 0; then
+        print_error "$matches"
+        exit $exit_code
+    fi
+}
