@@ -53,11 +53,15 @@ for packageandversion in $matches; do
     fi
 done)
 
-# check if there are explicitely installed packages that are not a matched package
 explicits=$($SCRIPT_DIR/package-managers/$PACMANAGER/get.sh)
+packages_in_paclist=$($SCRIPT_DIR/run_module.sh "configuration.get_packages_in_list" "$PACLIST")
+
+# check if there are explicitely installed packages that are not a matched package or in list
 (IFS=$'\n'
 for packageandversion in $explicits; do
-    if ! is_package_in_list "$matches" "$packageandversion"; then
-        print_colored "CYAN" "INSTALLED BUT NOT IN CONFIG: $packageandversion"
+    if ! is_package_in_list "$packages_in_paclist" "$packageandversion"; then
+        print_colored "CYAN" "INSTALLED BUT NOT IN PACKAGE LIST: $packageandversion"
+    elif ! is_package_in_list "$matches" "$packageandversion"; then
+        print_colored "BLUE" "INSTALLED, IN PACKAGE LIST BUT NOT IN CONFIG: $packageandversion"
     fi
 done)
