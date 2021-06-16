@@ -110,3 +110,11 @@ function exit_on_invalid_package_manager {
         exit 1
     fi
 }
+function exit_on_missing_option {
+    OPTION_VALUE=$1
+    OPTION_DESC=$2
+    if [ $OPTION_VALUE = 0 ]; then
+        err_missing_option "$OPTION_DESC"
+        exit 1
+    fi
+}

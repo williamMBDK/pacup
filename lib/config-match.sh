@@ -35,14 +35,8 @@ while :; do
 done
 
 # missing options check
-if test $CONFIG = 0; then
-    err_missing_option "-c | --configuration"
-    exit 1
-fi
-if test $PACLIST = 0; then
-    err_missing_option "-l | --package-list"
-    exit 1
-fi
+exit_on_missing_option "$CONFIG" "-c | --configuration"
+exit_on_missing_option "$PACLIST" "-l | --package-list"
 
 # get matches
 get_matches_and_handle_errors $CONFIG $PACLIST # will exit on error
