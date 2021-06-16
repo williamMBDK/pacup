@@ -22,7 +22,7 @@ COUNT=0
 while :; do
     case $1 in
         -h|-\?|--help)
-            showhelp
+            show_help
             exit
             ;;
         -q|--quiet)

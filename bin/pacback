@@ -15,7 +15,7 @@ case $SUBCMD in
         ;;
     config-match)
         shift
-        $SCRIPT_DIR/../lib/config-match.py "$@"
+        $SCRIPT_DIR/../lib/config-match.sh "$@"
         exit
         ;;
     install)
@@ -28,7 +28,7 @@ case $SUBCMD in
         exit
         ;;
     "")
-        showhelp
+        show_help
         exit 1
         ;;
     *)

@@ -41,11 +41,21 @@ while :; do
     esac
 done
 
-# check that a valid package manager were given
+# missing options check
+if test $CONFIG = 0; then
+    err_missing_option "-c | --configuration"
+    exit 1
+fi
+if test $PACLIST = 0; then
+    err_missing_option "-l | --package-list"
+    exit 1
+fi
 if [ $PACMANAGER = 0 ]; then
     err_missing_option "-p | -package-manager"
     exit 1
 fi
+
+# check that a valid package manager were given
 valid_package_manager=0
 for package_manager in $(get_package_managers); do
     if [ "$package_manager" = $PACMANAGER ]; then
@@ -57,15 +67,25 @@ if test $valid_package_manager -eq 0; then
     exit 1
 fi
 
+# get matching packages
+matches=$($SCRIPT_DIR/config-match.py $CONFIG $PACLIST)
+exit_code=$?
+
+# handle error during matching
+if test $exit_code != 0; then
+    print_error "$matches"
+    exit $exit_code
+fi
+
 # install matching packages
-$SCRIPT_DIR/config-match.py -q -c $CONFIG -l $PACLIST | while read -r packageandversion ; do
+printf "$matches" | while read -r packageandversion ; do
     if ! $SCRIPT_DIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
         if test $QUIET -eq 0; then
-            echo Installing package with $PACMANAGER: $packageandversion
+            print_needed_info "Beginning installation of $packageandversion using $PACMANAGER"
         fi
     else
         if test $QUIET -eq 0; then
-            print_info "Skipping $packageandversion"
+            print_additional_info "Skipping $packageandversion"
         fi
     fi
 done
