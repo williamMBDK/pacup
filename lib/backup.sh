@@ -57,10 +57,13 @@ for packageandversion in $explicits; do
     fi
 done)
 
-[ $(printf "$packages_to_add" | wc -l) = 0 ] && print_warning "Nothing to backup. Exiting..." && exit 0
-print_needed_info "Packages installed but not in package list ($OUTPUT)"
-printf "$packages_to_add\n"
-lazy_confirm "Do you wish to add the above packages?" || { print_needed_info "Okay. skipping..." && exit 0; }
+[ $(printf "$packages_to_add" | wc -l) = 0 ] && { [ $QUIET = 0 ] && print_warning "Nothing to backup. Exiting..."; } && exit 0
+[ $QUIET = 0 ] && print_needed_info "Packages installed but not in package list ($OUTPUT)"
+[ $QUIET = 0 ] && printf "$packages_to_add\n"
+[ $QUIET = 0 ] && { lazy_confirm "Do you wish to add the above packages?" || { print_needed_info "Okay. skipping..." && exit 0; }; }
 
 printf "$packages_to_add" | $SCRIPT_DIR/run_module.sh "configuration.append_to_package_list" "$PACLIST" "$OUTPUT"
-print_success "Added packages to package-list ($OUTPUT)"
+[ $QUIET = 0 ] && print_success "Added packages to package-list ($OUTPUT)"
+
+exit 0
+
