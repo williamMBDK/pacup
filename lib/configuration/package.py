@@ -64,7 +64,7 @@ class TaggedPackage(Package):
 
     def __str__(self):
         assert(self.has_been_initialized)
-        return "{} ({})".format(super().__str__(), " ".join(self.tags))
+        return "{} {}".format(super().__str__(), " ".join(self.tags))
 
     def copy(self):
         return PackageFactory.create_tagged_package_from_values(self.name, self.version, self.tags.copy())
