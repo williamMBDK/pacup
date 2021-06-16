@@ -27,6 +27,10 @@ case $SUBCMD in
         $SCRIPT_DIR/../lib/status.sh "$@"
         exit
         ;;
+    clear-cache)
+        rm -r "$HOME/.cache/pacback" 2> /dev/null
+        exit 0
+        ;;
     -h|-\?|--help)
         showhelp
         exit

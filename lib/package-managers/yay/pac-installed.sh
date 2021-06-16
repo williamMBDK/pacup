@@ -4,14 +4,15 @@ pac=$1
 version=$2
 cachedir="$HOME/.cache/pacback/yay"
 
-if [[ $(find "$cachedir/yayqe.out" -newermt '-6 seconds') == "" ]]; then
+mkdir -p $cachedir
+
+if [[ $(find "$cachedir/yayqe.out" -newermt '-6 seconds' 2>/dev/null) == "" ]]; then
     touch $cachedir/yayqe.out
     $SCRIPT_DIR/get.sh > $cachedir/yayqe.out
 fi
 
 if [ "$#" -eq 1 ]; then
-    mkdir -p $cachedir
-    if [[ $(find "$cachedir/yayqu.out" -newermt '-6 seconds') == "" ]]; then
+    if [[ $(find "$cachedir/yayqu.out" -newermt '-6 seconds' 2>/dev/null) == "" ]]; then
         touch $cachedir/yayqu.out
         yay -Qu > $cachedir/yayqu.out
     fi

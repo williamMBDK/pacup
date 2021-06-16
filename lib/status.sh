@@ -67,7 +67,7 @@ fi
 (IFS=$'\n'
 for packageandversion in $matches; do
     if ! $SCRIPT_DIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
-        print_colored "YELLOW" "NOT INSTALLED: $packageandversion"
+        print_colored "YELLOW" "NOT INSTALLED OR UP-TO-DATE: $packageandversion"
     fi
 done)
 

@@ -3,3 +3,9 @@
 - pac yay
 + pac yarn
 - pac yarn
+
+
+
+
+- pac hello
+- pac nerd-fonts-complete
