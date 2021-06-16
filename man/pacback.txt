@@ -1,4 +1,60 @@
-pachey(1)                                         test                                        pachey(1)
+pacup(1)                                               User Commands                                               pacup(1)
 
-PacBack
-perl v5.34.0                                      hey                                         pachey(1)
+NAME
+       pacup - Backup and install packages
+
+SYNOPSIS
+       pacup <subcommand> [options]
+
+       pacup clear-cache
+
+       pacup config-match [options]
+
+       pacup install [options]
+
+       pacup list [options] <package-managers>
+
+       pacup status [options]
+
+DESCRIPTION
+       pacup can backup lists of explicitely installed packages for different package managers. Moreover it can install a
+       selected subset of the a list of packages.
+
+OPTIONS
+       -h, -?, --help
+           Shows this help-page.
+
+       See the different subcommands for more options.
+
+SUBCOMMANDS
+       pacup has several subcommands, which each has a set of options.
+
+       clear-cache
+           Clears cache.
+
+       config-match
+           Given a configuration file and package list find the packages matched by the configuration file.
+
+           Can be used to validate a configuration file.
+
+       install
+           Given a configuration file and package list install the packages matched by the configuration file.
+
+       list
+           List explicitely installed packages for different package managers.
+
+       status
+           Lists packages that are not in both the configuration file and installed.
+
+CONFIG-MATCH OPTIONS
+INSTALL OPTIONS
+LIST OPTIONS
+STATUS OPTIONS
+FILES
+ENVIRONMENT
+DIAGNOSTICS
+BUGS
+AUTHOR
+       Developed by William Bille Meyling
+
+1.0                                                      2021-06-16                                                pacup(1)

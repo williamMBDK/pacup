@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
+SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
 
-pod2man -n pachey -d hey -c test $SCRIPT_DIR/man.pod > $SCRIPT_DIR/pacback.1
+pod2man -n pacup --release="1.0" -c "User Commands" $SCRIPT_DIR/man.pod > $SCRIPT_DIR/pacback.1
 man $SCRIPT_DIR/pacback.1 > $SCRIPT_DIR/pacback.txt

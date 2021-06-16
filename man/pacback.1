@@ -132,11 +132,73 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "pachey 1"
-.TH pachey 1 "hey" "perl v5.34.0" "test"
+.IX Title "pacup 1"
+.TH pacup 1 "2021-06-16" "1.0" "User Commands"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
-.SH "PacBack"
-.IX Header "PacBack"
+.SH "NAME"
+pacup \- Backup and install packages
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+\&\fBpacup\fR <subcommand> [options]
+.PP
+\&\fBpacup\fR clear-cache
+.PP
+\&\fBpacup\fR config-match [options]
+.PP
+\&\fBpacup\fR install [options]
+.PP
+\&\fBpacup\fR list [options] <package\-managers>
+.PP
+\&\fBpacup\fR status [options]
+.SH "DESCRIPTION"
+.IX Header "DESCRIPTION"
+pacup can backup lists of explicitely installed packages for different package managers. Moreover it can install a selected subset of the a list of packages.
+.SH "OPTIONS"
+.IX Header "OPTIONS"
+.IP "\fB\-h\fR, \fB\-?\fR, \fB\-\-help\fR" 4
+.IX Item "-h, -?, --help"
+Shows this help-page.
+.PP
+See the different subcommands for more options.
+.SH "SUBCOMMANDS"
+.IX Header "SUBCOMMANDS"
+pacup has several subcommands, which each has a set of options.
+.IP "\fBclear-cache\fR" 4
+.IX Item "clear-cache"
+Clears cache.
+.IP "\fBconfig-match\fR" 4
+.IX Item "config-match"
+Given a configuration file and package list find the packages matched by the configuration file.
+.Sp
+Can be used to validate a configuration file.
+.IP "\fBinstall\fR" 4
+.IX Item "install"
+Given a configuration file and package list install the packages matched by the configuration file.
+.IP "\fBlist\fR" 4
+.IX Item "list"
+List explicitely installed packages for different package managers.
+.IP "\fBstatus\fR" 4
+.IX Item "status"
+Lists packages that are not in both the configuration file and installed.
+.SH "CONFIG-MATCH OPTIONS"
+.IX Header "CONFIG-MATCH OPTIONS"
+.SH "INSTALL OPTIONS"
+.IX Header "INSTALL OPTIONS"
+.SH "LIST OPTIONS"
+.IX Header "LIST OPTIONS"
+.SH "STATUS OPTIONS"
+.IX Header "STATUS OPTIONS"
+.SH "FILES"
+.IX Header "FILES"
+.SH "ENVIRONMENT"
+.IX Header "ENVIRONMENT"
+.SH "DIAGNOSTICS"
+.IX Header "DIAGNOSTICS"
+.SH "BUGS"
+.IX Header "BUGS"
+.SH "AUTHOR"
+.IX Header "AUTHOR"
+Developed by William Bille Meyling

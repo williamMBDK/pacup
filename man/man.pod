@@ -1,1 +1,85 @@
-=head1 PacBack
+=encoding UTF8
+
+=head1 NAME
+
+pacup - Backup and install packages
+
+=head1 SYNOPSIS
+
+B<pacup> <subcommand> [options]
+
+B<pacup> clear-cache
+
+B<pacup> config-match [options]
+
+B<pacup> install [options]
+
+B<pacup> list [options] <package-managers>
+
+B<pacup> status [options]
+
+=head1 DESCRIPTION
+
+pacup can backup lists of explicitely installed packages for different package managers. Moreover it can install a selected subset of the a list of packages.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-h>, B<-?>, B<--help>
+
+Shows this help-page.
+
+=back
+
+See the different subcommands for more options.
+
+=head1 SUBCOMMANDS
+
+pacup has several subcommands, which each has a set of options.
+
+=over 4
+
+=item B<clear-cache>
+
+Clears cache.
+
+=item B<config-match>
+
+Given a configuration file and package list find the packages matched by the configuration file.
+
+Can be used to validate a configuration file.
+
+=item B<install>
+
+Given a configuration file and package list install the packages matched by the configuration file.
+
+=item B<list>
+
+List explicitely installed packages for different package managers.
+
+=item B<status>
+
+Lists packages that are not in both the configuration file and installed.
+
+=back
+
+=head1 CONFIG-MATCH OPTIONS
+
+=head1 INSTALL OPTIONS
+
+=head1 LIST OPTIONS
+
+=head1 STATUS OPTIONS
+
+=head1 FILES
+
+=head1 ENVIRONMENT
+
+=head1 DIAGNOSTICS
+
+=head1 BUGS
+
+=head1 AUTHOR
+
+Developed by William Bille Meyling
