@@ -1,8 +1,6 @@
-#!/usr/bin/python3
-
 import sys
-from configuration.configuration import ConfigurationFactory
-from configuration.tagged_package_list import TaggedPackageListFactory, TaggedPackageList
+from .configuration import ConfigurationFactory
+from .tagged_package_list import TaggedPackageListFactory, TaggedPackageList
 
 CONFIG=sys.argv[1]
 PACLIST=sys.argv[2]

@@ -1,6 +1,6 @@
-from configuration.package import PackageFactory, Package
-from configuration.configuration_element import ConfigurationElementFactory, ConfigurationElement
-from configuration.tagged_package_list import TaggedPackageList
+from .package import  Package
+from .configuration_element import ConfigurationElementFactory, ConfigurationElement
+from .tagged_package_list import TaggedPackageList
 
 class Configuration:
     def __init__(self):

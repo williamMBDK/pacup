@@ -1,5 +1,5 @@
 from typing import Optional
-from configuration.package import PackageFactory, Package
+from .package import PackageFactory, Package
 
 class ConfigurationElement:
 

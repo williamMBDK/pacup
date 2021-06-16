@@ -1,4 +1,4 @@
-from configuration.package import PackageFactory, TaggedPackage, Package
+from .package import PackageFactory, TaggedPackage, Package
 
 class TaggedPackageList:
     def __init__(self):
