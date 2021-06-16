@@ -83,20 +83,19 @@ if test $exit_code != 0; then
 fi
 
 # install matching packages
-printf "$matches" | while read -r packageandversion ; do
+(IFS=$'\n'
+for packageandversion in $matches; do
     if ! $SCRIPT_DIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
-        if test $QUIET -eq 0; then
-            print_needed_info "Beginning installation of $packageandversion using $PACMANAGER"
-            printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
-            if [ $TEST = 0 ]; then
-                $SCRIPT_DIR/package-managers/$PACMANAGER/install.sh $packageandversion
-            fi
-            printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
-            print_success "Installed $packageandversion using $PACMANAGER"
+        [ $QUIET = 0 ] && print_needed_info "Beginning installation of $packageandversion using $PACMANAGER"
+        [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
+        if [ $TEST = 0 ]; then
+            $SCRIPT_DIR/package-managers/$PACMANAGER/install.sh $packageandversion
         fi
+        [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
+        [ $QUIET = 0 ] && print_success "Installed $packageandversion using $PACMANAGER"
     else
         if test $QUIET -eq 0; then
             print_additional_info "Skipping $packageandversion"
         fi
     fi
-done
+done)
