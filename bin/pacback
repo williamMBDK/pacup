@@ -22,9 +22,9 @@ case $SUBCMD in
         $SCRIPT_DIR/../lib/install.sh "$@"
         exit
         ;;
-    diff)
+    status)
         shift
-        $SCRIPT_DIR/../lib/diff.sh "$@"
+        $SCRIPT_DIR/../lib/status.sh "$@"
         exit
         ;;
     -h|-\?|--help)

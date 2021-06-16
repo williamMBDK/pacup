@@ -73,4 +73,4 @@ I especially need advice and help on testing the shell code, which I think will 
 \- William
 
 ## todo
-- pacback status
+- pacback status default all
