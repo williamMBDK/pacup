@@ -17,6 +17,10 @@ function err_option_value {
     printf "${RED}ERROR: Unknown option value for %s: %s\n${NOCOLOR}" "$1" "$2" >&2
 }
 
+function err_missing_option {
+    print_error "option $1 is required"
+}
+
 function wrong_subcommand {
     printf "${RED}ERROR: Unknown subcommand: %s\n${NOCOLOR}" "$1" >&2
 }

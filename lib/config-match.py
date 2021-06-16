@@ -17,6 +17,14 @@ for o, a in opts:
     elif o in ("-c", "--configuration"): CONFIG = a
     elif o in ("-l", "--package-list"): PACLIST = a
 
+if CONFIG == None:
+    print("{}ERROR: configuration must be provided (-c | --configuration){}".format(TermColors.RED, TermColors.NOCOLOR))
+    exit(1)
+
+if PACLIST == None:
+    print("{}ERROR: paclist must be provided (-l | --package-list){}".format(TermColors.RED, TermColors.NOCOLOR))
+    exit(1)
+
 config = None
 taggedlist = TaggedPackageList()
 

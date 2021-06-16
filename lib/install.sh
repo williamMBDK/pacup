@@ -11,7 +11,7 @@ CONFIG=0
 PACLIST=0
 PACMANAGER=0
 
-PARSED_ARGUMENTS=$(getopt -n pacback-install -o c:l:p:q --long configuration,package-list,package-manager:,quiet: -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacback-install -o c:l:p:q --long configuration:,package-list:,package-manager:,quiet -- "$@")
 
 eval set -- "$PARSED_ARGUMENTS"
 
@@ -42,6 +42,10 @@ do
 done
 
 # check that a valid package manager were given
+if [ $PACMANAGER = 0 ]; then
+    err_missing_option "-p | -package-manager"
+    exit 1
+fi
 valid_package_manager=0
 for package_manager in $(get_package_managers); do
     if [ "$package_manager" = $PACMANAGER ]; then
