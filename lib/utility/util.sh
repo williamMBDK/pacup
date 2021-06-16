@@ -103,3 +103,10 @@ function get_matches_and_handle_errors {
         exit $exit_code
     fi
 }
+function exit_on_invalid_package_manager {
+    PACMANAGER=$1
+    if ! is_valid_package_manager $PACMANAGER; then
+        err_option_value "-p | --package-manager" "$PACMANAGER"
+        exit 1
+    fi
+}

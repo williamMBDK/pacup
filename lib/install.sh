@@ -59,10 +59,7 @@ if [ $PACMANAGER = 0 ]; then
 fi
 
 # check that a valid package manager were given
-if ! is_valid_package_manager $PACMANAGER; then
-    err_option_value "-p | --package-manager" "$PACMANAGER"
-    exit 1
-fi
+exit_on_invalid_package_manager $PACMANAGER
 
 # get matching packages
 get_matches_and_handle_errors $CONFIG $PACLIST # set $matches
