@@ -23,6 +23,10 @@ class TestPackage(unittest.TestCase):
             err = True
         self.assertTrue(err)
 
+    def test_str(self):
+        self.package.init_with_string("a@1")
+        self.assertEqual("a@1", str(self.package))
+
     def test_init_with_values(self):
         self.package.init_with_values("a","1")
         self.assert_values("a", "1")
@@ -120,3 +124,7 @@ class TestTaggedPackage(unittest.TestCase):
             self.package = TaggedPackage()
             self.package.init_with_string(string) 
             self.assertEqual(expected, self.package.tags)
+
+    def test_str(self):
+        self.package.init_with_string("a@1 a b c") 
+        self.assertEqual("a@1 a b c", str(self.package))
