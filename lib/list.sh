@@ -1,11 +1,10 @@
 #!/bin/sh
 
-SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
 source $SCRIPT_DIR/utility/util.sh
-SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
-source $SCRIPT_DIR/utility/color.sh
-SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
 
+# package managers
 ALL=0
 APT=0
 NPM=0
@@ -14,17 +13,16 @@ PIP=0
 YARN=0
 YAY=0
 
+# options
 QUIET=0
 VERBOSE=0
 COUNT=0
 
-# https://gist.github.com/deshion/10d3cb5f88a21671e17a
+# get arguments
+PARSED_ARGUMENTS=$(getopt -n pacback-install -o qvc --long quiet,verbose,count -- "$@")
+eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in
-        -h|-\?|--help)
-            show_help
-            exit
-            ;;
         -q|--quiet)
             QUIET=1
             ;;
@@ -34,6 +32,16 @@ while :; do
         -c|--count)
             COUNT=1
             ;;
+        --)
+            shift
+            break
+            ;;
+    esac
+    shift
+done
+# get package managers
+while :; do
+    case $1 in
         all)
             ALL=1
             ;;
@@ -55,12 +63,6 @@ while :; do
         yay)
             YAY=1
             ;;
-        -?*)
-            wrong_option $1
-            ;;
-        --?*)
-            wrong_option $1
-            ;;
         "")
             break
             ;;
@@ -71,23 +73,17 @@ while :; do
     shift
 done
 
-function print {
-    if test $QUIET -eq 0; then
-        echo -e $1
-    fi
-}
-
 function get_packages {
     if $SCRIPT_DIR/package-managers/$1/exists.sh; then
         if test $COUNT -eq 0; then
-            print "${GREEN}EXPLICITLY INSTALLED PACKAGES FOR ${1^^}${NOCOLOR}"
+            [ $QUIET == 0 ] && print_success "EXPLICITLY INSTALLED PACKAGES FOR ${1^^}"
             $SCRIPT_DIR/package-managers/$1/get.sh
         else
             count=$($SCRIPT_DIR/package-managers/$1/get.sh | wc -l)
-            print "${GREEN}NUMBER OF EXPLICITLY INSTALLED PACKAGES FOR ${1^^}${NOCOLOR}: $count"
+            [ $QUIET == 0 ] && print_success "NUMBER OF EXPLICITLY INSTALLED PACKAGES FOR ${1^^} IS $count"
         fi
     elif test $VERBOSE -eq 1; then
-        print "${YELLOW}SKIPPING ${1^^} (NOT INSTALLED OR NOT IN PATH)${NOCOLOR}"
+        [ $QUIET == 0 ] && print_warning "SKIPPING ${1^^} (NOT INSTALLED OR NOT IN PATH)"
     fi
 }
 
