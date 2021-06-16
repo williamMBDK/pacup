@@ -53,7 +53,7 @@ packages_in_paclist=$($SCRIPT_DIR/run_module.sh "configuration.get_packages_in_l
 packages_to_add=$(IFS=$'\n'
 for packageandversion in $explicits; do
     if ! is_package_in_list "$packages_in_paclist" "$packageandversion" ; then
-        printf "$packageandversion\n"
+        get_packageversion_name "$packageandversion"
     fi
 done)
 
