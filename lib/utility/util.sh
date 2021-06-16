@@ -94,7 +94,7 @@ function is_valid_package_manager {
 function get_matches_and_handle_errors {
     CONFIG=$1
     PACLIST=$2
-    matches=$($SCRIPT_DIR/config-match.py $CONFIG $PACLIST)
+    matches=$($SCRIPT_DIR/run_module.sh "configuration.config_match" "$CONFIG" "$PACLIST")
     exit_code=$?
 
     # handle error during matching
