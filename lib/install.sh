@@ -88,11 +88,14 @@ for packageandversion in $matches; do
     if ! $SCRIPT_DIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
         [ $QUIET = 0 ] && print_needed_info "Beginning installation of $packageandversion using $PACMANAGER"
         [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
+        exit_code=0
         if [ $TEST = 0 ]; then
             $SCRIPT_DIR/package-managers/$PACMANAGER/install.sh $packageandversion
+            exit_code=$?
         fi
         [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
-        [ $QUIET = 0 ] && print_success "Installed $packageandversion using $PACMANAGER"
+        [ $QUIET = 0 ] && [ $exit_code = 0 ] && print_success "Installed $packageandversion using $PACMANAGER"
+        [ $exit_code != 0 ] && print_error "Something went wrong during installation of $packageandversion using $PACMANAGER"
     else
         if test $QUIET -eq 0; then
             print_additional_info "Skipping $packageandversion"
