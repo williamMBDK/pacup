@@ -57,7 +57,7 @@ done)
 explicits=$($SCRIPT_DIR/package-managers/$PACMANAGER/get.sh)
 (IFS=$'\n'
 for packageandversion in $explicits; do
-    if ! $SCRIPT_DIR/package-managers/is_pac_in_config.sh "$matches" "$packageandversion"; then
+    if ! is_package_in_list "$matches" "$packageandversion"; then
         print_colored "CYAN" "INSTALLED BUT NOT IN CONFIG: $packageandversion"
     fi
 done)

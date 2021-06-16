@@ -118,3 +118,16 @@ function exit_on_missing_option {
         exit 1
     fi
 }
+
+# packages
+function is_package_in_list {
+    list=$1
+    packageandversion=$2
+
+    package=$(echo $packageandversion  | head -n1 | cut -d " " -f1)
+
+    if ! printf "$list" | grep "^$packageandversion$" > /dev/null && ! printf "$list" | grep "^$package$" > /dev/null; then
+        return 1
+    fi
+    return 0
+}
