@@ -71,3 +71,6 @@ Feel free to contribute.
 I especially need advice and help on testing the shell code, which I think will be quite inconvenient.
 
 \- William
+
+## todo
+- pacback status

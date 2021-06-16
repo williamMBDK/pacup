@@ -21,6 +21,9 @@ function print_success {
 function print_needed_info {
     printf "PACBACK: %s\n" "$1"
 }
+function print_colored {
+    printf "${!1}%s\n${NOCOLOR}" "$2"
+}
 
 # specialized versions of above
 function wrong_option {

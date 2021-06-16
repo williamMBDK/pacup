@@ -4,8 +4,6 @@
 SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
 source $SCRIPT_DIR/utility/util.sh
 SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
-source $SCRIPT_DIR/utility/color.sh
-SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
 
 # option variables
 QUIET=0
