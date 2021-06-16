@@ -48,6 +48,12 @@ if [ $PACMANAGER = 0 ]; then
     exit 1
 fi
 
+# check that a valid package manager were given
+if ! is_valid_package_manager $PACMANAGER; then
+    err_option_value "-p | --package-manager" "$PACMANAGER"
+    exit 1
+fi
+
 # get matching packages
 matches=$($SCRIPT_DIR/config-match.py $CONFIG $PACLIST)
 exit_code=$?
@@ -70,8 +76,7 @@ done)
 explicits=$($SCRIPT_DIR/package-managers/$PACMANAGER/get.sh)
 (IFS=$'\n'
 for packageandversion in $explicits; do
-    package=$(echo $packageandversion  | head -n1 | cut -d " " -f1)
-    if ! printf "$matches" | grep "^$packageandversion$" > /dev/null && ! printf "$matches" | grep "^$package$" > /dev/null; then
+    if ! $SCRIPT_DIR/package-managers/is_pac_in_config.sh "$matches" "$packageandversion"; then
         print_colored "CYAN" "INSTALLED BUT NOT IN CONFIG: $packageandversion"
     fi
 done)

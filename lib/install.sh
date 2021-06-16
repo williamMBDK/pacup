@@ -59,13 +59,7 @@ if [ $PACMANAGER = 0 ]; then
 fi
 
 # check that a valid package manager were given
-valid_package_manager=0
-for package_manager in $(get_package_managers); do
-    if [ "$package_manager" = $PACMANAGER ]; then
-        valid_package_manager=1
-    fi
-done
-if test $valid_package_manager -eq 0; then
+if ! is_valid_package_manager $PACMANAGER; then
     err_option_value "-p | --package-manager" "$PACMANAGER"
     exit 1
 fi
