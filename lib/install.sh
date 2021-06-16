@@ -12,9 +12,10 @@ QUIET=0
 CONFIG=0
 PACLIST=0
 PACMANAGER=0
+TEST=0
 
 # get arguments
-PARSED_ARGUMENTS=$(getopt -n pacback-install -o c:l:p:q --long configuration:,package-list:,package-manager:,quiet -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacback-install -o c:l:p:qt --long configuration:,package-list:,package-manager:,quiet,test -- "$@")
 eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in
@@ -32,6 +33,10 @@ while :; do
             ;;
         -q | --quiet)
             QUIET=1
+            shift
+            ;;
+        -t  | --test)
+            TEST=1
             shift
             ;;
         --)
@@ -82,6 +87,12 @@ printf "$matches" | while read -r packageandversion ; do
     if ! $SCRIPT_DIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
         if test $QUIET -eq 0; then
             print_needed_info "Beginning installation of $packageandversion using $PACMANAGER"
+            printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
+            if [ $TEST = 0 ]; then
+                $SCRIPT_DIR/package-managers/$PACMANAGER/install.sh $packageandversion
+            fi
+            printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
+            print_success "Installed $packageandversion using $PACMANAGER"
         fi
     else
         if test $QUIET -eq 0; then
