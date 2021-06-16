@@ -6,13 +6,12 @@ source $SCRIPT_DIR/utility/util.sh
 SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
 
 # option variables
-QUIET=0
 CONFIG=0
 PACLIST=0
 PACMANAGER=0
 
 # get arguments
-PARSED_ARGUMENTS=$(getopt -n pacback-install -o c:l:p:q --long configuration:,package-list:,package-manager:,quiet -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacback-install -o c:l:p: --long configuration:,package-list:,package-manager: -- "$@")
 eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in
@@ -27,10 +26,6 @@ while :; do
         -p | --package-manager)
             PACMANAGER=$2
             shift 2
-            ;;
-        -q | --quiet)
-            QUIET=1
-            shift
             ;;
         --)
             shift

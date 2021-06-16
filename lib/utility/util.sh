@@ -21,6 +21,9 @@ function print_success {
 function print_needed_info {
     printf "PACBACK: %s\n" "$1"
 }
+function print_needed_info_no_newline {
+    printf "PACBACK: %s" "$1"
+}
 function print_colored {
     printf "${!1}%s\n${NOCOLOR}" "$2"
 }
@@ -43,6 +46,17 @@ function wrong_subcommand {
 }
 function config_path_not_exist {
     print_error "Configuration path does not exist: $1"
+}
+
+# user input
+function lazy_confirm {
+    print_needed_info_no_newline "$1 [Y\n]: "
+    read ans
+    if [ "$ans" = "n" ]; then
+        return 1
+    else
+        return 0
+    fi
 }
 
 # help

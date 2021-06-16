@@ -84,6 +84,10 @@ fi
 (IFS=$'\n'
 for packageandversion in $matches; do
     if ! $SCRIPT_DIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
+        if ! lazy_confirm "Do you wish to install $packageandversion using $PACMANAGER?"; then
+            [ $QUIET = 0 ] && print_additional_info "Skipping $packageandversion"
+            continue
+        fi
         [ $QUIET = 0 ] && print_needed_info "Beginning installation of $packageandversion using $PACMANAGER"
         [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
         exit_code=0
