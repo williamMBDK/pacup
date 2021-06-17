@@ -1,9 +1,11 @@
 #!/bin/sh
-regex="^info \"(.*)@(.*)\""
-items=$(yarn global list 2> /dev/null | grep -P "info")
-echo "$items" | while read line ; do
-	[[ $line =~ $regex ]]
-	package="${BASH_REMATCH[1]}"
-	version="${BASH_REMATCH[2]}"
-	echo "$package $version"
+
+dir=$(yarn global dir)
+packages="$(jq -r '.dependencies | keys[]' $dir/package.json)"
+
+IFS=$'\n'
+for package in $packages; do
+    pacdir="$dir/node_modules/$package"
+    version="$(jq -r '.version' $pacdir/package.json)"
+    echo "$package $version"
 done
