@@ -78,4 +78,4 @@ I especially need advice and help on testing the shell code, which I think will 
 - what if a newer version of a match is installed and we try to install the match?
 - is $IFS handled correctly everywhere?
 - many different package managers in backup, status and so on
-- fix is_valid_package_manager
+- use local
