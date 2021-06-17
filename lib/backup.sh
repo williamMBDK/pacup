@@ -11,9 +11,10 @@ PACLIST=0
 QUIET=0
 OUTPUT=0
 WITH_VERSION=0
+INTERACTIVE=0
 
 # get arguments
-PARSED_ARGUMENTS=$(getopt -n pacback-backup -o p:l:o:qv -l package-manager:,package-list:,output:,quiet,with-version -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacback-backup -o p:l:o:qvi -l package-manager:,package-list:,output:,quiet,with-version,interactive -- "$@")
 eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in
@@ -38,6 +39,10 @@ while :; do
             WITH_VERSION=1
             shift
             ;;
+        -i | --interactive)
+            INTERACTIVE=1
+            shift
+            ;;
         --)
             shift
             break
@@ -55,23 +60,37 @@ exit_on_invalid_package_manager "$PACMANAGER"
 explicits=$($SCRIPT_DIR/package-managers/$PACMANAGER/get.sh)
 packages_in_paclist=$($SCRIPT_DIR/run_module.sh "configuration.get_packages_in_list" "$PACLIST")
 
-packages_to_add=$(IFS=$'\n'
+# slow for loop!
+packages_to_add=()
+IFS=$'\n'
 for packageandversion in $explicits; do
     if ! is_package_in_list "$packages_in_paclist" "$packageandversion" ; then
-        if [ $WITH_VERSION = 1 ]; then
-            printf "$packageandversion\n"
+        package=$(if [ $WITH_VERSION = 1 ]; then
+            printf "$packageandversion"
         else
             get_packageversion_name "$packageandversion"
+        fi)
+        if [ $INTERACTIVE = 1 ]; then
+            if lazy_confirm "Do you wish to add the following package to the package list: $package"; then
+                packages_to_add+=($package)
+            else
+                [ $QUIET = 0 ] && print_needed_info "Skipping $package"
+            fi
+        else
+            packages_to_add+=($package)
         fi
     fi
-done)
+done
 
-[ $(printf "$packages_to_add" | wc -l) = 0 ] && { [ $QUIET = 0 ] && print_warning "Nothing to backup. Exiting..."; } && exit 0
-[ $QUIET = 0 ] && print_needed_info "Packages installed but not in package list ($OUTPUT)"
-[ $QUIET = 0 ] && printf "$packages_to_add\n"
-[ $QUIET = 0 ] && { lazy_confirm "Do you wish to add the above packages?" || { print_needed_info "Okay. skipping..." && exit 0; }; }
+[ ${#packages_to_add[@]} = 0 ] && { [ $QUIET = 0 ] && print_warning "Nothing to backup. Exiting..."; } && exit 0
 
-printf "$packages_to_add" | $SCRIPT_DIR/run_module.sh "configuration.append_to_package_list" "$PACLIST" "$OUTPUT"
+if [[ $QUIET == 0 && $INTERACTIVE == 0 ]]; then
+    print_needed_info "Packages installed but not in package list ($OUTPUT)"
+    printf "%s\n" "${packages_to_add[@]}"
+    { lazy_confirm "Do you wish to add the above packages?" || { print_needed_info "Okay. skipping..." && exit 0; }; }
+fi
+
+printf "%s\n" "${packages_to_add[@]}" | $SCRIPT_DIR/run_module.sh "configuration.append_to_package_list" "$PACLIST" "$OUTPUT"
 [ $QUIET = 0 ] && print_success "Added packages to package-list ($OUTPUT)"
 
 exit 0
