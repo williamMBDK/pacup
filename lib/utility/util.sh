@@ -94,6 +94,7 @@ function is_valid_package_manager {
 function does_package_manager_exist {
     $ROOTDIR/package-managers/$1/exists.sh
 }
+# if $QUIET = 1 it will not print warnings
 function process_package_manager_arguments {
     # declare package managers
     for package_manager in $(get_package_managers); do
@@ -117,14 +118,14 @@ function process_package_manager_arguments {
         if [ $should_continue = 1 ]; then
             continue
         fi
-        wrong_package_manager "$arg"
+        [ $QUIET != 1 ] && wrong_package_manager "$arg"
     done
     # check that chosen package managers are installed
     for package_manager in $(get_package_managers); do
         varname=${package_manager^^}
         if [ ${!varname} = 1 ] && ! does_package_manager_exist "$package_manager"; then 
             declare -g "${package_manager^^}=0"
-            print_warning "$package_manager is not installed (ignored)"
+            [ $QUIET != 1 ] && print_warning "$package_manager is not installed (ignored)"
         fi
     done
 }
