@@ -95,6 +95,7 @@ function does_package_manager_exist {
     $ROOTDIR/package-managers/$1/exists.sh
 }
 # if $QUIET = 1 it will not print warnings
+# set all global $PM where PM is a package manager
 function process_package_manager_arguments {
     # declare package managers
     for package_manager in $(get_package_managers); do
@@ -118,7 +119,7 @@ function process_package_manager_arguments {
         if [ $should_continue = 1 ]; then
             continue
         fi
-        [ $QUIET != 1 ] && wrong_package_manager "$arg"
+        [ "$QUIET" != 1 ] && wrong_package_manager "$arg"
     done
     # check that chosen package managers are installed
     for package_manager in $(get_package_managers); do
@@ -129,13 +130,23 @@ function process_package_manager_arguments {
         fi
     done
 }
+function get_number_of_package_managers_provided {
+    local seen=0
+    for package_manager in $(get_package_managers); do
+        varname=${package_manager^^}
+        if [ ${!varname} = 1 ]; then
+            seen=$((seen+1))
+        fi
+    done
+    printf "$seen"
+}
 
 # other
 function get_matches_and_handle_errors {
-    CONFIG=$1
-    PACLIST=$2
+    local CONFIG=$1
+    local PACLIST=$2
     matches=$($ROOTDIR/run_module.sh "configuration.config_match" "$CONFIG" "$PACLIST")
-    exit_code=$?
+    local exit_code=$?
 
     # handle error during matching
     if test $exit_code != 0; then
