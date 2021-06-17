@@ -78,7 +78,7 @@ while :; do
 done
 
 function get_packages {
-    if $ROOTDIR/package-managers/$1/exists.sh; then
+    if does_package_manager_exist "$1"; then
         if test $COUNT -eq 0; then
             [ $QUIET == 0 ] && print_success "EXPLICITLY INSTALLED PACKAGES FOR ${1^^}"
             IFS=$'\n' packages=($($ROOTDIR/package-managers/$1/get.sh))
