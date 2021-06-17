@@ -43,4 +43,6 @@ get_matches_and_handle_errors $CONFIG $PACLIST # will exit on error
 if test $QUIET = 0; then
     print_success "MATCHED PACKAGES"
 fi
-printf "$matches"
+IFS=$'\n'
+match_list=($matches)
+get_packageversion_human_format "${match_list[@]}"

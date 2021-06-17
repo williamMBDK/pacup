@@ -124,6 +124,10 @@ function get_packageversion_name {
     packageandversion=$1
     printf $packageandversion  | head -n1 | cut -d " " -f1
 }
+function get_packageversion_version {
+    packageandversion=$1
+    printf $packageandversion | awk '{print $2}'
+}
 function is_package_in_list {
     list=$1
     packageandversion=$2
@@ -134,4 +138,17 @@ function is_package_in_list {
         return 1
     fi
     return 0
+}
+function get_packageversion_human_format {
+    while :; do
+        [ "$1" = "" ] && break
+        name=$(get_packageversion_name $1)
+        version=$(get_packageversion_version $1)
+        if [ "$version" = "" ]; then
+            printf "$name\n"
+        else
+            printf "$name@$version\n"
+        fi
+        shift
+    done
 }

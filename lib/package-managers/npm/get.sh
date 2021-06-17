@@ -5,5 +5,5 @@ echo "$output" | while read line ; do
 	[[ $line =~ $regex ]]
 	package="${BASH_REMATCH[2]}"
 	version="${BASH_REMATCH[3]}"
-	echo p:$package, v:$version
+	echo "$package $version"
 done

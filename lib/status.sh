@@ -49,19 +49,19 @@ get_matches_and_handle_errors $CONFIG $PACLIST # set $matches
 (IFS=$'\n'
 for packageandversion in $matches; do
     if ! $SCRIPT_DIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
-        print_colored "YELLOW" "NOT INSTALLED OR UP-TO-DATE: $packageandversion"
+        print_colored "YELLOW" "NOT INSTALLED OR UP-TO-DATE: $(get_packageversion_human_format "$packageandversion")"
     fi
 done)
 
 explicits=$($SCRIPT_DIR/package-managers/$PACMANAGER/get.sh)
 packages_in_paclist=$($SCRIPT_DIR/run_module.sh "configuration.get_packages_in_list" "$PACLIST")
 
-# check if there are explicitely installed packages that are not a matched package or in list
+# check if there are explicitly installed packages that are not a matched package or in list
 (IFS=$'\n'
 for packageandversion in $explicits; do
     if ! is_package_in_list "$packages_in_paclist" "$packageandversion"; then
-        print_colored "CYAN" "INSTALLED BUT NOT IN PACKAGE LIST: $packageandversion"
+        print_colored "CYAN" "INSTALLED BUT NOT IN PACKAGE LIST: $(get_packageversion_human_format "$packageandversion")"
     elif ! is_package_in_list "$matches" "$packageandversion"; then
-        print_colored "BLUE" "INSTALLED, IN PACKAGE LIST BUT NOT IN CONFIG: $packageandversion"
+        print_colored "BLUE" "INSTALLED, IN PACKAGE LIST BUT NOT IN CONFIG: $(get_packageversion_human_format "$packageandversion")"
     fi
 done)

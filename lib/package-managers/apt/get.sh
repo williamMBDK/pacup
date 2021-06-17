@@ -5,5 +5,5 @@ for package in ${packages[@]}; do
 	regex="Version: (.*)"
 	[[ $s =~  $regex ]]
 	version=${BASH_REMATCH[1]}
-	echo "p:$package, v:$version"
+	echo "$package $version"
 done

@@ -77,7 +77,9 @@ function get_packages {
     if $SCRIPT_DIR/package-managers/$1/exists.sh; then
         if test $COUNT -eq 0; then
             [ $QUIET == 0 ] && print_success "EXPLICITLY INSTALLED PACKAGES FOR ${1^^}"
-            $SCRIPT_DIR/package-managers/$1/get.sh
+            IFS=$'\n'
+            packages=($($SCRIPT_DIR/package-managers/$1/get.sh))
+            get_packageversion_human_format "${packages[@]}"
         else
             count=$($SCRIPT_DIR/package-managers/$1/get.sh | wc -l)
             [ $QUIET == 0 ] && print_success "NUMBER OF EXPLICITLY INSTALLED PACKAGES FOR ${1^^} IS $count"

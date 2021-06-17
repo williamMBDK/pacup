@@ -71,10 +71,10 @@ for packageandversion in $explicits; do
             get_packageversion_name "$packageandversion"
         fi)
         if [ $INTERACTIVE = 1 ]; then
-            if lazy_confirm "Do you wish to add the following package to the package list: $package"; then
+            if lazy_confirm "Do you wish to add the following package to the package list: $(get_packageversion_human_format $package)"; then
                 packages_to_add+=($package)
             else
-                [ $QUIET = 0 ] && print_needed_info "Skipping $package"
+                [ $QUIET = 0 ] && print_needed_info "Skipping $(get_packageversion_human_format $package)"
             fi
         else
             packages_to_add+=($package)
@@ -86,7 +86,7 @@ done
 
 if [[ $QUIET == 0 && $INTERACTIVE == 0 ]]; then
     print_needed_info "Packages installed but not in package list ($OUTPUT)"
-    printf "%s\n" "${packages_to_add[@]}"
+    get_packageversion_human_format "${packages_to_add[@]}"
     { lazy_confirm "Do you wish to add the above packages?" || { print_needed_info "Okay. skipping..." && exit 0; }; }
 fi
 

@@ -59,23 +59,23 @@ get_matches_and_handle_errors $CONFIG $PACLIST # set $matches
 (IFS=$'\n'
 for packageandversion in $matches; do
     if ! $SCRIPT_DIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
-        if ! lazy_confirm "Do you wish to install $packageandversion using $PACMANAGER?"; then
-            [ $QUIET = 0 ] && print_additional_info "Skipping $packageandversion"
+        if ! lazy_confirm "Do you wish to install $(get_packageversion_human_format "$packageandversion") using $PACMANAGER?"; then
+            [ $QUIET = 0 ] && print_additional_info "Skipping $(get_packageversion_human_format "$packageandversion")"
             continue
         fi
-        [ $QUIET = 0 ] && print_needed_info "Beginning installation of $packageandversion using $PACMANAGER"
+        [ $QUIET = 0 ] && print_needed_info "Beginning installation of $(get_packageversion_human_format "$packageandversion") using $PACMANAGER"
         [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
         exit_code=0
         if [ $TEST = 0 ]; then
-            $SCRIPT_DIR/package-managers/$PACMANAGER/install.sh $packageandversion
+            $SCRIPT_DIR/package-managers/$PACMANAGER/install.sh $(get_packageversion_name $packageandversion) $(get_packageversion_version $packageandversion) # why cant i just give $packageandversion as argument?
             exit_code=$?
         fi
         [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
-        [ $QUIET = 0 ] && [ $exit_code = 0 ] && print_success "Installed $packageandversion using $PACMANAGER"
-        [ $exit_code != 0 ] && print_error "Something went wrong during installation of $packageandversion using $PACMANAGER"
+        [ $QUIET = 0 ] && [ $exit_code = 0 ] && print_success "Installed $(get_packageversion_human_format "$packageandversion") using $PACMANAGER"
+        [ $exit_code != 0 ] && print_error "Something went wrong during installation of $(get_packageversion_human_format "$packageandversion") using $PACMANAGER"
     else
         if test $QUIET -eq 0; then
-            print_additional_info "Skipping $packageandversion"
+            print_additional_info "Skipping $(get_packageversion_human_format "$packageandversion")"
         fi
     fi
 done)
