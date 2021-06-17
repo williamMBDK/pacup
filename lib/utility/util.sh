@@ -95,49 +95,34 @@ function does_package_manager_exist {
     $ROOTDIR/package-managers/$1/exists.sh
 }
 function process_package_manager_arguments {
-    # package managers
-    ALL=0
+    # declare package managers
     for package_manager in $(get_package_managers); do
         declare -g "${package_manager^^}=0"
     done
     # get package managers
-    while :; do
-        case $1 in
-            ([Aa][Ll][Ll])
-                ALL=1
-                for package_manager in $(get_package_managers); do
-                    declare -g "${package_manager^^}=1"
-                done
-                ;;
-            ([Aa][Pp][Tt])
-                APT=1
-                ;;
-            ([Nn][Pp][Mm])
-                NPM=1
-                ;;
-            ([Pp][Aa][Cc][Mm][Aa][Nn])
-                PACMAN=1
-                ;;
-            ([Pp][Ii][Pp])
-                PIP=1
-                ;;
-            ([Yy][Aa][Rr][Nn])
-                YARN=1
-                ;;
-            ([Yy][Aa][Yy])
-                YAY=1
-                ;;
-            "")
-                break
-                ;;
-            *)
-                wrong_package_manager $1
-                ;;
-        esac
-        shift
+    for arg in "$@"; do
+        should_continue=0
+        for package_manager in $(get_package_managers); do
+            if [ "${package_manager^^}" = "${arg^^}" ]; then
+                declare -g "${package_manager^^}=1"
+                should_continue=1
+            fi
+        done
+        if [ "ALL" = "${arg^^}" ]; then
+            for package_manager in $(get_package_managers); do
+                declare -g "${package_manager^^}=1"
+            done
+            should_continue=1
+        fi
+        if [ $should_continue = 1 ]; then
+            continue
+        fi
+        wrong_package_manager "$arg"
     done
+    # check that chosen package managers are installed
     for package_manager in $(get_package_managers); do
-        if ! does_package_manager_exist "$package_manager"; then 
+        varname=${package_manager^^}
+        if [ ${!varname} = 1 ] && ! does_package_manager_exist "$package_manager"; then 
             declare -g "${package_manager^^}=0"
             print_warning "$package_manager is not installed (ignored)"
         fi
