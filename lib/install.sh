@@ -13,7 +13,7 @@ PACMANAGER=0
 TEST=0
 
 # get arguments
-PARSED_ARGUMENTS=$(getopt -n pacback-install -o c:l:p:qt --long configuration:,package-list:,package-manager:,quiet,test -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacup-install -o c:l:p:qt --long configuration:,package-list:,package-manager:,quiet,test -- "$@")
 eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in

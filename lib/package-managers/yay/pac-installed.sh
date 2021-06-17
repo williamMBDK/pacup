@@ -2,7 +2,7 @@ SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
 
 pac=$1
 version=$2
-cachedir="$HOME/.cache/pacback/yay"
+cachedir="$HOME/.cache/pacup/yay"
 
 mkdir -p $cachedir
 

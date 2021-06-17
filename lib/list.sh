@@ -19,7 +19,7 @@ VERBOSE=0
 COUNT=0
 
 # get arguments
-PARSED_ARGUMENTS=$(getopt -n pacback-install -o qvc --long quiet,verbose,count -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacup-list -o qvc --long quiet,verbose,count -- "$@")
 eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in

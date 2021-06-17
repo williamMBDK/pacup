@@ -7,22 +7,22 @@ SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 # fundamental printf's
 function print_warning {
-    printf "${YELLOW}PACBACK WARNING: %s\n${NOCOLOR}" "$1" >&2
+    printf "${YELLOW}PACUP WARNING: %s\n${NOCOLOR}" "$1" >&2
 }
 function print_error {
-    printf "${RED}PACBACK ERROR: %s\n${NOCOLOR}" "$1" >&2
+    printf "${RED}PACUP ERROR: %s\n${NOCOLOR}" "$1" >&2
 }
 function print_additional_info {
-    printf "${CYAN}PACBACK INFO: %s\n${NOCOLOR}" "$1"
+    printf "${CYAN}PACUP INFO: %s\n${NOCOLOR}" "$1"
 }
 function print_success {
-    printf "${GREEN}PACBACK: %s\n${NOCOLOR}" "$1"
+    printf "${GREEN}PACUP: %s\n${NOCOLOR}" "$1"
 }
 function print_needed_info {
-    printf "PACBACK: %s\n" "$1"
+    printf "PACUP: %s\n" "$1"
 }
 function print_needed_info_no_newline {
-    printf "PACBACK: %s" "$1"
+    printf "PACUP: %s" "$1"
 }
 function print_colored {
     printf "${!1}%s\n${NOCOLOR}" "$2"
@@ -61,13 +61,13 @@ function lazy_confirm {
 
 # help
 function show_help {
-    if (ls $SCRIPT_DIR/../man/pacback.1 >> /dev/null 2>&1) || (ls $SCRIPT_DIR/../man/pacback.txt >> /dev/null 2>&1); then
+    if ! ls $SCRIPT_DIR/../man/pacup.1 >> /dev/null 2>&1 || ! ls $SCRIPT_DIR/../man/pacup.txt >> /dev/null 2>&1; then
         $SCRIPT_DIR/../man/makeman.sh
     fi
     if command -v man > /dev/null; then
-        man $SCRIPT_DIR/../man/pacback.1
+        man $SCRIPT_DIR/../man/pacup.1
     else
-        cat $SCRIPT_DIR/../man/pacback.txt
+        cat $SCRIPT_DIR/../man/pacup.txt
     fi
 }
 

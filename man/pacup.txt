@@ -1,4 +1,4 @@
-pacup(1)                                               User Commands                                               pacup(1)
+pacup(1)                                                    User Commands                                                    pacup(1)
 
 NAME
        pacup - Backup and install packages
@@ -17,8 +17,8 @@ SYNOPSIS
        pacup status [options]
 
 DESCRIPTION
-       pacup can backup lists of explicitely installed packages for different package managers. Moreover it can install a
-       selected subset of the a list of packages.
+       pacup can backup lists of explicitely installed packages for different package managers. Moreover it can install a selected
+       subset of the a list of packages.
 
 OPTIONS
        -h, -?, --help
@@ -57,4 +57,4 @@ BUGS
 AUTHOR
        Developed by William Bille Meyling
 
-1.0                                                      2021-06-16                                                pacup(1)
+1.0                                                           2021-06-17                                                     pacup(1)

@@ -11,7 +11,7 @@ PACLIST=0
 PACMANAGER=0
 
 # get arguments
-PARSED_ARGUMENTS=$(getopt -n pacback-install -o c:l:p: --long configuration:,package-list:,package-manager: -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacup-status -o c:l:p: --long configuration:,package-list:,package-manager: -- "$@")
 eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in

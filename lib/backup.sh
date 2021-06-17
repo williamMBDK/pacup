@@ -14,7 +14,7 @@ WITH_VERSION=0
 INTERACTIVE=0
 
 # get arguments
-PARSED_ARGUMENTS=$(getopt -n pacback-backup -o p:l:o:qvi -l package-manager:,package-list:,output:,quiet,with-version,interactive -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacup-backup -o p:l:o:qvi -l package-manager:,package-list:,output:,quiet,with-version,interactive -- "$@")
 eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in
