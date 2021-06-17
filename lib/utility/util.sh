@@ -81,6 +81,7 @@ function get_package_manager_pattern {
     get_package_managers | sed 's/ /|/g'
 }
 function is_valid_package_manager {
+    PACMANAGER=$1
     valid_package_manager=1
     for package_manager in $(get_package_managers); do
         if [ "$package_manager" = $PACMANAGER ]; then
