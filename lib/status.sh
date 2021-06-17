@@ -59,6 +59,8 @@ function format_packageversion {
     fi
 }
 
+print_needed_info "STATUS OF PACKAGES"
+
 # check if matching packages are installed
 (IFS=$'\n'
 for packageandversion in $matches; do
