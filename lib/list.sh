@@ -1,8 +1,8 @@
 #!/bin/sh
 
-SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
-source $SCRIPT_DIR/utility/util.sh
-SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))"
+source $ROOTDIR/utility/util.sh
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))"
 
 # package managers
 ALL=0
@@ -78,14 +78,14 @@ while :; do
 done
 
 function get_packages {
-    if $SCRIPT_DIR/package-managers/$1/exists.sh; then
+    if $ROOTDIR/package-managers/$1/exists.sh; then
         if test $COUNT -eq 0; then
             [ $QUIET == 0 ] && print_success "EXPLICITLY INSTALLED PACKAGES FOR ${1^^}"
-            IFS=$'\n' packages=($($SCRIPT_DIR/package-managers/$1/get.sh))
+            IFS=$'\n' packages=($($ROOTDIR/package-managers/$1/get.sh))
             [ $WITH_VERSION = 0 ] && get_packageversion_human_format_name "${packages[@]}"
             [ $WITH_VERSION = 1 ] && get_packageversion_human_format "${packages[@]}"
         else
-            count=$($SCRIPT_DIR/package-managers/$1/get.sh | wc -l)
+            count=$($ROOTDIR/package-managers/$1/get.sh | wc -l)
             [ $QUIET == 0 ] && print_success "NUMBER OF EXPLICITLY INSTALLED PACKAGES FOR ${1^^} IS $count"
         fi
     elif test $VERBOSE -eq 1; then

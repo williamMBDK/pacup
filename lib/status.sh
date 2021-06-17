@@ -1,9 +1,11 @@
 #!/bin/sh
 
 # imports
-SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
-source $SCRIPT_DIR/utility/util.sh
-SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))"
+source $ROOTDIR/utility/util.sh
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))"
+source $ROOTDIR/utility/config.sh
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))"
 
 # option variables
 CONFIG=0
@@ -59,18 +61,36 @@ function format_packageversion {
     fi
 }
 
+print_needed_info "STATUS OF USER CONFIGURATION"
+print_colored "GREEN" "USER LISTS DIRECTORY: $PACUP_LISTS_DIR"
+print_colored "GREEN" "USER CONFIGS DIRECTORY: $PACUP_CONFIGS_DIR"
+
+echo
+
+print_needed_info "STATUS OF SUPPORTED PACKAGE MANAGERS"
+
+for package_manager in $(get_package_managers); do
+    if does_package_manager_exist "$package_manager"; then 
+        print_colored "GREEN" "$package_manager is installed"
+    else
+        print_colored "CYAN" "$package_manager is not installed"
+    fi
+done
+
+echo
+
 print_needed_info "STATUS OF PACKAGES"
 
 # check if matching packages are installed
 (IFS=$'\n'
 for packageandversion in $matches; do
-    if ! $SCRIPT_DIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
+    if ! $ROOTDIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
         print_colored "YELLOW" "NOT INSTALLED OR UP-TO-DATE: $(get_packageversion_human_format "$packageandversion")" # version is not optional here since version is part of the config
     fi
 done)
 
-explicits=$($SCRIPT_DIR/package-managers/$PACMANAGER/get.sh)
-packages_in_paclist=$($SCRIPT_DIR/run_module.sh "configuration.get_packages_in_list" "$PACLIST")
+explicits=$($ROOTDIR/package-managers/$PACMANAGER/get.sh)
+packages_in_paclist=$($ROOTDIR/run_module.sh "configuration.get_packages_in_list" "$PACLIST")
 
 # check if there are explicitly installed packages that are not a matched package or in list
 (IFS=$'\n'

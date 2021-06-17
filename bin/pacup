@@ -1,15 +1,15 @@
 #!/bin/sh
 
-SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
-source $SCRIPT_DIR/../lib/utility/util.sh
-SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/../lib"
+source $ROOTDIR/utility/util.sh
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/../lib"
 
 SUBCMD=$1
 
 case $SUBCMD in
     backup)
         shift
-        $SCRIPT_DIR/../lib/backup.sh "$@"
+        $ROOTDIR/backup.sh "$@"
         exit
         ;;
     clear-cache)
@@ -18,22 +18,22 @@ case $SUBCMD in
         ;;
     config-match)
         shift
-        $SCRIPT_DIR/../lib/config_match.sh "$@"
+        $ROOTDIR/config_match.sh "$@"
         exit
         ;;
     install)
         shift
-        $SCRIPT_DIR/../lib/install.sh "$@"
+        $ROOTDIR/install.sh "$@"
         exit
         ;;
     list)
         shift
-        $SCRIPT_DIR/../lib/list.sh "$@"
+        $ROOTDIR/list.sh "$@"
         exit
         ;;
     status)
         shift
-        $SCRIPT_DIR/../lib/status.sh "$@"
+        $ROOTDIR/status.sh "$@"
         exit
         ;;
     -h|-\?|--help)

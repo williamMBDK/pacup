@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # imports
-SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
-source $SCRIPT_DIR/utility/util.sh
-SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))"
+source $ROOTDIR/utility/util.sh
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))"
 
 # option variables
 QUIET=0
@@ -58,7 +58,7 @@ get_matches_and_handle_errors $CONFIG $PACLIST # set $matches
 # install matching packages
 (IFS=$'\n'
 for packageandversion in $matches; do
-    if ! $SCRIPT_DIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
+    if ! $ROOTDIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
         if ! lazy_confirm "Do you wish to install $(get_packageversion_human_format "$packageandversion") using $PACMANAGER?"; then
             [ $QUIET = 0 ] && print_additional_info "Skipping $(get_packageversion_human_format "$packageandversion")"
             continue
@@ -67,7 +67,7 @@ for packageandversion in $matches; do
         [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
         exit_code=0
         if [ $TEST = 0 ]; then
-            $SCRIPT_DIR/package-managers/$PACMANAGER/install.sh $(get_packageversion_name $packageandversion) $(get_packageversion_version $packageandversion) # why cant i just give $packageandversion as argument?
+            $ROOTDIR/package-managers/$PACMANAGER/install.sh $(get_packageversion_name $packageandversion) $(get_packageversion_version $packageandversion) # why cant i just give $packageandversion as argument?
             exit_code=$?
         fi
         [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='

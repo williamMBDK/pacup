@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # imports
-SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
-source $SCRIPT_DIR/color.sh
-SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/.."
+source $ROOTDIR/utility/color.sh
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/.."
 
 # fundamental printf's
 function print_warning {
@@ -61,19 +61,19 @@ function lazy_confirm {
 
 # help
 function show_help {
-    if ! ls $SCRIPT_DIR/../man/pacup.1 >> /dev/null 2>&1 || ! ls $SCRIPT_DIR/../man/pacup.txt >> /dev/null 2>&1; then
-        $SCRIPT_DIR/../man/makeman.sh
+    if ! ls $ROOTDIR/../man/pacup.1 >> /dev/null 2>&1 || ! ls $ROOTDIR/../man/pacup.txt >> /dev/null 2>&1; then
+        $ROOTDIR/../man/makeman.sh
     fi
     if command -v man > /dev/null; then
-        man $SCRIPT_DIR/../man/pacup.1
+        man $ROOTDIR/../man/pacup.1
     else
-        cat $SCRIPT_DIR/../man/pacup.txt
+        cat $ROOTDIR/../man/pacup.txt
     fi
 }
 
 # package managers
 function get_package_managers {
-    ls -d $SCRIPT_DIR/package-managers/*/ | while read folder ; do
+    ls -d $ROOTDIR/package-managers/*/ | while read folder ; do
         echo -n "$(basename $folder) "
     done
 }
@@ -89,12 +89,16 @@ function is_valid_package_manager {
     done
     return $valid_package_manager
 }
+# assumes $1 is a valid package manager
+function does_package_manager_exist {
+    $ROOTDIR/package-managers/$1/exists.sh
+}
 
 # other
 function get_matches_and_handle_errors {
     CONFIG=$1
     PACLIST=$2
-    matches=$($SCRIPT_DIR/run_module.sh "configuration.config_match" "$CONFIG" "$PACLIST")
+    matches=$($ROOTDIR/run_module.sh "configuration.config_match" "$CONFIG" "$PACLIST")
     exit_code=$?
 
     # handle error during matching
