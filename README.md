@@ -76,3 +76,4 @@ I especially need advice and help on testing the shell code, which I think will 
 - pacback status default all
 - name: pacup* or packup??
 - script for each packagemanager that prints what features are available
+- format package@version for user
