@@ -17,20 +17,24 @@ YAY=0
 QUIET=0
 VERBOSE=0
 COUNT=0
+WITH_VERSION=0
 
 # get arguments
-PARSED_ARGUMENTS=$(getopt -n pacup-list -o qvc --long quiet,verbose,count -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacup-list -o qVcv --long quiet,verbose,count,with-version -- "$@")
 eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in
         -q|--quiet)
             QUIET=1
             ;;
-        -v|--verbose)
+        -V|--verbose)
             VERBOSE=1
             ;;
         -c|--count)
             COUNT=1
+            ;;
+        -v|--with-version)
+            WITH_VERSION=1
             ;;
         --)
             shift
@@ -77,9 +81,9 @@ function get_packages {
     if $SCRIPT_DIR/package-managers/$1/exists.sh; then
         if test $COUNT -eq 0; then
             [ $QUIET == 0 ] && print_success "EXPLICITLY INSTALLED PACKAGES FOR ${1^^}"
-            IFS=$'\n'
-            packages=($($SCRIPT_DIR/package-managers/$1/get.sh))
-            get_packageversion_human_format "${packages[@]}"
+            IFS=$'\n' packages=($($SCRIPT_DIR/package-managers/$1/get.sh))
+            [ $WITH_VERSION = 0 ] && get_packageversion_human_format_name "${packages[@]}"
+            [ $WITH_VERSION = 1 ] && get_packageversion_human_format "${packages[@]}"
         else
             count=$($SCRIPT_DIR/package-managers/$1/get.sh | wc -l)
             [ $QUIET == 0 ] && print_success "NUMBER OF EXPLICITLY INSTALLED PACKAGES FOR ${1^^} IS $count"

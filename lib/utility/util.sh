@@ -139,6 +139,14 @@ function is_package_in_list {
     fi
     return 0
 }
+function get_packageversion_human_format_name {
+    while :; do
+        [ "$1" = "" ] && break
+        name=$(get_packageversion_name $1)
+        printf "$name\n"
+        shift
+    done
+}
 function get_packageversion_human_format {
     while :; do
         [ "$1" = "" ] && break

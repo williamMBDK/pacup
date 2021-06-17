@@ -76,6 +76,7 @@ I especially need advice and help on testing the shell code, which I think will 
 - PacUp status default all
 - name: pacup* or packup??
 - script for each packagemanager that prints what features are available
-- format package@version for user
 - what if a newer version of a match is installed and we try to install the match?
 - version optional in list script, and status script
+- is $IFS handled correctly everywhere?
+- many different package managers in backup, status and so on
