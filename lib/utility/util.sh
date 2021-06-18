@@ -94,6 +94,12 @@ function is_valid_package_manager {
 function does_package_manager_exist {
     $ROOTDIR/package-managers/$1/exists.sh
 }
+function does_package_manager_have_config {
+    [[ -e $(get_config_for_package_manager "$1") ]]
+}
+function does_package_manager_have_list {
+    [[ -e $(get_list_for_package_manager "$1") ]]
+}
 # if $QUIET = 1 it will not print warnings
 # set all global $PM where PM is a package manager
 function process_package_manager_arguments {

@@ -62,10 +62,16 @@ function status_of_user_configuration {
 function status_of_package_managers {
     print_needed_info "STATUS OF SUPPORTED PACKAGE MANAGERS"
     for package_manager in $(get_package_managers); do
-        if does_package_manager_exist "$package_manager"; then 
-            print_colored "GREEN" "$package_manager is installed"
-        else
+        if ! does_package_manager_exist "$package_manager"; then 
             print_colored "CYAN" "$package_manager is not installed"
+        elif ! does_package_manager_have_config "$package_manager" && ! does_package_manager_have_list "$package_manager"; then
+            print_colored "CYAN" "$package_manager is installed"
+        elif ! does_package_manager_have_config "$package_manager"; then
+            print_colored "YELLOW" "$package_manager is installed and has a package list, but not a config"
+        elif ! does_package_manager_have_list "$package_manager"; then
+            print_colored "YELLOW" "$package_manager is installed and has a config, but not a package list"
+        else
+            print_colored "GREEN" "$package_manager is installed, has a package list and a config"
         fi
     done
 }
