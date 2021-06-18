@@ -1,0 +1,35 @@
+#!/bin/sh
+
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/../lib"
+source $ROOTDIR/utility/util.sh
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/../lib"
+
+subcommands=(
+    backup
+    clear-cache
+    config-match
+    generate_config
+    install
+    list
+    status
+    -h
+)
+package_managers=($(get_package_managers))
+
+function _pacup_completion {
+    # COMPREPLY=()
+    # local subcommands=(
+    #     "backup"
+    #     "clear-cache"
+    #     "config-match"
+    #     "generate_config"
+    #     "install"
+    #     "list"
+    #     "status"
+    #     "-h"
+    # )
+    # COMPREPLY=("${subcommands[@]}")
+    gen_completions 
+}
+
+complete -F _pacup_completion pacup
