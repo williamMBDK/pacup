@@ -5,10 +5,18 @@ version=$2
 
 cachedir="$HOME/.cache/pacup/pip"
 
+mkdir -p $cachedir
+
+if [[ $(find "$cachedir/pipget.out" -newermt '-6 seconds' 2>/dev/null) == "" ]]; then
+    $SCRIPT_DIR/get.sh > $cachedir/pipget.out
+fi
+
 if [ "$#" -eq 1 ]; then
-    # can be optimized with cache files
-    pip list --user -o --not-required 2> /dev/null | grep "^$package " > /dev/null && exit 1
-    $SCRIPT_DIR/get.sh | grep "^$package " > /dev/null
+    if [[ $(find "$cachedir/pipupdate.out" -newermt '-6 seconds' 2>/dev/null) == "" ]]; then
+        pip list --user -o --not-required 2> /dev/null > $cachedir/pipupdate.out
+    fi
+    cat $cachedir/pipupdate.out | grep "^$package " > /dev/null && exit 1
+    cat $cachedir/pipget.out | grep "^$package " > /dev/null
 else
-    $SCRIPT_DIR/get.sh | grep "^$package $version$" > /dev/null
+    cat $cachedir/pipget.out | grep "^$package $version$" > /dev/null
 fi

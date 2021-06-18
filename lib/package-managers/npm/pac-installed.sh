@@ -5,14 +5,18 @@ version=$2
 
 cachedir="$HOME/.cache/pacup/npm"
 
-dir=$(yarn global dir)
+mkdir -p $cachedir
 
-cd $dir
+if [[ $(find "$cachedir/get.out" -newermt '-6 seconds' 2>/dev/null) == "" ]]; then
+    $SCRIPT_DIR/get.sh > $cachedir/get.out
+fi
 
 if [ "$#" -eq 1 ]; then
-    # can be optimized with cache files
-    npm outdated -g | tail -n +2 | grep $package > /dev/null && exit 1
-    $SCRIPT_DIR/get.sh | grep "^$package " > /dev/null
+    if [[ $(find "$cachedir/update.out" -newermt '-6 seconds' 2>/dev/null) == "" ]]; then
+        npm outdated -g 2> /dev/null | tail -n +2 > $cachedir/update.out
+    fi
+    cat $cachedir/update.out | grep $package > /dev/null && exit 1
+    cat $cachedir/get.out | grep "^$package " > /dev/null
 else
-    $SCRIPT_DIR/get.sh | grep "^$package $version$" > /dev/null
+    cat $cachedir/get.out | grep "^$package $version$" > /dev/null
 fi
