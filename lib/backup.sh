@@ -6,7 +6,6 @@ source $ROOTDIR/utility/util.sh
 ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))"
 
 # option variables
-PACMANAGER=0
 PACLIST=0
 QUIET=0
 OUTPUT=0
@@ -15,17 +14,12 @@ INTERACTIVE=0
 YES=0
 
 # get arguments
-PARSED_ARGUMENTS=$(getopt -n pacup-backup -o p:l:o:qviy -l package-manager:,package-list:,output:,quiet,with-version,interactive,yes -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacup-backup -o l:o:qviy -l package-list:,output:,quiet,with-version,interactive,yes -- "$@")
 eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in
-        -p | --package-manager)
-            PACMANAGER=$2
-            shift 2
-            ;;
         -l | --package-list)
             PACLIST=$2
-            [ $OUTPUT = 0 ] && OUTPUT=$PACLIST
             shift 2
             ;;
         -o | --output)
@@ -55,48 +49,79 @@ while :; do
     esac
 done
 
-# missing options check
-exit_on_missing_option "$PACMANAGER" "-p | --package-manager"
-exit_on_missing_option "$PACLIST" "-l | --package-list"
+# get package managers
+! PACUP_SHOULD_FILTER=1 process_package_manager_arguments $@ && [ $QUIET != 1 ] && [[ $(get_number_of_package_managers_provided) > 0 ]] && echo
 
-# check that a valid package manager were given
-exit_on_invalid_package_manager "$PACMANAGER"
+function perform_backup {
 
-explicits=$($ROOTDIR/package-managers/$PACMANAGER/get.sh)
-packages_in_paclist=$($ROOTDIR/run_module.sh "configuration.get_packages_in_list" "$PACLIST")
+    local PACMANAGER=$1
+    local PACLIST=$2
+    local OUTPUT=$3
 
-# slow for loop!
-packages_to_add=()
-IFS=$'\n'
-for packageandversion in $explicits; do
-    if ! is_package_in_list "$packages_in_paclist" "$packageandversion" ; then
-        package=$(if [ $WITH_VERSION = 1 ]; then
-            printf "$packageandversion"
-        else
-            get_packageversion_name "$packageandversion"
-        fi)
-        if [ $INTERACTIVE = 1 ]; then
-            if lazy_confirm "Do you wish to add the following package to the package list: $(get_packageversion_human_format $package)"; then
-                packages_to_add+=($package)
+    [ $QUIET = 0 ] && print_needed_info "BACKUP OF PACKAGES FROM ${PACMANAGER^^}"
+
+    explicits=$($ROOTDIR/package-managers/$PACMANAGER/get.sh)
+    packages_in_paclist=$($ROOTDIR/run_module.sh "configuration.get_packages_in_list" "$PACLIST")
+
+    # slow for loop!
+    local packages_to_add=()
+    IFS=$'\n'
+    for packageandversion in $explicits; do
+        if ! is_package_in_list "$packages_in_paclist" "$packageandversion" ; then
+            package=$(if [ $WITH_VERSION = 1 ]; then
+                printf "$packageandversion"
             else
-                [ $QUIET = 0 ] && print_needed_info "Skipping $(get_packageversion_human_format $package)"
+                get_packageversion_name "$packageandversion"
+            fi)
+            if [ $INTERACTIVE = 1 ]; then
+                if lazy_confirm "Do you wish to add the following package to the package list: $(get_packageversion_human_format $package)"; then
+                    packages_to_add+=($package)
+                else
+                    [ $QUIET = 0 ] && print_needed_info "Skipping $(get_packageversion_human_format $package)"
+                fi
+            else
+                packages_to_add+=($package)
             fi
-        else
-            packages_to_add+=($package)
         fi
+    done
+
+    [ ${#packages_to_add[@]} = 0 ] && { [ $QUIET = 0 ] && print_warning "Nothing to backup for $PACMANAGER."; } && return 0
+
+    if [[ $QUIET == 0 && $INTERACTIVE == 0 ]]; then
+        print_needed_info "Packages installed but not in package list ($OUTPUT)"
+        print_colored "GREEN" "$(get_packageversion_human_format "${packages_to_add[@]}")"
+        { { [ $YES = 1 ] || lazy_confirm "Do you wish to add the above packages?"; } || { print_needed_info "Okay. skipping..." && return 0; }; }
     fi
-done
 
-[ ${#packages_to_add[@]} = 0 ] && { [ $QUIET = 0 ] && print_warning "Nothing to backup. Exiting..."; } && exit 0
+    printf "%s\n" "${packages_to_add[@]}" | $ROOTDIR/run_module.sh "configuration.append_to_package_list" "$PACLIST" "$OUTPUT"
+    [ $QUIET = 0 ] && print_success "Added packages to package-list ($OUTPUT)"
+}
 
-if [[ $QUIET == 0 && $INTERACTIVE == 0 ]]; then
-    print_needed_info "Packages installed but not in package list ($OUTPUT)"
-    get_packageversion_human_format "${packages_to_add[@]}"
-    { { [ $YES = 1 ] || lazy_confirm "Do you wish to add the above packages?"; } || { print_needed_info "Okay. skipping..." && exit 0; }; }
+[ $(get_number_of_package_managers_provided) = "0" ] && exit 0
+
+if [ $(get_number_of_package_managers_provided) = "1" ]; then
+    package_manager=$(get_single_set_package_manager)
+    if [ $PACLIST = 0 ]; then
+        PACLIST=$(get_list_for_package_manager $package_manager)
+    fi
+    if [ $OUTPUT = 0 ]; then
+        OUTPUT=$PACLIST
+    fi
+    perform_backup "$package_manager" "$PACLIST" "$OUTPUT"
+else
+    [ $PACLIST != 0 ] && print_warning "Ignoring -l | --package-list since multiple package managers were given"
+    [ $OUTPUT != 0 ] && print_warning "Ignoring -o | --output since multiple package managers were given"
+    should_print_newline=0
+    for package_manager in $(get_package_managers); do
+        varname=${package_manager^^}
+        if [ ${!varname} = 1 ]; then 
+            PACLIST="$(get_list_for_package_manager $package_manager)"
+            OUTPUT=$PACLIST
+            [ $should_print_newline = 1 ] && echo
+            perform_backup "$package_manager" "$PACLIST" "$OUTPUT"
+            should_print_newline=1
+        fi
+    done
 fi
 
-printf "%s\n" "${packages_to_add[@]}" | $ROOTDIR/run_module.sh "configuration.append_to_package_list" "$PACLIST" "$OUTPUT"
-[ $QUIET = 0 ] && print_success "Added packages to package-list ($OUTPUT)"
-
 exit 0
-

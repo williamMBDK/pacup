@@ -4,6 +4,8 @@
 ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/.."
 source $ROOTDIR/utility/color.sh
 ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/.."
+source $ROOTDIR/utility/config.sh
+ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/.."
 
 # fundamental printf's
 function print_warning {
@@ -169,6 +171,16 @@ function get_number_of_package_managers_provided {
     done
     printf "$seen"
 }
+function get_single_set_package_manager {
+    local package_manager
+    for pm in $(get_package_managers); do
+        local varname=${pm^^}
+        if [ ${!varname} = 1 ]; then 
+            package_manager=$pm
+        fi
+    done
+    printf "$package_manager"
+}
 
 # other
 function get_matches_and_handle_errors {
@@ -191,9 +203,9 @@ function exit_on_invalid_package_manager {
     fi
 }
 function exit_on_missing_option {
-    OPTION_VALUE=$1
-    OPTION_DESC=$2
-    if [ $OPTION_VALUE = 0 ]; then
+    local OPTION_VALUE=$1
+    local OPTION_DESC=$2
+    if [ "$OPTION_VALUE" = 0 ]; then
         err_missing_option "$OPTION_DESC"
         exit 1
     fi
