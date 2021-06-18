@@ -80,3 +80,5 @@ I especially need advice and help on testing the shell code, which I think will 
 - many different package managers in backup, status and so on
 - use local
 - make global variables used in other functions, ex. QUIET be prefixed by PACUP
+- yes option for install
+- make all not include stuff that does not have config/lists I think
