@@ -1,6 +1,6 @@
 #!/bin/sh
 
-dir=$(yarn global dir)
+dir=$(yarn global dir 2> /dev/null)
 packages="$(jq -r '.dependencies | keys[]' $dir/package.json)"
 
 IFS=$'\n'
