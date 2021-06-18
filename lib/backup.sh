@@ -12,9 +12,10 @@ QUIET=0
 OUTPUT=0
 WITH_VERSION=0
 INTERACTIVE=0
+YES=0
 
 # get arguments
-PARSED_ARGUMENTS=$(getopt -n pacup-backup -o p:l:o:qvi -l package-manager:,package-list:,output:,quiet,with-version,interactive -- "$@")
+PARSED_ARGUMENTS=$(getopt -n pacup-backup -o p:l:o:qviy -l package-manager:,package-list:,output:,quiet,with-version,interactive,yes -- "$@")
 eval set -- "$PARSED_ARGUMENTS"
 while :; do
     case $1 in
@@ -41,6 +42,10 @@ while :; do
             ;;
         -i | --interactive)
             INTERACTIVE=1
+            shift
+            ;;
+        -y | --yes)
+            YES=1
             shift
             ;;
         --)
@@ -87,7 +92,7 @@ done
 if [[ $QUIET == 0 && $INTERACTIVE == 0 ]]; then
     print_needed_info "Packages installed but not in package list ($OUTPUT)"
     get_packageversion_human_format "${packages_to_add[@]}"
-    { lazy_confirm "Do you wish to add the above packages?" || { print_needed_info "Okay. skipping..." && exit 0; }; }
+    { { [ $YES = 1 ] || lazy_confirm "Do you wish to add the above packages?"; } || { print_needed_info "Okay. skipping..." && exit 0; }; }
 fi
 
 printf "%s\n" "${packages_to_add[@]}" | $ROOTDIR/run_module.sh "configuration.append_to_package_list" "$PACLIST" "$OUTPUT"

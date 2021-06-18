@@ -21,6 +21,11 @@ case $SUBCMD in
         $ROOTDIR/config_match.sh "$@"
         exit
         ;;
+    generate-config)
+        shift
+        $ROOTDIR/generate-config.sh "$@"
+        exit
+        ;;
     install)
         shift
         $ROOTDIR/install.sh "$@"
