@@ -42,7 +42,7 @@ while :; do
 done
 
 # get package managers
-process_package_manager_arguments $@
+! PACUP_SHOULD_FILTER=1 process_package_manager_arguments $@ && [ $QUIET != 1 ] && echo
 
 function format_packageversion {
     packageversion="$1"

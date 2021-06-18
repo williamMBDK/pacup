@@ -79,3 +79,4 @@ I especially need advice and help on testing the shell code, which I think will 
 - is $IFS handled correctly everywhere?
 - many different package managers in backup, status and so on
 - use local
+- make global variables used in other functions, ex. QUIET be prefixed by PACUP
