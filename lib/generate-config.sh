@@ -60,8 +60,8 @@ if ! [[ -d $configs_dir ]]; then
         varname=${package_manager^^}
         if [ ${!varname} = 1 ]; then
             print_needed_info "Generating config file for $package_manager: $configs_dir/$package_manager.conf"
-            printf all > $configs_dir/$package_manager.conf
-            print_success "Created file: printf all > $configs_dir/$package_manager.conf"
+            printf "+ all" > $configs_dir/$package_manager.conf
+            print_success "Created file: printf \"+ all\" > $configs_dir/$package_manager.conf"
         fi
     done
 else

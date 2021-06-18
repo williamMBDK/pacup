@@ -19,9 +19,9 @@ function get_configs_dir {
 }
 
 function get_list_for_package_manager {
-    printf "$(get_lists_dir)/$1"
+    printf "$(get_lists_dir)/$1.list"
 }
 
 function get_config_for_package_manager {
-    printf "$(get_configs_dir)/$1"
+    printf "$(get_configs_dir)/$1.conf"
 }
