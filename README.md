@@ -82,3 +82,5 @@ I especially need advice and help on testing the shell code, which I think will 
 - make global variables used in other functions, ex. QUIET be prefixed by PACUP
 - yes option for install
 - make all not include stuff that does not have config/lists I think
+- bash completion
+- check correct output for -q. not newlines...

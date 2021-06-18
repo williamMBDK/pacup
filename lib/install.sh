@@ -94,8 +94,8 @@ if [ $(get_number_of_package_managers_provided) = "1" ]; then
     perform_installation "$package_manager" "$PACLIST" "$CONFIG"
 else
     should_print_newline=0
-    [ $PACLIST != 0 ] && [ $QUIET != 0 ] && print_warning "Ignoring -l | --package-list since multiple package managers were given" && should_print_newline=1
-    [ $CONFIG != 0 ] && [ $QUIET != 0 ] && print_warning "Ignoring -c | --config since multiple package managers were given" && should_print_newline=1
+    [ $PACLIST != 0 ] && [ $QUIET = 0 ] && print_warning "Ignoring -l | --package-list since multiple package managers were given" && should_print_newline=1
+    [ $CONFIG != 0 ] && [ $QUIET = 0 ] && print_warning "Ignoring -c | --config since multiple package managers were given" && should_print_newline=1
     for package_manager in $(get_package_managers); do
         varname=${package_manager^^}
         if [ ${!varname} = 1 ]; then 

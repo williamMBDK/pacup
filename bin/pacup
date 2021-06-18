@@ -12,14 +12,14 @@ case $SUBCMD in
         $ROOTDIR/backup.sh "$@"
         exit
         ;;
+    check)
+        shift
+        $ROOTDIR/check.sh "$@"
+        exit
+        ;;
     clear-cache)
         rm -r "$HOME/.cache/pacup" 2> /dev/null
         exit 0
-        ;;
-    config-match)
-        shift
-        $ROOTDIR/config_match.sh "$@"
-        exit
         ;;
     generate-config)
         shift
