@@ -86,7 +86,7 @@ function status_of_packages_for_package_manager {
     (IFS=$'\n'
     for packageandversion in $matches; do
         if ! $ROOTDIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
-            print_colored "YELLOW" "NOT INSTALLED OR UP-TO-DATE: $(get_packageversion_human_format "$packageandversion")" # version is not optional here since version is part of the config
+            print_colored "YELLOW" "NOT INSTALLED OR NOT UP-TO-DATE: $(get_packageversion_human_format "$packageandversion")" # version is not optional here since version is part of the config
         fi
     done)
 
