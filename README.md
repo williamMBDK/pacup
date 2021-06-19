@@ -3,6 +3,10 @@ Back**up** of lists of explicitly installed **pac**kages from various linux pack
 
 Note: PacUp currently does not support any of the below features besides listing explicitly installed packages.
 
+# Prerequisites
+* python3
+* bash (only tested in bash for now)
+
 # Installation
 Since PacUp manages package managers PacUp is not accessible in any package manager. Instead simply clone this repo and run the `path/to/pacup-repo/bin/pacup.sh` shell script.
 
