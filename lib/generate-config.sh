@@ -30,23 +30,26 @@ echo
 print_needed_info "GENERATING PACKAGE LISTS FILES"
 print_needed_info "Using directory: $lists_dir"
 if ! [[ -d $lists_dir ]]; then
-    print_success "Created directory: mkdir -p $lists_dir"
     mkdir -p $lists_dir
-
-    for package_manager in $(get_package_managers); do
-        varname=${package_manager^^}
-        if [ ${!varname} = 1 ]; then
-            print_needed_info "Generating package-list file for $package_manager: $lists_dir/$package_manager.list"
-            touch $lists_dir/$package_manager.list
-            print_success "Created file: touch $lists_dir/$package_manager.list"
-            print_needed_info "Backing up existing manually installed $package_manager packages into $lists_dir/$package_manager.list"
-            $ROOTDIR/backup.sh -qy -l "$lists_dir/$package_manager.list" $package_manager
-            print_success "Backup complete: pacup backup -qy -l $lists_dir/$package_manager.list $package_manager"
-        fi
-    done
-else
-    print_warning "Directory already exists ($lists_dir). Skipping list generation."
+    print_success "Created directory: mkdir -p $lists_dir"
 fi
+for package_manager in $(get_package_managers); do
+    filename="$lists_dir/$package_manager.list"
+    varname=${package_manager^^}
+    if [ ${!varname} = 1 ]; then
+        if ! [ -e "$filename" ]; then
+            print_needed_info "Generating package-list file for $package_manager: $filename"
+            touch $filename
+            print_success "Created file: touch $filename"
+            print_needed_info "Backing up existing manually installed $package_manager packages into $filename"
+            $ROOTDIR/backup.sh -qy -l "$filename" $package_manager
+            print_success "Backup complete: pacup backup -qy -l $filename $package_manager"
+        else
+            print_warning "File already exists ($filename). Skipping list generation for $package_manager."
+        fi
+    fi
+    
+done
 
 echo
 
@@ -55,15 +58,17 @@ print_needed_info "Using directory: $configs_dir"
 if ! [[ -d $configs_dir ]]; then
     print_success "Created directory: mkdir -p $configs_dir"
     mkdir -p $configs_dir
-
-    for package_manager in $(get_package_managers); do
-        varname=${package_manager^^}
-        if [ ${!varname} = 1 ]; then
-            print_needed_info "Generating config file for $package_manager: $configs_dir/$package_manager.conf"
-            printf "+ all" > $configs_dir/$package_manager.conf
-            print_success "Created file: printf \"+ all\" > $configs_dir/$package_manager.conf"
-        fi
-    done
-else
-    print_warning "Directory already exists ($configs_dir). Skipping config generation."
 fi
+for package_manager in $(get_package_managers); do
+    filename="$configs_dir/$package_manager.conf"
+    varname=${package_manager^^}
+    if [ ${!varname} = 1 ]; then
+        if ! [ -e "$filename" ]; then
+            print_needed_info "Generating config file for $package_manager: $filename"
+            printf "+ all" > $filename
+            print_success "Created file: printf \"+ all\" > $filename"
+        else
+            print_warning "File already exists ($filename). Skipping config generation for $package_manager."
+        fi
+    fi
+done
