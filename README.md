@@ -88,3 +88,4 @@ I especially need advice and help on testing the shell code, which I think will 
     - mention completion
 - when using string comparison use quotes
 - use proper comparison methods for different things ex. (( vs [[
+- divide util.sh into differnet files???
