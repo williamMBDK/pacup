@@ -97,3 +97,5 @@ I especially need advice and help on testing the shell code, which I think will 
 - user defined package managers - a pm wrapper for config files
 - uninstall script???
 - add check for duplicate pm in get_package_managers for EXTRA_PMS
+- -y option for install script
+- fix that -l and -c are not able to be used unless the given package manager already has a config/list in the default location

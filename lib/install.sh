@@ -67,7 +67,7 @@ function perform_installation {
             [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
             exit_code=0
             if [ $TEST = 0 ]; then
-                install_package "$PACMANAGER" "$(get_packageversion_name $packageandversion) $(get_packageversion_version $packageandversion)" # why cant i just give $packageandversion as argument?
+                install_package "$PACMANAGER" "$packageandversion" # why cant i just give $packageandversion as argument?
                 exit_code=$?
             fi
             [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
