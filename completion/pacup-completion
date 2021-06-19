@@ -10,9 +10,9 @@ package_managers="$(get_package_managers) all"
 # thx: https://opensource.com/article/18/3/creating-bash-completion-script
 function _pacup_completions {
     if (( ${#COMP_WORDS[@]} == 2 )); then
-        COMPREPLY=($(compgen -W "$subcommands" "${COMP_WORDS[1]}"))
+        COMPREPLY=($(compgen -W "$subcommands" -- "${COMP_WORDS[1]}"))
     elif (( ${#COMP_WORDS[@]} > 2 )); then
-        COMPREPLY=($(compgen -W "$package_managers" "${COMP_WORDS[-1]}"))
+        COMPREPLY=($(compgen -W "$package_managers" -- "${COMP_WORDS[-1]}"))
     fi
 }
 
