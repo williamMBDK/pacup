@@ -77,10 +77,10 @@ I especially need advice and help on testing the shell code, which I think will 
 - script for each packagemanager that prints what features are available
 - what if a newer version of a match is installed and we try to install the match?
 - is $IFS handled correctly everywhere?
-- many different package managers in backup, status and so on
 - use local
 - make global variables used in other functions, ex. QUIET be prefixed by PACUP
 - yes option for install
 - make all not include stuff that does not have config/lists I think
 - bash completion
 - check correct output for -q. not newlines...
+- make code nicer

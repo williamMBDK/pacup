@@ -4,32 +4,16 @@ ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/../lib"
 source $ROOTDIR/utility/util.sh
 ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/../lib"
 
-subcommands=(
-    backup
-    clear-cache
-    config-match
-    generate_config
-    install
-    list
-    status
-    -h
-)
-package_managers=($(get_package_managers))
+subcommands="backup clear-cache config-match generate_config install list status -h"
+package_managers="$(get_package_managers)"
 
-function _pacup_completion {
-    # COMPREPLY=()
-    # local subcommands=(
-    #     "backup"
-    #     "clear-cache"
-    #     "config-match"
-    #     "generate_config"
-    #     "install"
-    #     "list"
-    #     "status"
-    #     "-h"
-    # )
-    # COMPREPLY=("${subcommands[@]}")
-    gen_completions 
+# thx: https://opensource.com/article/18/3/creating-bash-completion-script
+function _pacup_completions {
+    if (( ${#COMP_WORDS[@]} == 2 )); then
+        COMPREPLY=($(compgen -W "$subcommands" "${COMP_WORDS[1]}"))
+    elif (( ${#COMP_WORDS[@]} == 3 )); then
+        COMPREPLY=($(compgen -W "$package_managers" "${COMP_WORDS[2]}"))
+    fi
 }
 
-complete -F _pacup_completion pacup
+complete -F _pacup_completions pacup
