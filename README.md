@@ -96,3 +96,4 @@ I especially need advice and help on testing the shell code, which I think will 
 - spacing in list script output
 - user defined package managers - a pm wrapper for config files
 - uninstall script???
+- add check for duplicate pm in get_package_managers for EXTRA_PMS

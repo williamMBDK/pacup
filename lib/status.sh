@@ -85,12 +85,12 @@ function status_of_packages_for_package_manager {
     get_matches_and_handle_errors $CONFIG $PACLIST # set $matches
     (IFS=$'\n'
     for packageandversion in $matches; do
-        if ! $ROOTDIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
+        if ! is_package_installed "$PACMANAGER" "$packageandversion"; then
             print_colored "YELLOW" "NOT INSTALLED OR NOT UP-TO-DATE: $(get_packageversion_human_format "$packageandversion")" # version is not optional here since version is part of the config
         fi
     done)
 
-    explicits=$($ROOTDIR/package-managers/$PACMANAGER/get.sh)
+    explicits=$(get_packages_installed_for_package_manager $PACMANAGER)
     packages_in_paclist=$($ROOTDIR/run_module.sh "configuration.get_packages_in_list" "$PACLIST")
 
     # check if there are explicitly installed packages that are not a matched package or in list

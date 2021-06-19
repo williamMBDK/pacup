@@ -78,10 +78,41 @@ function get_package_managers {
     ls -d $ROOTDIR/package-managers/*/ | while read folder ; do
         echo -n "$(basename $folder) "
     done
+    [ -z $PACUP_EXTRA_PMS ] && return 0
+    ls -d $PACUP_EXTRA_PMS/*/ | while read folder ; do
+        echo -n "$(basename $folder) "
+    done
 }
-# function get_package_manager_pattern {
-#     get_package_managers | sed 's/ /|/g'
-# }
+function get_dir_for_package_manager {
+    if [ -d $ROOTDIR/package-managers/$1 ]; then
+        printf "$ROOTDIR/package-managers/$1"
+        return 0
+    fi
+    if [ -d $PACUP_EXTRA_PMS/$1 ]; then
+        printf "$PACUP_EXTRA_PMS/$1"
+        return 0
+    fi
+    print_warning "unknown package manager: $1"
+    return 1
+}
+# assumes $1 is a valid package manager
+function get_packages_installed_for_package_manager {
+    $(get_dir_for_package_manager $1)/get.sh
+}
+# assumes $1 is a valid package manager
+function does_package_manager_exist {
+    $(get_dir_for_package_manager $1)/exists.sh
+}
+# assumes $1 is a valid package manager
+# assumes $2 is packageversion
+function is_package_installed {
+    $(get_dir_for_package_manager $1)/pac-installed.sh $2
+}
+# assumes $1 is a valid package manager
+# assumes $2 is packageversion
+function install_package {
+    $(get_dir_for_package_manager $1)/install.sh $2
+}
 function is_valid_package_manager {
     PACMANAGER=$1
     valid_package_manager=1
@@ -91,10 +122,6 @@ function is_valid_package_manager {
         fi
     done
     return $valid_package_manager
-}
-# assumes $1 is a valid package manager
-function does_package_manager_exist {
-    $ROOTDIR/package-managers/$1/exists.sh
 }
 function does_package_manager_have_config {
     [[ -e $(get_config_for_package_manager "$1") ]]

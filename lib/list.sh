@@ -37,11 +37,11 @@ process_package_manager_arguments $@
 function get_packages {
     if test $COUNT -eq 0; then
         [ $QUIET == 0 ] && print_success "EXPLICITLY INSTALLED PACKAGES FOR ${1^^}"
-        IFS=$'\n' packages=($($ROOTDIR/package-managers/$1/get.sh))
+        IFS=$'\n' packages=($(get_packages_installed_for_package_manager "$1"))
         [ $WITH_VERSION = 0 ] && get_packageversion_human_format_name "${packages[@]}"
         [ $WITH_VERSION = 1 ] && get_packageversion_human_format "${packages[@]}"
     else
-        count=$($ROOTDIR/package-managers/$1/get.sh | wc -l)
+        count=$(get_packages_installed_for_package_manager "$1" | wc -l)
         [ $QUIET == 0 ] && print_success "NUMBER OF EXPLICITLY INSTALLED PACKAGES FOR ${1^^} IS $count"
     fi
 }

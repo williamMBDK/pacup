@@ -58,7 +58,7 @@ function perform_installation {
     # install matching packages
     (IFS=$'\n'
     for packageandversion in $matches; do
-        if ! $ROOTDIR/package-managers/$PACMANAGER/pac-installed.sh $packageandversion; then
+        if ! is_package_installed "$PACMANAGER" "$packageandversion"; then
             if ! lazy_confirm "Do you wish to install $(get_packageversion_human_format "$packageandversion") using $PACMANAGER?"; then
                 [ $QUIET = 0 ] && print_additional_info "Skipping $(get_packageversion_human_format "$packageandversion")"
                 continue
@@ -67,7 +67,7 @@ function perform_installation {
             [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
             exit_code=0
             if [ $TEST = 0 ]; then
-                $ROOTDIR/package-managers/$PACMANAGER/install.sh $(get_packageversion_name $packageandversion) $(get_packageversion_version $packageandversion) # why cant i just give $packageandversion as argument?
+                install_package "$PACMANAGER" "$(get_packageversion_name $packageandversion) $(get_packageversion_version $packageandversion)" # why cant i just give $packageandversion as argument?
                 exit_code=$?
             fi
             [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='

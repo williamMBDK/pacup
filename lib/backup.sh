@@ -60,7 +60,7 @@ function perform_backup {
 
     [ $QUIET = 0 ] && print_needed_info "BACKUP OF PACKAGES FROM ${PACMANAGER^^}"
 
-    explicits=$($ROOTDIR/package-managers/$PACMANAGER/get.sh)
+    explicits=$(get_packages_installed_for_package_manager "$PACMANAGER")
     packages_in_paclist=$($ROOTDIR/run_module.sh "configuration.get_packages_in_list" "$PACLIST")
 
     # slow for loop!
