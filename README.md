@@ -95,3 +95,4 @@ I especially need advice and help on testing the shell code, which I think will 
 - divide util.sh into differnet files???
 - spacing in list script output
 - user defined package managers - a pm wrapper for config files
+- uninstall script???
