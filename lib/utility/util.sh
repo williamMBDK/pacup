@@ -78,7 +78,9 @@ function get_package_managers {
     ls -d $ROOTDIR/package-managers/*/ | while read folder ; do
         echo -n "$(basename $folder) "
     done
-    [ -z $PACUP_EXTRA_PMS ] && return 0
+    if [ -z $PACUP_EXTRA_PMS ] || ! [ -d $PACUP_EXTRA_PMS ]; then
+        return 0
+    fi
     ls -d $PACUP_EXTRA_PMS/*/ | while read folder ; do
         echo -n "$(basename $folder) "
     done
