@@ -84,3 +84,7 @@ I especially need advice and help on testing the shell code, which I think will 
 - bash completion
 - check correct output for -q. not newlines...
 - make code nicer
+- write readme
+    - mention completion
+- when using string comparison use quotes
+- use proper comparison methods for different things ex. (( vs [[
