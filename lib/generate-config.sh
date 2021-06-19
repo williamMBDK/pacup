@@ -40,8 +40,8 @@ if ! [[ -d $lists_dir ]]; then
             touch $lists_dir/$package_manager.list
             print_success "Created file: touch $lists_dir/$package_manager.list"
             print_needed_info "Backing up existing manually installed $package_manager packages into $lists_dir/$package_manager.list"
-            $ROOTDIR/backup.sh -qy -p $package_manager -l "$lists_dir/$package_manager.list"
-            print_success "Backup complete: pacup backup -qy -p $package_manager -l $lists_dir/$package_manager.list"
+            $ROOTDIR/backup.sh -qy -l "$lists_dir/$package_manager.list" $package_manager
+            print_success "Backup complete: pacup backup -qy -l $lists_dir/$package_manager.list $package_manager"
         fi
     done
 else

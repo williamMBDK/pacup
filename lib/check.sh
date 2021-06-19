@@ -35,7 +35,7 @@ while :; do
 done
 
 # get package managers
-! PACUP_SHOULD_FILTER=1 process_package_manager_arguments $@ && [ $QUIET != 1 ] && (( $(get_number_of_package_managers_provided) > 0 )) && echo
+! PACUP_SHOULD_FILTER_LISTS=1 PACUP_SHOULD_FILTER_CONFIGS=1 process_package_manager_arguments $@ && [ $QUIET != 1 ] && (( $(get_number_of_package_managers_provided) > 0 )) && echo
 
 function perform_check {
     local PACMANAGER=$1

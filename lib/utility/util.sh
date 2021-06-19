@@ -103,7 +103,8 @@ function does_package_manager_have_list {
     [[ -e $(get_list_for_package_manager "$1") ]]
 }
 # if $QUIET = 1 it will not print warnings
-# if $PACUP_SHOULD_FILTER = 1 it will filter pms with missing config/list
+# if $PACUP_SHOULD_FILTER_LISTS = 1 it will filter pms with missing list
+# if $PACUP_SHOULD_FILTER_CONFIGS = 1 it will filter pms with missing config
 # set all global $PM where PM is a package manager
 function process_package_manager_arguments {
     local exit_code=0
@@ -141,24 +142,31 @@ function process_package_manager_arguments {
             local exit_code=1
         fi
 
-        [ "$PACUP_SHOULD_FILTER" != 1 ] && continue
+        if [ "$PACUP_SHOULD_FILTER_LISTS" = "1" ] && [ "$PACUP_SHOULD_FILTER_CONFIGS" = "1" ]; then
+            if [ ${!varname} = 1 ] && ! does_package_manager_have_list "$package_manager" && ! does_package_manager_have_config "$package_manager"; then 
+                declare -g "${package_manager^^}=0"
+                [ $QUIET != 1 ] && print_warning "$package_manager does not have package list or a config (ignored)"
+                local exit_code=1
+            fi
+        fi
 
-        if [ ${!varname} = 1 ] && ! does_package_manager_have_list "$package_manager" && ! does_package_manager_have_config "$package_manager"; then 
-            declare -g "${package_manager^^}=0"
-            [ $QUIET != 1 ] && print_warning "$package_manager does not have package list or a config (ignored)"
-            local exit_code=1
+        if [ "$PACUP_SHOULD_FILTER_LISTS" = "1" ]; then
+            if [ ${!varname} = 1 ] && ! does_package_manager_have_list "$package_manager"; then 
+                declare -g "${package_manager^^}=0"
+                [ $QUIET != 1 ] && print_warning "$package_manager does not have package list (ignored)"
+                local exit_code=1
+            fi
         fi
-        if [ ${!varname} = 1 ] && ! does_package_manager_have_list "$package_manager"; then 
-            declare -g "${package_manager^^}=0"
-            [ $QUIET != 1 ] && print_warning "$package_manager does not have package list (ignored)"
-            local exit_code=1
-        fi
-        if [ ${!varname} = 1 ] && ! does_package_manager_have_config "$package_manager"; then 
-            declare -g "${package_manager^^}=0"
-            [ $QUIET != 1 ] && print_warning "$package_manager does not have config (ignored)"
-            local exit_code=1
+
+        if [ "$PACUP_SHOULD_FILTER_CONFIGS" = "1" ]; then
+            if [ ${!varname} = 1 ] && ! does_package_manager_have_config "$package_manager"; then 
+                declare -g "${package_manager^^}=0"
+                [ $QUIET != 1 ] && print_warning "$package_manager does not have config (ignored)"
+                local exit_code=1
+            fi
         fi
     done
+
     return $exit_code
 }
 function get_number_of_package_managers_provided {

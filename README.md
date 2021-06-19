@@ -93,3 +93,4 @@ I especially need advice and help on testing the shell code, which I think will 
 - when using string comparison use quotes
 - use proper comparison methods for different things ex. (( vs [[
 - divide util.sh into differnet files???
+- spacing in list script output
