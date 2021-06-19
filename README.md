@@ -94,3 +94,4 @@ I especially need advice and help on testing the shell code, which I think will 
 - use proper comparison methods for different things ex. (( vs [[
 - divide util.sh into differnet files???
 - spacing in list script output
+- user defined package managers - a pm wrapper for config files
