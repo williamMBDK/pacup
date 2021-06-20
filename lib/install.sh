@@ -56,18 +56,21 @@ function perform_installation {
     # get matching packages
     get_matches_and_handle_errors $CONFIG $PACLIST # set $matches
     # install matching packages
-    (IFS=$'\n'
+    local OLDIFS=$IFS
+    local IFS=$'\n'
     for packageandversion in $matches; do
+        local IFS=$OLDIFS
         if ! is_package_installed "$PACMANAGER" "$packageandversion"; then
             if ! lazy_confirm "Do you wish to install $(get_packageversion_human_format "$packageandversion") using $PACMANAGER?"; then
                 [ $QUIET = 0 ] && print_additional_info "Skipping $(get_packageversion_human_format "$packageandversion")"
+                local IFS=$'\n'
                 continue
             fi
             [ $QUIET = 0 ] && print_needed_info "Beginning installation of $(get_packageversion_human_format "$packageandversion") using $PACMANAGER"
             [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
             exit_code=0
             if [ $TEST = 0 ]; then
-                install_package "$PACMANAGER" "$packageandversion" # why cant i just give $packageandversion as argument?
+                install_package "$PACMANAGER" $packageandversion # why cant i just give $packageandversion as argument?
                 exit_code=$?
             fi
             [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
@@ -78,7 +81,9 @@ function perform_installation {
                 print_additional_info "Package $(get_packageversion_human_format "$packageandversion") is installed"
             fi
         fi
-    done)
+        local IFS=$'\n'
+    done
+    local IFS=$OLDIFS
 }
 
 [ $(get_number_of_package_managers_provided) = "0" ] && exit 0

@@ -65,8 +65,10 @@ function perform_backup {
 
     # slow for loop!
     local packages_to_add=()
-    IFS=$'\n'
+    local OLDIFS=$IFS
+    local IFS=$'\n'
     for packageandversion in $explicits; do
+        local IFS=$OLDIFS
         if ! is_package_in_list "$packages_in_paclist" "$packageandversion" ; then
             package=$(if [ $WITH_VERSION = 1 ]; then
                 printf "$packageandversion"
@@ -83,7 +85,9 @@ function perform_backup {
                 packages_to_add+=($package)
             fi
         fi
+        local IFS=$'\n'
     done
+    local IFS=$OLDIFS
 
     [ ${#packages_to_add[@]} = 0 ] && { [ $QUIET = 0 ] && print_warning "Nothing to backup for $PACMANAGER."; } && return 0
 
