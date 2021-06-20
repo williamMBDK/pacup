@@ -80,7 +80,6 @@ I especially need advice and help on testing the shell code, which I think will 
 - PacUp status default all
 - script for each packagemanager that prints what features are available
 - what if a newer version of a match is installed and we try to install the match?
-- is $IFS handled correctly everywhere?
 - use local
 - make global variables used in other functions, ex. QUIET be prefixed by PACUP
 - yes option for install
@@ -99,3 +98,4 @@ I especially need advice and help on testing the shell code, which I think will 
 - add check for duplicate pm in get_package_managers for EXTRA_PMS
 - -y option for install script
 - fix that -l and -c are not able to be used unless the given package manager already has a config/list in the default location
+- remove IFS everywhere

@@ -1,2 +1,2 @@
 #!/bin/sh
-yay -Qe --color never
+yay -Qe --color never | awk '{print $1"@"$2}'

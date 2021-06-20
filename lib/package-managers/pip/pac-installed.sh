@@ -16,7 +16,7 @@ if [ "$#" -eq 1 ]; then
         pip list --user -o --not-required 2> /dev/null > $cachedir/pipupdate.out
     fi
     cat $cachedir/pipupdate.out | grep "^$package " > /dev/null && exit 1
-    cat $cachedir/pipget.out | grep "^$package " > /dev/null
+    cat $cachedir/pipget.out | grep "^$package@" > /dev/null
 else
-    cat $cachedir/pipget.out | grep "^$package $version$" > /dev/null
+    cat $cachedir/pipget.out | grep "^$package@$version$" > /dev/null
 fi

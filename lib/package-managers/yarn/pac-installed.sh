@@ -17,7 +17,7 @@ if [ "$#" -eq 1 ]; then
         yarn outdated 2> /dev/null | grep -A 10000000000000 "^Package Current Wanted" > $cachedir/update.out
     fi
     cat $cachedir/update.out | grep "^$package " > /dev/null && exit 1
-    cat $cachedir/get.out | grep "^$package " > /dev/null
+    cat $cachedir/get.out | grep "^$package@" > /dev/null
 else
-    cat $cachedir/get.out | grep "^$package $version$" > /dev/null
+    cat $cachedir/get.out | grep "^$package@$version$" > /dev/null
 fi

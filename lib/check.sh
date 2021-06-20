@@ -44,9 +44,7 @@ function perform_check {
     # get matches
     [ $QUIET = 0 ] && print_success "MATCHED PACKAGES FOR ${PACMANAGER^^}"
     get_matches_and_handle_errors $CONFIG $PACLIST # will exit on error
-    local IFS=$'\n'
-    match_list=($matches)
-    get_packageversion_human_format "${match_list[@]}"
+    printf "$matches"
 }
 
 [ $(get_number_of_package_managers_provided) = "0" ] && exit 0

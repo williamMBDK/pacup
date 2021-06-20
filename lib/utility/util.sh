@@ -106,14 +106,18 @@ function does_package_manager_exist {
     $(get_dir_for_package_manager $1)/exists.sh
 }
 # assumes $1 is a valid package manager
-# assumes $2 is packageversion
+# assumes $2 is package@version or package
 function is_package_installed {
-    $(get_dir_for_package_manager $1)/pac-installed.sh $2
+    name="$(get_packageversion_name "$2")"
+    version="$(get_packageversion_version "$2")"
+    $(get_dir_for_package_manager $1)/pac-installed.sh $name $version
 }
 # assumes $1 is a valid package manager
-# assumes $2 is packageversion
+# assumes $2 is package@version or package
 function install_package {
-    $(get_dir_for_package_manager $1)/install.sh $2
+    name="$(get_packageversion_name "$2")"
+    version="$(get_packageversion_version "$2")"
+    $(get_dir_for_package_manager $1)/install.sh $name $version
 }
 function is_valid_package_manager {
     PACMANAGER=$1
@@ -250,13 +254,13 @@ function exit_on_missing_option {
 
 # packages
 function get_packageversion_name {
-    packageandversion=$1
-    printf $packageandversion  | head -n1 | cut -d " " -f1
+    printf "$1" | awk -F '@' '{print $1}'
 }
 function get_packageversion_version {
-    packageandversion=$1
-    printf $packageandversion | awk '{print $2}'
+    printf "$1" | awk -F '@' '{print $2}'
 }
+# $1 is a string of p@v seperated by newlines
+# $2 is a string of format p@v or p
 function is_package_in_list {
     list=$1
     packageandversion=$2
@@ -268,24 +272,24 @@ function is_package_in_list {
     fi
     return 0
 }
-function get_packageversion_human_format_name {
-    while :; do
-        [ "$1" = "" ] && break
-        name=$(get_packageversion_name $1)
+# $1 is a string of p@v seperated by whitespace
+function get_packageversion_list_names {
+    list=$1
+    for package in $list; do
+        name=$(get_packageversion_name "$package")
         printf "$name\n"
-        shift
     done
 }
-function get_packageversion_human_format {
-    while :; do
-        [ "$1" = "" ] && break
-        name=$(get_packageversion_name $1)
-        version=$(get_packageversion_version $1)
-        if [ "$version" = "" ]; then
-            printf "$name\n"
-        else
-            printf "$name@$version\n"
-        fi
-        shift
-    done
-}
+# function get_packageversion_human_format {
+#     while :; do
+#         [ "$1" = "" ] && break
+#         name=$(get_packageversion_name $1)
+#         version=$(get_packageversion_version $1)
+#         if [ "$version" = "" ]; then
+#             printf "$name\n"
+#         else
+#             printf "$name@$version\n"
+#         fi
+#         shift
+#     done
+# }

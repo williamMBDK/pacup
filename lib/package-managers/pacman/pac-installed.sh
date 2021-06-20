@@ -17,7 +17,7 @@ if [ "$#" -eq 1 ]; then
         pacman -Qu > $cachedir/pacmanqu.out
     fi
     cat $cachedir/pacmanqu.out | grep "^$pac " > /dev/null && exit 1
-    cat $cachedir/pacmanqe.out | grep "^$pac[\$[:space:]]" > /dev/null
+    cat $cachedir/pacmanqe.out | grep "^$pac@" > /dev/null
 else
-    cat $cachedir/pacmanqe.out | grep "^$pac $version$" > /dev/null
+    cat $cachedir/pacmanqe.out | grep "^$pac@$version$" > /dev/null
 fi

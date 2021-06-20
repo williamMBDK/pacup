@@ -47,9 +47,9 @@ done
 function format_packageversion {
     packageversion="$1"
     if [ $WITH_VERSION = 0 ]; then
-        get_packageversion_human_format_name "$packageversion"
+        get_packageversion_name "$packageversion"
     else
-        get_packageversion_human_format "$packageversion"
+        printf "$packageversion"
     fi
 }
 
@@ -84,34 +84,23 @@ function status_of_packages_for_package_manager {
     # check if matching packages are installed
     get_matches_and_handle_errors $CONFIG $PACLIST # set $matches
 
-    # this works but is not good looking
-    local OLDIFS=$IFS
-    local IFS=$'\n'
     for packageandversion in $matches; do
-        local IFS=$OLDIFS
         if ! is_package_installed "$PACMANAGER" "$packageandversion"; then
-            print_colored "YELLOW" "NOT INSTALLED OR NOT UP-TO-DATE: $(get_packageversion_human_format "$packageandversion")" # version is not optional here since version is part of the config
+            print_colored "YELLOW" "NOT INSTALLED OR NOT UP-TO-DATE: $packageandversion" # version is not optional here since version is part of the config, format_packageversion makes version optional
         fi
-        local IFS=$'\n'
     done
-    local IFS=$OLDIFS
 
     explicits=$(get_packages_installed_for_package_manager $PACMANAGER)
     packages_in_paclist=$($ROOTDIR/run_module.sh "configuration.get_packages_in_list" "$PACLIST")
 
     # check if there are explicitly installed packages that are not a matched package or in list
-    local OLDIFS=$IFS
-    local IFS=$'\n'
     for packageandversion in $explicits; do
-        local IFS=$OLDIFS
         if ! is_package_in_list "$packages_in_paclist" "$packageandversion"; then
             print_colored "CYAN" "INSTALLED BUT NOT IN PACKAGE LIST: $(format_packageversion "$packageandversion")"
         elif ! is_package_in_list "$matches" "$packageandversion"; then
             print_colored "BLUE" "INSTALLED, IN PACKAGE LIST BUT NOT IN CONFIG: $(format_packageversion "$packageandversion")"
         fi
-        local IFS=$'\n'
     done
-    local IFS=$OLDIFS
 }
 
 function status_of_packages {

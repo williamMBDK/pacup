@@ -56,17 +56,13 @@ function perform_installation {
     # get matching packages
     get_matches_and_handle_errors $CONFIG $PACLIST # set $matches
     # install matching packages
-    local OLDIFS=$IFS
-    local IFS=$'\n'
     for packageandversion in $matches; do
-        local IFS=$OLDIFS
         if ! is_package_installed "$PACMANAGER" "$packageandversion"; then
-            if ! lazy_confirm "Do you wish to install $(get_packageversion_human_format "$packageandversion") using $PACMANAGER?"; then
-                [ $QUIET = 0 ] && print_additional_info "Skipping $(get_packageversion_human_format "$packageandversion")"
-                local IFS=$'\n'
+            if ! lazy_confirm "Do you wish to install $packageandversion using $PACMANAGER?"; then
+                [ $QUIET = 0 ] && print_additional_info "Skipping $packageandversion"
                 continue
             fi
-            [ $QUIET = 0 ] && print_needed_info "Beginning installation of $(get_packageversion_human_format "$packageandversion") using $PACMANAGER"
+            [ $QUIET = 0 ] && print_needed_info "Beginning installation of $packageandversion using $PACMANAGER"
             [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
             exit_code=0
             if [ $TEST = 0 ]; then
@@ -74,16 +70,14 @@ function perform_installation {
                 exit_code=$?
             fi
             [ $QUIET = 0 ] && printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = # fill width of display with '='
-            [ $QUIET = 0 ] && [ $exit_code = 0 ] && print_success "Installed $(get_packageversion_human_format "$packageandversion") using $PACMANAGER"
-            [ $exit_code != 0 ] && print_error "Something went wrong during installation of $(get_packageversion_human_format "$packageandversion") using $PACMANAGER"
+            [ $QUIET = 0 ] && [ $exit_code = 0 ] && print_success "Installed $packageandversion using $PACMANAGER"
+            [ $exit_code != 0 ] && print_error "Something went wrong during installation of $packageandversion using $PACMANAGER"
         else
             if test $QUIET -eq 0; then
-                print_additional_info "Package $(get_packageversion_human_format "$packageandversion") is installed"
+                print_additional_info "Package $packageandversion is installed"
             fi
         fi
-        local IFS=$'\n'
     done
-    local IFS=$OLDIFS
 }
 
 [ $(get_number_of_package_managers_provided) = "0" ] && exit 0

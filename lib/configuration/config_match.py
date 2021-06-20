@@ -40,5 +40,5 @@ except ValueError as e:
     exit(1)
 
 for package in matched_packages:
-    if package.version: print(package.name, package.version)
+    if package.version: print("{}@{}".format(package.name, package.version))
     else: print(package.name)

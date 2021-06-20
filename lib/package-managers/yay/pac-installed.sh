@@ -17,7 +17,7 @@ if [ "$#" -eq 1 ]; then
         yay -Qu > $cachedir/yayqu.out
     fi
     cat $cachedir/yayqu.out | grep "^$pac " > /dev/null && exit 1
-    cat $cachedir/yayqe.out | grep "^$pac[\$[:space:]]" > /dev/null
+    cat $cachedir/yayqe.out | grep "^$pac@" > /dev/null
 else
-    cat $cachedir/yayqe.out | grep "^$pac $version$" > /dev/null
+    cat $cachedir/yayqe.out | grep "^$pac@$version$" > /dev/null
 fi

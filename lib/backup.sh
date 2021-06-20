@@ -64,11 +64,8 @@ function perform_backup {
     packages_in_paclist=$($ROOTDIR/run_module.sh "configuration.get_packages_in_list" "$PACLIST")
 
     # slow for loop!
-    local packages_to_add=()
-    local OLDIFS=$IFS
-    local IFS=$'\n'
+    local packages_to_add=""
     for packageandversion in $explicits; do
-        local IFS=$OLDIFS
         if ! is_package_in_list "$packages_in_paclist" "$packageandversion" ; then
             package=$(if [ $WITH_VERSION = 1 ]; then
                 printf "$packageandversion"
@@ -76,28 +73,26 @@ function perform_backup {
                 get_packageversion_name "$packageandversion"
             fi)
             if [ $INTERACTIVE = 1 ]; then
-                if lazy_confirm "Do you wish to add the following package to the package list: $(get_packageversion_human_format $package)"; then
-                    packages_to_add+=($package)
+                if lazy_confirm "Do you wish to add the following package to the package list: $package"; then
+                    packages_to_add="$packages_to_add$package"$'\n'
                 else
-                    [ $QUIET = 0 ] && print_needed_info "Skipping $(get_packageversion_human_format $package)"
+                    [ $QUIET = 0 ] && print_needed_info "Skipping $package"
                 fi
             else
-                packages_to_add+=($package)
+                packages_to_add="$packages_to_add$package"$'\n'
             fi
         fi
-        local IFS=$'\n'
     done
-    local IFS=$OLDIFS
 
-    [ ${#packages_to_add[@]} = 0 ] && { [ $QUIET = 0 ] && print_warning "Nothing to backup for $PACMANAGER."; } && return 0
+    [ $(printf "$packages_to_add" | wc -l) = 0 ] && { [ $QUIET = 0 ] && print_warning "Nothing to backup for $PACMANAGER."; } && return 0
 
     if [[ $QUIET == 0 && $INTERACTIVE == 0 ]]; then
         print_needed_info "Packages installed but not in package list ($OUTPUT)"
-        print_colored "GREEN" "$(get_packageversion_human_format "${packages_to_add[@]}")"
+        print_colored "GREEN" "$packages_to_add"
         { { [ $YES = 1 ] || lazy_confirm "Do you wish to add the above packages?"; } || { print_needed_info "Okay. skipping..." && return 0; }; }
     fi
 
-    printf "%s\n" "${packages_to_add[@]}" | $ROOTDIR/run_module.sh "configuration.append_to_package_list" "$PACLIST" "$OUTPUT"
+    printf "$packages_to_add" | $ROOTDIR/run_module.sh "configuration.append_to_package_list" "$PACLIST" "$OUTPUT"
     [ $QUIET = 0 ] && print_success "Added packages to package-list ($OUTPUT)"
 }
 

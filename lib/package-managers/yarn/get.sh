@@ -8,6 +8,6 @@ IFS=$'\n'
 for package in $packages; do
     pacdir="$dir/node_modules/$package"
     version="$(jq -r '.version' $pacdir/package.json)"
-    echo "$package $version"
+    echo "$package@$version"
 done
 IFS=$OLDIFS
