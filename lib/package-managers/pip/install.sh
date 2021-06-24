@@ -4,5 +4,5 @@ version=$2
 if [ "$#" -eq 2 ]; then
     pip install --user "$package==$version"
 else
-    pip install --user "$package"
+    pip install --user --upgrade "$package"
 fi
