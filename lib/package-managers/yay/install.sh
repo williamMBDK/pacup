@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 if [ "$#" -eq 2 ]; then
     echo "version not supported by yay"
     exit 1

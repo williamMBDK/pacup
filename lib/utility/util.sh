@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # imports
 ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/.."

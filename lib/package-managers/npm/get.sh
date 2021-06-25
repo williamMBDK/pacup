@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 dir=$(npm root -g 2> /dev/null)
 packages="$(ls $dir)"

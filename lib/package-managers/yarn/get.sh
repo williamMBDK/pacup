@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 dir=$(yarn global dir 2> /dev/null)
 packages="$(jq -r '.dependencies | keys[]' $dir/package.json)"

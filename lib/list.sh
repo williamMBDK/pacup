@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))"
 source $ROOTDIR/utility/util.sh

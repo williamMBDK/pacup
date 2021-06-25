@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 package=$1
 version=$2
 if [ "$#" -eq 2 ]; then
