@@ -102,3 +102,4 @@ I especially need advice and help on testing the shell code, which I think will 
 # ideas
 - config file combined for all pms?
 - uninstall script???
+- ignored packages (ex. packages that are already installed explicitely in kali)
