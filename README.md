@@ -98,6 +98,7 @@ I especially need advice and help on testing the shell code, which I think will 
 - -y option for install script
 - fix that -l and -c are not able to be used unless the given package manager already has a config/list in the default location
 - remove IFS everywhere
+- flush io install script such that you dont accidentally accept by pressing enter before a question arises
 
 # ideas
 - config file combined for all pms?
