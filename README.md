@@ -1,8 +1,6 @@
 # PacUp
 Back**up** of lists of explicitly installed **pac**kages from various linux package managers
 
-Note: PacUp currently does not support any of the below features besides listing explicitly installed packages.
-
 # Prerequisites
 * python3
 * bash (only tested in bash for now)
