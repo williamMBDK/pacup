@@ -1,6 +1,8 @@
 # PacUp
 Back**up** of lists of explicitly installed **pac**kages from various linux package managers
 
+Note: this readme is incomplete and possibly incorrect, it will be updated...
+
 # Prerequisites
 * python3
 * bash (only tested in bash for now)
