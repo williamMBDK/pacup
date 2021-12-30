@@ -1,14 +1,16 @@
 # PacUp
 Back**up** of lists of explicitly installed **pac**kages from various linux package managers
 
-Note: this readme is incomplete and possibly incorrect, it will be updated...
+## TLDR
+Create a 'package-list' for each package-manager, and a 'config' for each package-manager on each linux machine. The configs describes which packages from the 'package-lists' should be installed on a specific machine.
 
 # Prerequisites
 * python3
 * bash (only tested in bash for now)
+* (optional) [argcomplete](https://github.com/kislyuk/argcomplete) (for bash autocomplete)
 
 # Installation
-Since PacUp manages package managers PacUp is not accessible in any package manager. Instead simply clone this repo and run the `path/to/pacup-repo/bin/pacup.sh` shell script.
+Since PacUp manages package managers PacUp is not (atm) accessible in any package manager. Instead simply clone this repo and the `path/to/pacup-repo/bin/pacup` python script is the entrypoint for the program.
 
 ```shell
 git clone https://github.com/williamMBDK/pacup.git
@@ -19,64 +21,60 @@ You may optionally add `path/to/pacup-repo/bin` to your path and then the comman
 export PATH="/path/to/pacup-repo/bin:$PATH"
 ```
 
-# The (initial) concept 
-You will create a config file for each of your package managers.
-A config file will contain a list of package configurations, consisting of a package name, an optional version number and a list of tags. By default each package configuration will have the *all* tag, and a unique tag which is *package@version* (or *package* if version is not specified).
-Creating a config file for a given package manager is easy since PacUp has built in features to generate and maintain them - however it is meant for you to do some manual editing of the config files (adding tags...).
+To get bash autocompletion you should install [argcomplete](https://github.com/kislyuk/argcomplete). Then you either enable argcomplete globally or source the following script.
+```
+source /path/to/pacup-repo/completion/pacup-completion
+```
 
-Then you should use github or any other git host to backup your config files (or another way of backing up the config files).
+# The concept 
+PacUp aims to make it easier to synchronize or move a linux setup from one machine to another. A big part of this is to install packages from package-managers. PacUp helps automate this through 'package-lists' and local 'configurations' (explained below).
 
-Then on each of your linux machines (desktop, laptop, work computer, server, ...) you can simply pull the config files and install the packages it specifies using PacUp. Optionally you can create a machine specific config file, where you for each package managers specify which tags should be installed (or more precisely for each specified tag the corresponding package configuration will be installed). You can also specify tags that should not be installed (these will take presedence). Then PacUp will install only those package configurations specified by the tags. For example you could have *dev* tag specifying packages used for software development, and only have these dev packages be installed on you work machine and laptop.
+A 'package-list' is part of the PacUp user configuration, and it contains a list of all the packages a user has across all of the users machines. Moreover, each package manager that the user uses has a seperate 'package-list'. Entries in a 'package-list' consists of a package name, an optional version number and a list of tags. Creating a 'package-list' file for a given package manager is easy since PacUp has built in functionality to generate and maintain them - however it is meant for you to do some manual editing of the 'package-lists' (adding tags and so on).
 
-When you wish to add a new package you can either manually add it to a config file or install it and then sync to the config file.
+On each of the user's machines the user then creates a local 'configuration' (or config) for each chosen package manager. A config describes which packages from a corresponding 'package-list' should be installed on the specific machine. In the config file the user can specify to include/exclude specific packages or specific tags. For example you could have a *dev* tag specifying packages used for software development, and only have these *dev* packages be installed on you work machine.
 
-PacUp is very interactive and will handle all sorts of edge cases with duplicated packages, inconsistent versions, error resolution and so on (todo).
+It is recommended to use github or any other git host to backup your 'package-list' files, such that they can easily be accessed on a new machine.
 
-# Features
-* Configuration files for many different package managers.
-    * List of packages
-    * Optional version numbers
-* Create specific configurations for each linux machine using tagged packages.
+Initially you can use `pacup generate-config` to generate starting configuration files, which will be placed in `~/.config/pacup`.
+
+# Highlighted Features
+* Easy to use using the status subcommand, which gives an overview of the current configuration for all package-managers, and the install subcommand which installs all the packages that are specified by the configs for all package managers.
+* Create specific configurations for each Linux machine using tagged packages.
 * Automated configuration management.
-* Optionally very interactive.
-* Has built-in commands for listing explicitly installed packages for many package managers.
-* Currently supports the following package managers:
+    * Backup newly installed packages into the 'package-lists' (backup)
+    * Validate the correctness of the configuration (check)
+    * Generate initial configuration files (generate-config)
+* Built-in commands for listing explicitly installed packages for many package managers.
+* Supported package managers:
+    * apm
     * apt
-    * npm (*global*)
+    * npm
     * pacman
-    * pip (*global*)
-    * yarn (*global*)
+    * pip
+    * snap
+    * yarn
     * yay
-
-    More will be added.
-
-    Here *global* refers to the global installation of packages, since some of these package managers can be used for project package management.
-* Compatible with the POSIX shell specification (todo), and can thus run on nearly any linux distribution (todo: does there exist distros it cannot run on?)
+* Upcoming: Compatible with the POSIX shell specification, and can thus run on nearly any linux distribution.
 
 # Configuration 
-## Package manager config files
-This is the config files that specifies the list of package configurations for each of your package managers.
+## Package-lists
 ### Location
-Todo
 ### Format
-Todo
-* Can contain duplicate packages (packages with different versions).
-## Machine specific config files
-This is the configuration files that specifies which packages a specific linux machine should have installed for each package manager.
+* Can contain duplicate packages (the same package but with different versions).
+## Configurations (configs)
+The configuration files that specify which packages a specific Linux machine should have installed for each chosen package manager.
 ### Location
-Todo
 ### Format
-Todo
 * Cannot contain duplicate packages.
+
+# Support for additional package managers
 
 # Contributing
 Feel free to contribute.
 
-I especially need advice and help on testing the shell code, which I think will be quite inconvenient.
-
 \- William
 
-## todo
+## TODO
 - PacUp status default all
 - script for each packagemanager that prints what features are available
 - what if a newer version of a match is installed and we try to install the match?
@@ -101,7 +99,7 @@ I especially need advice and help on testing the shell code, which I think will 
 - yarn file does not exist initially when no other packages are installed
 - flush io install script such that you dont accidentally accept by pressing enter before a question arises
 
-# ideas
-- config file combined for all pms?
-- uninstall script???
-- ignored packages (ex. packages that are already installed explicitely in kali)
+# IDEAS
+- Config file combined for all package managers?
+- Uninstall script?
+- Ignored packages (ex. packages that are already installed explicitely in kali)

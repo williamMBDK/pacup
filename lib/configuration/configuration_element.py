@@ -1,5 +1,6 @@
 from typing import Optional
-from .package import PackageFactory, Package
+from ..util.package import PackageFactory, Package
+from ..util.io import PacupUserError
 
 class ConfigurationElement:
 
@@ -20,18 +21,18 @@ class ConfigurationElement:
         assert(not self.has_been_initialized)
         items = input_string.split()
         if len(items) == 2:
-            if items[0] not in ConfigurationElement.valid_modifiers: raise ValueError("invalid modifier")
+            if items[0] not in ConfigurationElement.valid_modifiers: raise PacupUserError("invalid modifier")
             self.modifier = items[0]
-            if items[1] not in ConfigurationElement.valid_single_types: raise ValueError("invalid single type")
+            if items[1] not in ConfigurationElement.valid_single_types: raise PacupUserError("invalid single type")
             self.type = items[1]
         elif len(items) == 3:
-            if items[0] not in ConfigurationElement.valid_modifiers: raise ValueError("invalid modifier")
+            if items[0] not in ConfigurationElement.valid_modifiers: raise PacupUserError("invalid modifier")
             self.modifier = items[0]
-            if items[1] not in ConfigurationElement.valid_value_types: raise ValueError("invalid value type")
+            if items[1] not in ConfigurationElement.valid_value_types: raise PacupUserError("invalid value type")
             self.type = items[1]
             self._set_value(items[2])
         else:
-            raise ValueError("invalid input_string length")
+            raise PacupUserError("invalid length of line in config")
         self.has_been_initialized = True
 
     def _set_value(self, string : str):
@@ -56,4 +57,3 @@ class ConfigurationElementFactory:
         e = ConfigurationElement()
         e.init_with_string(input_string)
         return e
-

@@ -1,55 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
-ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/../lib"
-source $ROOTDIR/utility/util.sh
-ROOTDIR="$(dirname $(realpath ${BASH_SOURCE[0]}))/../lib"
+import os, sys
 
-SUBCMD=$1
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, root_dir)
 
-case $SUBCMD in
-    backup)
-        shift
-        $ROOTDIR/backup.sh "$@"
-        exit
-        ;;
-    check)
-        shift
-        $ROOTDIR/check.sh "$@"
-        exit
-        ;;
-    clear-cache)
-        rm -r "$HOME/.cache/pacup" 2> /dev/null
-        exit 0
-        ;;
-    generate-config)
-        shift
-        $ROOTDIR/generate-config.sh "$@"
-        exit
-        ;;
-    install)
-        shift
-        $ROOTDIR/install.sh "$@"
-        exit
-        ;;
-    list)
-        shift
-        $ROOTDIR/list.sh "$@"
-        exit
-        ;;
-    status)
-        shift
-        $ROOTDIR/status.sh "$@"
-        exit
-        ;;
-    -h|-\?|--help)
-        show_help
-        exit
-        ;;
-    "")
-        show_help
-        exit 1
-        ;;
-    *)
-        wrong_subcommand $SUBCMD
-        exit 1
-esac
+from lib.pacup import main # type: ignore
+
+if __name__ == '__main__':
+    main()

@@ -30,7 +30,10 @@ class Package:
         if self.version:
             return "{}@{}".format(self.name, self.version)
         else:
-            return self.name
+            return self.get_name()
+
+    def get_name(self):
+        return self.name
     
     def copy(self):
         return PackageFactory.create_package_from_values(self.name, self.version)
@@ -42,35 +45,14 @@ class Package:
         return hash(self.name) * hash(self.version) # not sure if this is good?
 
     def __lt__(self, other):
-        if self.name == other.name: return self.version < other.version
+        if self.name == other.name:
+            if self.version == None: return other.version != None
+            elif other.version == None: return False
+            else: return self.version < other.version
         return self.name < other.name
-
-class TaggedPackage(Package):
-    def __init__(self):
-        super().__init__()
-        self.tags : list[str] = []
-        
-    def init_with_string(self, input_string):
-        assert(not self.has_been_initialized)
-        items = input_string.split()
-        if len(items) == 0:
-            raise ValueError("invalid input_string")
-        super().init_with_string(items[0])
-        self.tags = items[1:]
-
-    def init_with_values(self, name, version, tags):
-        super().init_with_values(name, version)
-        self.tags = tags
-
-    def __str__(self):
-        assert(self.has_been_initialized)
-        return "{} {}".format(super().__str__(), " ".join(self.tags))
-
-    def copy(self):
-        return PackageFactory.create_tagged_package_from_values(self.name, self.version, self.tags.copy())
-
-    def copy_as_package(self):
-        return super().copy()
+    
+    def without_version(self):
+        return PackageFactory.create_package_from_values(self.name, None)
 
 class PackageFactory:
     
@@ -84,16 +66,4 @@ class PackageFactory:
     def create_package_from_values(name : str, version : Optional[str]) -> Package:
         pac = Package()
         pac.init_with_values(name, version)
-        return pac
-
-    @staticmethod
-    def create_tagged_package_from_string(input_string) -> TaggedPackage:
-        pac = TaggedPackage()
-        pac.init_with_string(input_string)
-        return pac
-
-    @staticmethod
-    def create_tagged_package_from_values(name, version, tags) -> TaggedPackage:
-        pac = TaggedPackage()
-        pac.init_with_values(name, version, tags)
         return pac

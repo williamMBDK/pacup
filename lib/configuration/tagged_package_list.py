@@ -1,4 +1,6 @@
-from .package import PackageFactory, TaggedPackage, Package
+from .tagged_package import TaggedPackageFactory, TaggedPackage
+from ..util.package import PackageFactory, Package
+from ..util.io import PacupUserError
 
 class TaggedPackageList:
     def __init__(self):
@@ -11,10 +13,10 @@ class TaggedPackageList:
         seen = set()
         for line in lines:
             if len(line.split()) == 0: continue
-            pac = PackageFactory.create_tagged_package_from_string(line)
+            pac = TaggedPackageFactory.create_tagged_package_from_string(line)
             key = (pac.name, pac.version)
             if key in seen:
-                raise ValueError("content contains duplicate package@version")
+                raise PacupUserError("list contains duplicate package@version")
             seen.add(key)
             self.tagged_packages.append(pac)
         self.has_been_initialized = True
@@ -34,7 +36,7 @@ class TaggedPackageList:
         return tags
     
     def contains(self, package : Package):
-        # can be optimized
+        # TODO can be optimized
         return package in self.tagged_packages
     
     def write_to_file(self, filename : str):
@@ -45,18 +47,32 @@ class TaggedPackageList:
         # todo?: this can be done faster
         for package in self.tagged_packages:
             if package.name == tagged_package.name and package.version == tagged_package.version:
-                raise ValueError("content contains duplicate package@version")
+                raise PacupUserError("list will contain duplicate package@version after appending {}".format(tagged_package))
         self.tagged_packages.append(tagged_package)
 
     def append_str(self, string : str):
-        self.append(PackageFactory.create_tagged_package_from_string(string))
+        self.append(TaggedPackageFactory.create_tagged_package_from_string(string))
 
 class TaggedPackageListFactory:
+
     @staticmethod
     def create_list_from_filename(filename) -> TaggedPackageList:
-        with open(filename) as file:
-            content = file.read()
-            return TaggedPackageListFactory.create_list_from_content(content)
+        content = None
+        try:
+            with open(filename) as file:
+                content = file.read()
+        except FileNotFoundError:
+            raise PacupUserError(
+                "package list path does not exist: {}"
+                .format(filename)
+            )
+        except IsADirectoryError:
+            raise PacupUserError(
+                "package list path is a directory: {}"
+                .format(filename)
+            )
+        assert(content != None)
+        return TaggedPackageListFactory.create_list_from_content(content)
 
     @staticmethod
     def create_list_from_content(content) -> TaggedPackageList:

@@ -2,7 +2,7 @@
 
 if [ "$#" -eq 2 ]; then
     echo "version not supported by pacman"
-    exit 1
+    exit 2
 else
-    sudo pacman --asexplicit -S "$1"
+    sudo pacman --color always --asexplicit -S "$1" || exit 1
 fi

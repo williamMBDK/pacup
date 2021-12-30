@@ -1,6 +1,7 @@
 import unittest
-from configuration.configuration_element import ConfigurationElement
-from configuration.package import Package
+from lib.util.io import PacupUserError
+from lib.configuration.configuration_element import ConfigurationElement
+from lib.util.package import Package
 
 class TestConfigurationElement(unittest.TestCase):
     def setUp(self):
@@ -21,17 +22,17 @@ class TestConfigurationElement(unittest.TestCase):
     def test_init_with_string_invalid_modifier(self):
         def test():
             self.element.init_with_string("  s all")
-        self.assertRaises(ValueError, test) 
+        self.assertRaises(PacupUserError, test) 
 
     def test_init_with_string_single_type_fail(self):
         def test():
             self.element.init_with_string("+ tag")
-        self.assertRaises(ValueError, test) 
+        self.assertRaises(PacupUserError, test) 
 
     def test_init_with_value_type_fail(self):
         def test():
             self.element.init_with_string("+ all sdf")
-        self.assertRaises(ValueError, test) 
+        self.assertRaises(PacupUserError, test) 
 
     def test_init_with_string_tag(self):
         tests = [
