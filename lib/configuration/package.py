@@ -42,7 +42,10 @@ class Package:
         return hash(self.name) * hash(self.version) # not sure if this is good?
 
     def __lt__(self, other):
-        if self.name == other.name: return self.version < other.version
+        if self.name == other.name:
+            if self.version == None: return other.version != None
+            elif other.version == None: return False
+            else: return self.version < other.version
         return self.name < other.name
 
 class TaggedPackage(Package):

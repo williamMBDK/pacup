@@ -56,4 +56,3 @@ class ConfigurationElementFactory:
         e = ConfigurationElement()
         e.init_with_string(input_string)
         return e
-

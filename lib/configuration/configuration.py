@@ -31,16 +31,18 @@ class Configuration:
         for element in self.configuration_elements:
             if element.modifier == "+":
                 if element.type == "pac":
-                    if not package_list.contains(element.package.copy()): raise ValueError("{} not in tagged package list".format(element.package))
-                    packages.add(element.package.copy())
+                    if not package_list.contains(element.package.copy()): # type: ignore
+                        raise ValueError("{} not in tagged package list".format(element.package))
+                    packages.add(element.package.copy()) # type: ignore
                 elif element.type == "tag":
                     if element.tag not in tags: continue
                     packages.update(tags[str(element.tag)])
                 elif element.type == "all": packages.update(set(tagged_package.copy_as_package() for tagged_package in package_list.tagged_packages))
             else:
                 if element.type == "pac":
-                    if not package_list.contains(element.package.copy()): raise ValueError("{} not in tagged package list".format(element.package))
-                    remove_package(element.package.copy())
+                    if not package_list.contains(element.package.copy()): # type: ignore
+                        raise ValueError("{} not in tagged package list".format(element.package))
+                    remove_package(element.package.copy()) # type: ignore
                 elif element.type == "tag":
                     if element.tag not in tags: continue
                     for package in tags[str(element.tag)]: remove_package(package)
@@ -64,4 +66,3 @@ class ConfigurationFactory:
         config = Configuration()
         config.init_with_file_content(content)
         return config
-
