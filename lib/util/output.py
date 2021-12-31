@@ -1,0 +1,3 @@
+class PacupUserError(Exception):
+    pass
+

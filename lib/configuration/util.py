@@ -1,8 +1,6 @@
 from .configuration import ConfigurationFactory
 from .tagged_package_list import TaggedPackageListFactory, TaggedPackageList
-
-class PacupUserError(Exception):
-    pass
+from ..util.output import PacupUserError
 
 def append_to_package_list(
     input_list_path : str,
@@ -14,7 +12,7 @@ def append_to_package_list(
         package_list.append_str(line)
     package_list.write_to_file(output_list_path)
 
-def get_matching_pacakges(config_path, paclist_path):
+def get_matching_packages(config_path, paclist_path):
     config = None
     taggedlist = TaggedPackageList()
 

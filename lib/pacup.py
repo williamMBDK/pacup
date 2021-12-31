@@ -2,6 +2,7 @@
 # PYTHON_ARGCOMPLETE_OK
 
 from . import cli
+from .util.output import PacupUserError
 
 def main():
     parser = cli.create_parser()
@@ -17,4 +18,10 @@ def main():
     args = parser.parse_args()
 
     # run handler for a given subcommand (see https://docs.python.org/3/library/argparse.html#the-add-argument-method)
-    args.handler(args)
+    if hasattr(args, "handler"):
+        try:
+            args.handler(args)
+        except PacupUserError as e:
+            print(e)
+    else:
+        parser.print_help()
