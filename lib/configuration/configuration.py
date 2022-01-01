@@ -1,6 +1,8 @@
-from .package import  Package
+from ..util.package import Package
 from .configuration_element import ConfigurationElementFactory, ConfigurationElement
 from .tagged_package_list import TaggedPackageList
+from . import util
+from ..util.output import PacupUserError
 
 class Configuration:
     def __init__(self):
@@ -19,7 +21,7 @@ class Configuration:
                 str(element.get_value()) if element.has_value() else ""
             )
             if key in seen:
-                raise ValueError("content contains duplicate rule")
+                raise PacupUserError("file content contains duplicate rule")
             seen.add(key)
             self.configuration_elements.append(element)
 
@@ -32,7 +34,7 @@ class Configuration:
             if element.modifier == "+":
                 if element.type == "pac":
                     if not package_list.contains(element.package.copy()): # type: ignore
-                        raise ValueError("{} not in tagged package list".format(element.package))
+                        raise PacupUserError("{} not in tagged package list".format(element.package))
                     packages.add(element.package.copy()) # type: ignore
                 elif element.type == "tag":
                     if element.tag not in tags: continue
@@ -41,7 +43,7 @@ class Configuration:
             else:
                 if element.type == "pac":
                     if not package_list.contains(element.package.copy()): # type: ignore
-                        raise ValueError("{} not in tagged package list".format(element.package))
+                        raise PacupUserError("{} not in tagged package list".format(element.package))
                     remove_package(element.package.copy()) # type: ignore
                 elif element.type == "tag":
                     if element.tag not in tags: continue
@@ -50,16 +52,27 @@ class Configuration:
         names = set()
         for package in packages:
             if package.name in names:
-                raise ValueError("invalid package list")
+                raise PacupUserError("A package was specified more than once with name {}".format(package.name))
             names.add(package.name)
         return sorted(list(packages))
 
 class ConfigurationFactory:
+
+    @staticmethod
+    def create_configuration_from_config(pacmanname) -> Configuration:
+        configuration_path = util.get_config_path(pacmanname)
+        return ConfigurationFactory.create_configuration_from_filename(configuration_path)
+
     @staticmethod
     def create_configuration_from_filename(filename) -> Configuration:
-        with open(filename) as file:
-            content = file.read()
-            return ConfigurationFactory.create_configuration_from_content(content)
+        content = None
+        try:
+            with open(filename) as file:
+                content = file.read()
+        except FileNotFoundError: raise PacupUserError("config path does not exist")
+        except IsADirectoryError: raise PacupUserError("config path is a directory")
+        assert(content != None)
+        return ConfigurationFactory.create_configuration_from_content(content)
 
     @staticmethod
     def create_configuration_from_content(content) -> Configuration:

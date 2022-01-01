@@ -1,9 +1,14 @@
-from .configuration import Configuration
-from .tagged_package_list import TaggedPackageList
-from .util import append_to_package_list
+from .configuration import Configuration, ConfigurationFactory
+from .tagged_package_list import TaggedPackageList, TaggedPackageListFactory
+from .util import get_config_path, get_list_path
 
 __all__ = [
     "Configuration",
+    "ConfigurationFactory",
     "TaggedPackageList",
-    "append_to_package_list"
+    "TaggedPackageListFactory",
+    "append_to_package_list",
+    "get_matching_packages",
+    "get_config_path",
+    "get_list_path",
 ]
