@@ -30,7 +30,10 @@ class Package:
         if self.version:
             return "{}@{}".format(self.name, self.version)
         else:
-            return self.name
+            return self.get_name()
+
+    def get_name(self):
+        return self.name
     
     def copy(self):
         return PackageFactory.create_package_from_values(self.name, self.version)

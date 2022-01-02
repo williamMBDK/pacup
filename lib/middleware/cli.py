@@ -8,6 +8,7 @@ from .. import list
 from .. import status
 from .configuration import *
 from .package_managers import *
+from .middleware import setup_middleware
 
 def add_common_arguments(parser):
     group = parser.add_mutually_exclusive_group()
@@ -25,10 +26,12 @@ def add_common_arguments(parser):
         dest="verbosity"
     )
 
-def setup_parser_backup(parser : argparse.ArgumentParser, middleware):
+def setup_parser_backup(parser : argparse.ArgumentParser):
+    setup_middleware(parser)
     parser.set_defaults(handler=backup.handler)
 
-def setup_parser_check(parser, middleware):
+def setup_parser_check(parser):
+    setup_middleware(parser)
     parser.set_defaults(handler=check.handler)
     # arguments
     add_common_arguments(parser)
@@ -36,53 +39,76 @@ def setup_parser_check(parser, middleware):
     add_config_argument(parser)
     add_list_argument(parser)
     # middleware
-    add_package_managers_middleware(middleware)
-    add_config_middleware(middleware)
-    add_list_middleware(middleware)
-    load_configs(middleware)
-    load_lists(middleware)
+    add_package_managers_middleware(parser)
+    add_config_middleware(parser)
+    add_list_middleware(parser)
+    load_configs(parser)
+    load_lists(parser)
 
-def setup_parser_clear_cache(parser, middleware):
+def setup_parser_clear_cache(parser):
+    setup_middleware(parser)
     parser.set_defaults(handler=clear_cache.handler)
 
-def setup_parser_generate_config(parser, middleware):
+def setup_parser_generate_config(parser):
+    setup_middleware(parser)
     parser.set_defaults(handler=generate_config.handler)
 
-def setup_parser_install(parser, middleware):
+def setup_parser_install(parser):
+    setup_middleware(parser)
     parser.set_defaults(handler=install.handler)
 
-def setup_parser_list(parser, middleware):
+def setup_parser_list(parser : argparse.ArgumentParser):
+    setup_middleware(parser)
     parser.set_defaults(handler=list.handler)
+    # arguments
+    add_common_arguments(parser)
+    add_package_managers_argument(parser)
+    # TODO these two could be in a mutually exclusive group?
+    parser.add_argument(
+        "-V", "--with-version",
+        dest="with_version",
+        action="store_true",
+        default=False
+    )
+    parser.add_argument(
+        "-c", "--count",
+        dest="perform_count",
+        action="store_true",
+        default=False
+    )
+    # middleware
+    add_package_managers_middleware(parser)
 
-def setup_parser_status(parser, middleware):
+def setup_parser_status(parser):
+    setup_middleware(parser)
     parser.set_defaults(handler=status.handler)
 
 def create_parser():
     parser = argparse.ArgumentParser(prog="pacup")
-    middleware = []
+    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
     ### subcommands ###
     subparsers = parser.add_subparsers()
 
     parser_backup = subparsers.add_parser('backup')
-    setup_parser_backup(parser_backup, middleware)
+    setup_parser_backup(parser_backup)
 
     parser_check = subparsers.add_parser('check')
-    setup_parser_check(parser_check, middleware)
+    setup_parser_check(parser_check)
 
     parser_clear_cache = subparsers.add_parser('clear-cache')
-    setup_parser_clear_cache(parser_clear_cache, middleware)
+    setup_parser_clear_cache(parser_clear_cache)
 
     parser_generate_config = subparsers.add_parser('generate-config')
-    setup_parser_generate_config(parser_generate_config, middleware)
+    setup_parser_generate_config(parser_generate_config)
 
     parser_install = subparsers.add_parser('install')
-    setup_parser_install(parser_install, middleware)
+    setup_parser_install(parser_install)
 
     parser_list = subparsers.add_parser('list')
-    setup_parser_list(parser_list, middleware)
+    setup_parser_list(parser_list)
 
     parser_status = subparsers.add_parser('status')
-    setup_parser_status(parser_status, middleware)
+    setup_parser_status(parser_status)
 
-    return parser, middleware
+    return parser

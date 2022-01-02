@@ -5,7 +5,7 @@ from .middleware import create_parser
 from .util.output import PacupUserError
 
 def main():
-    parser, middleware = create_parser()
+    parser = create_parser()
 
     # bash autocompletion
     try:
@@ -20,7 +20,7 @@ def main():
     # run handler for a given subcommand (see https://docs.python.org/3/library/argparse.html#the-add-argument-method)
     if hasattr(args, "handler"):
         try:
-            for f in middleware:
+            for f in args.middleware: # type: ignore
                 f(args)
             args.handler(args)
         except PacupUserError as e:
