@@ -19,7 +19,7 @@ def print_success(s):
     print_green("PACUP: {}".format(s))
 
 def print_additional_info(s):
-    print(colored("PACUP INFO: {}".format(s), "green"))
+    print(colored("PACUP INFO: {}".format(s), "cyan"))
 
 def print_needed_info(s):
     print("PACUP: {}".format(s))

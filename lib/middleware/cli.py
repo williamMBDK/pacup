@@ -49,6 +49,8 @@ def setup_parser_check(parser):
 def setup_parser_clear_cache(parser):
     setup_middleware(parser)
     parser.set_defaults(handler=clear_cache.handler)
+    # arguments
+    add_common_arguments(parser)
 
 def setup_parser_generate_config(parser):
     setup_middleware(parser)
