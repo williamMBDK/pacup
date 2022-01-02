@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # PYTHON_ARGCOMPLETE_OK
 
-from . import cli
+from .middleware import create_parser
 from .util.output import PacupUserError
 
 def main():
-    parser, middleware = cli.create_parser()
+    parser, middleware = create_parser()
 
     # bash autocompletion
     try:

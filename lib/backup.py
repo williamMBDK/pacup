@@ -1,4 +1,4 @@
-from .package_managers import package_managers
+#from .package_managers import package_managers
 from .util.package import PackageFactory
 
 def handler(args):
