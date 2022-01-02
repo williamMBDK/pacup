@@ -2,7 +2,7 @@
 # PYTHON_ARGCOMPLETE_OK
 
 from .middleware import create_parser
-from .util.output import PacupUserError
+from .util.output import PacupUserError, PacupUnknownError, print_error
 
 def main():
     parser = create_parser()
@@ -24,6 +24,8 @@ def main():
                 f(args)
             args.handler(args)
         except PacupUserError as e:
-            print(e)
+            print_error(e)
+        except PacupUnknownError as e:
+            print_error(e)
     else:
         parser.print_help()

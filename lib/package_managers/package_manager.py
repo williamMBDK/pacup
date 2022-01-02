@@ -1,8 +1,10 @@
 import os, subprocess
+from typing import Optional
 
 from ..util import package
 from ..util.package import Package
-from ..util.output import PacupUserError
+from ..util.output import PacupUserError, PacupUnknownError
+from ..configuration import get_config_path, get_list_path, Configuration, TaggedPackageList
 
 PACMANDIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -40,6 +42,8 @@ class PackageManager:
     def __init__(self, name):
         assert(name in PackageManager.valid_package_managers)
         self.name = name
+        self.config : Optional[Configuration] = None
+        self.list : Optional[TaggedPackageList] = None
 
     def __eq__(self, other):
         if isinstance(other, PackageManager):
@@ -65,8 +69,9 @@ class PackageManager:
 
     def get_installed_packages(self) -> list[Package]:
         # TODO cache?
-        exitcode,stdout,_ = run_command("{}/get.sh".format(self._get_path()))
-        assert(exitcode == 0)
+        cmd="{}/get.sh".format(self._get_path())
+        exitcode,stdout,_ = run_command(cmd)
+        if exitcode != 0: raise PacupUnknownError("an error occurred when listing explicit packages from {}.\nThis may be your installation not working or an error in pacup.\nYou may try running {} to see what caused the error.".format(self.name, cmd))
         return [
             package.PackageFactory.create_package_from_string(line)
             for line in stdout.split()
@@ -85,7 +90,7 @@ class PackageManager:
         if exitcode == 1:
             raise PacupUserError("while installing with {} an error for package: {}".format(self.name, package))
         if exitcode == 2:
-            raise PacupUserError("{} does not support installing specific a version".format(self.name))
+            raise PacupUserError("{} does not support installing a specific version".format(self.name))
         assert(exitcode == 0)
 
     def is_package_installed(self, package):
@@ -100,3 +105,31 @@ class PackageManager:
         )
         assert(exitcode == 0 or exitcode == 1)
         return exitcode == 0
+
+    def has_config(self):
+        return os.path.exists(get_config_path(self.name))
+
+    def has_list(self):
+        return os.path.exists(get_config_path(self.name))
+
+    def get_config_path(self):
+        assert(self.has_config())
+        return get_config_path(self.name)
+
+    def get_list_path(self):
+        assert(self.has_list())
+        return get_list_path(self.name)
+
+    def set_config(self, config):
+        self.config = config
+
+    def set_list(self, list):
+        self.list = list
+
+    def get_config(self):
+        assert(self.config != None)
+        return self.config
+
+    def get_list(self):
+        assert(self.list != None)
+        return self.list

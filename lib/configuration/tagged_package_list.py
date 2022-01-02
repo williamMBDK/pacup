@@ -1,7 +1,6 @@
 from .tagged_package import TaggedPackageFactory, TaggedPackage
 from ..util.package import PackageFactory, Package
 from ..util.output import PacupUserError
-from . import util
 
 class TaggedPackageList:
     def __init__(self):
@@ -55,11 +54,6 @@ class TaggedPackageList:
         self.append(TaggedPackageFactory.create_tagged_package_from_string(string))
 
 class TaggedPackageListFactory:
-
-    @staticmethod
-    def create_list_from_config(pacmanname) -> TaggedPackageList:
-        list_path = util.get_list_path(pacmanname)
-        return TaggedPackageListFactory.create_list_from_filename(list_path)
 
     @staticmethod
     def create_list_from_filename(filename) -> TaggedPackageList:

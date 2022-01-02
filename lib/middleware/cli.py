@@ -8,7 +8,7 @@ from .. import list
 from .. import status
 from .configuration import *
 from .package_managers import *
-from .middleware import setup_middleware
+from .middleware import setup_middleware, add_middleware
 
 def add_common_arguments(parser):
     group = parser.add_mutually_exclusive_group()
@@ -39,11 +39,12 @@ def setup_parser_check(parser):
     add_config_argument(parser)
     add_list_argument(parser)
     # middleware
-    add_package_managers_middleware(parser)
-    add_config_middleware(parser)
-    add_list_middleware(parser)
-    load_configs(parser)
-    load_lists(parser)
+    add_middleware(parser, add_package_managers_conversion_middleware)
+    add_middleware(parser, add_package_managers_is_installed_middleware)
+    add_middleware(parser, config_middleware)
+    add_middleware(parser, list_middleware)
+    add_middleware(parser, load_configs)
+    add_middleware(parser, load_lists)
 
 def setup_parser_clear_cache(parser):
     setup_middleware(parser)
@@ -77,11 +78,19 @@ def setup_parser_list(parser : argparse.ArgumentParser):
         default=False
     )
     # middleware
-    add_package_managers_middleware(parser)
+    add_middleware(parser, add_package_managers_conversion_middleware)
+    add_middleware(parser, add_package_managers_is_installed_middleware)
 
 def setup_parser_status(parser):
     setup_middleware(parser)
     parser.set_defaults(handler=status.handler)
+    # arguments
+    add_common_arguments(parser)
+    add_package_managers_argument(parser)
+    add_config_argument(parser)
+    add_list_argument(parser)
+    # middleware
+    add_middleware(parser, add_package_managers_conversion_middleware)
 
 def create_parser():
     parser = argparse.ArgumentParser(prog="pacup")

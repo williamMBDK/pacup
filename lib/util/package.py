@@ -50,6 +50,9 @@ class Package:
             elif other.version == None: return False
             else: return self.version < other.version
         return self.name < other.name
+    
+    def without_version(self):
+        return PackageFactory.create_package_from_values(self.name, None)
 
 class PackageFactory:
     

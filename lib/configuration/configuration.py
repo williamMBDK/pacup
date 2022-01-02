@@ -1,7 +1,6 @@
 from ..util.package import Package
 from .configuration_element import ConfigurationElementFactory, ConfigurationElement
 from .tagged_package_list import TaggedPackageList
-from . import util
 from ..util.output import PacupUserError
 
 class Configuration:
@@ -57,11 +56,6 @@ class Configuration:
         return sorted(list(packages))
 
 class ConfigurationFactory:
-
-    @staticmethod
-    def create_configuration_from_config(pacmanname) -> Configuration:
-        configuration_path = util.get_config_path(pacmanname)
-        return ConfigurationFactory.create_configuration_from_filename(configuration_path)
 
     @staticmethod
     def create_configuration_from_filename(filename) -> Configuration:
