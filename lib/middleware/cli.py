@@ -4,10 +4,26 @@ from .. import check
 from .. import clear_cache
 from .. import generate_config
 from .. import install
-from .. import list_subcommand
+from .. import list
 from .. import status
 from .configuration import *
 from .package_managers import *
+
+def add_common_arguments(parser):
+    group = parser.add_mutually_exclusive_group()
+    group.set_defaults(verbosity=1)
+    group.add_argument(
+        "-q", "--quiet",
+        action="store_const",
+        const=0,
+        dest="verbosity"
+    )
+    group.add_argument(
+        "-v", "--verbose",
+        action="store_const",
+        const=2,
+        dest="verbosity"
+    )
 
 def setup_parser_backup(parser : argparse.ArgumentParser, middleware):
     parser.set_defaults(handler=backup.handler)
@@ -15,6 +31,7 @@ def setup_parser_backup(parser : argparse.ArgumentParser, middleware):
 def setup_parser_check(parser, middleware):
     parser.set_defaults(handler=check.handler)
     # arguments
+    add_common_arguments(parser)
     add_package_managers_argument(parser)
     add_config_argument(parser)
     add_list_argument(parser)
@@ -35,7 +52,7 @@ def setup_parser_install(parser, middleware):
     parser.set_defaults(handler=install.handler)
 
 def setup_parser_list(parser, middleware):
-    parser.set_defaults(handler=list_subcommand.handler)
+    parser.set_defaults(handler=list.handler)
 
 def setup_parser_status(parser, middleware):
     parser.set_defaults(handler=status.handler)

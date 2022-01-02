@@ -54,7 +54,7 @@ def load_configs(middleware):
     middleware.append(f)
 
 # depends on:
-    # args.package_managers
+    # args.package_managers, also modifies this
     # args.list
 def load_lists(middleware):
     def f(args):
