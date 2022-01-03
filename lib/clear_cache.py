@@ -1,5 +1,5 @@
 import os, shutil
-from .util.output import print_additional_info
+from .util.io import print_additional_info
 
 def handler(args):
     path ="~/.cache/pacup"

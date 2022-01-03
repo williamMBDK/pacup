@@ -1,5 +1,5 @@
 from .middleware.configuration import load_configs, load_lists, config_middleware, list_middleware
-from .util.output import print_cyan, print_needed_info, print_green, print_warning, print_success, print_blue, print_normal
+from .util.io import print_cyan, print_needed_info, print_green, print_warning, print_success, print_blue, print_normal
 from .configuration import get_configs_dir, get_lists_dir
 from .package_managers import PackageManager
 
@@ -51,6 +51,8 @@ def status_of_packages_for_package_manager(pm : PackageManager):
         if not pm.is_package_installed(pac):
             print_warning("NOT INSTALLED OR NOT UP-TO-DATE: {}".format(pac))
     explicits = pm.get_installed_packages()
+    # TODO refactor such that there is a 'package_list' type which pm.get_list()
+    # inherits from and which matches and explicits 'is'
     for pac in explicits:
         if not pm.get_list().contains(pac) and \
            not pm.get_list().contains(pac.without_version()):

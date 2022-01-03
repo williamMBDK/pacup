@@ -1,4 +1,4 @@
-from .util.output import print_normal, print_success
+from .util.io import print_normal, print_success
 from .package_managers import PackageManager
 
 def handler(args):

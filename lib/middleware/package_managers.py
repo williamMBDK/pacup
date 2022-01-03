@@ -1,5 +1,5 @@
 from ..package_managers import valid_package_manager_names, get_package_managers, PackageManager
-from ..util.output import print_warning
+from ..util.io import print_warning
 
 def add_package_managers_argument(parser):
     # 'all' is a hack to fix this bug: https://bugs.python.org/issue41047

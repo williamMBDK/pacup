@@ -3,7 +3,7 @@ from typing import Optional
 
 from ..util import package
 from ..util.package import Package
-from ..util.output import PacupUserError, PacupUnknownError
+from ..util.io import PacupUserError, PacupUnknownError
 from ..configuration import get_config_path, get_list_path, Configuration, TaggedPackageList
 
 PACMANDIR = os.path.abspath(os.path.dirname(__file__))

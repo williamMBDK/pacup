@@ -1,6 +1,6 @@
 from .tagged_package import TaggedPackageFactory, TaggedPackage
 from ..util.package import PackageFactory, Package
-from ..util.output import PacupUserError
+from ..util.io import PacupUserError
 
 class TaggedPackageList:
     def __init__(self):

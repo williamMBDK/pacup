@@ -1,7 +1,7 @@
 from ..util.package import Package
 from .configuration_element import ConfigurationElementFactory, ConfigurationElement
 from .tagged_package_list import TaggedPackageList
-from ..util.output import PacupUserError
+from ..util.io import PacupUserError
 
 class Configuration:
     def __init__(self):

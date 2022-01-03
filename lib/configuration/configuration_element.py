@@ -1,6 +1,6 @@
 from typing import Optional
 from ..util.package import PackageFactory, Package
-from ..util.output import PacupUserError
+from ..util.io import PacupUserError
 
 class ConfigurationElement:
 

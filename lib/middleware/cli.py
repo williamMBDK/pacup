@@ -9,6 +9,7 @@ from .. import status
 from .configuration import *
 from .package_managers import *
 from .middleware import setup_middleware, add_middleware
+from ..configuration import get_lists_dir, get_configs_dir
 
 def add_common_arguments(parser):
     group = parser.add_mutually_exclusive_group()
@@ -55,6 +56,10 @@ def setup_parser_clear_cache(parser):
 def setup_parser_generate_config(parser):
     setup_middleware(parser)
     parser.set_defaults(handler=generate_config.handler)
+    # arguments
+    add_common_arguments(parser)
+    add_configs_dir_argument(parser)
+    add_lists_dir_argument(parser)
 
 def setup_parser_install(parser):
     setup_middleware(parser)

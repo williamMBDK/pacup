@@ -1,5 +1,6 @@
+from ..configuration import get_configs_dir, get_lists_dir
 from ..configuration import ConfigurationFactory, TaggedPackageListFactory
-from ..util.output import print_warning
+from ..util.io import print_warning
 
 def add_config_argument(parser):
     parser.add_argument(
@@ -76,3 +77,17 @@ def load_lists(args):
                     .format(pm.name, pm.get_lsit_path())
                 )
     args.package_managers = new_package_managers
+
+def add_configs_dir_argument(parser):
+    parser.add_argument(
+        "-c", "--configs-dir",
+        dest="configs_dir",
+        default=get_configs_dir()
+    )
+    
+def add_lists_dir_argument(parser):
+    parser.add_argument(
+        "-l", "--lists-dir",
+        dest="lists_dir",
+        default=get_lists_dir()
+    )

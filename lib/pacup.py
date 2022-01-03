@@ -2,7 +2,7 @@
 # PYTHON_ARGCOMPLETE_OK
 
 from .middleware import create_parser
-from .util.output import PacupUserError, PacupUnknownError, print_error
+from .util.io import PacupUserError, PacupUnknownError, print_error
 
 def main():
     parser = create_parser()

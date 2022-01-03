@@ -9,7 +9,7 @@ class PacupUnknownError(Exception):
 def print_warning(s):
     print(colored("PACUP WARNING: {}".format(s), "yellow"))
 
-def print_normal(s):
+def print_normal(s=""):
     print(s)
 
 def print_error(s):
@@ -24,6 +24,9 @@ def print_additional_info(s):
 def print_needed_info(s):
     print("PACUP: {}".format(s))
 
+def print_needed_info_no_newline(s):
+    print("PACUP: {}".format(s),end="")
+
 def print_green(s):
     print(colored(s, "green"))
 
@@ -32,3 +35,13 @@ def print_cyan(s):
 
 def print_blue(s):
     print(colored(s, "blue"))
+
+def lazy_confirm(question):
+    while True:
+        print_needed_info_no_newline("{} [Y\\n]: ".format(question))
+        ans = input()
+        if ans == "n" or ans == "N":
+            return False
+        elif ans == "y" or ans == "Y" or ans == "":
+            return True
+        print_needed_info_no_newline("Invalid input. Try again.")
