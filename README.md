@@ -57,24 +57,107 @@ Initially you can use `pacup generate-config` to generate starting configuration
 * Upcoming: Compatible with the POSIX shell specification, and can thus run on nearly any linux distribution.
 
 # Configuration 
-## Package-lists
-### Location
-### Format
-* Can contain duplicate packages (the same package but with different versions).
-## Configurations (configs)
-The configuration files that specify which packages a specific Linux machine should have installed for each chosen package manager.
-### Location
-### Format
-* Cannot contain duplicate packages.
+The configuration consists of two parts: 'package-lits' and 'configs'.
 
-# Support for additional package managers
+## Package-lists
+A package-list contains a list of package with tags.
+
+### Location
+PacUp will look for package-lists in `~/.config/pacup/lists/PACKAGE_MANAGER.list`, where `PACKAGE_MANAGER` is the name of some supported package manager. Alternatively the environment variable `PACUP_LISTS_DIR` can be set the directory to look for `PACKAGE_MANAGER.list` files.
+
+### Format
+* Each line describes a package and has one of the following formats.
+```
+name@version [tag ...]
+name [tag ...]
+```
+where `[tag ...]` represents any amount (0 to infinity) of tags the package should have. When only a `name` is provided then it generally just means that the version isn't specified, but typically it means the latest version of the package.
+* Can contain duplicate packages (the same package but with different versions). For example you might use an older version of `numpy` on a machine.
+```
+numpy@1.11 ml dev
+numpy ml dev
+```
+* A complete example: `~/.config/pacup/lists/pip.list`
+```
+argcomplete personal-projects dev
+numpy@1.11 ml dev
+numpy ml dev
+scipy ml dev
+opencv ml gpu dev
+virtualenv dev
+six
+```
+
+## Configurations (configs)
+The configuration files that specify which packages a specific Linux machine should have installed for each chosen package manager. A configuration file has a corresponding package-list from which it selects the packages to be installed.
+
+### Location
+PacUp will look for configs in `~/.config/pacup/configs/PACKAGE_MANAGER.conf`, where `PACKAGE_MANAGER` is the name of some supported package manager. Alternatively the environment variable `PACUP_CONFIGS_DIR` can be set the directory to look for `PACKAGE_MANAGER.conf` files.
+
+### Format
+* We can view the format a program of commands being executed from the first line to the last line. The output of this program is a set of packages, which should be installed for a given package manager. Initially the set is empty. Each command has the following format.
+```
+-|+ tag|pac name@version|name|tag
+```
+For example the following means adding `numpy` to the set of packages.
+```
++ pac numpy
+```
+For example the following means erasing `numpy` from the set of packages if it is present.
+```
+- pac numpy
+```
+For example the following means adding all packages with the tag `dev` to the set.
+```
++ tag dev
+```
+* Packages must be present in the corresponding package-list. For example if the following is the package-list.
+```
+numpy@1.1
+numpy@1.3
+numpy
+```
+Then the following configuration is invalid.
+```
++ pac numpy@1.2
+```
+Since `numpy` with version `1.2` is not specified in the package-list.
+
+* Cannot evaluate to duplicate packages. For example the following is an invalid configuration.
+```
++ pac numpy@1.1
++ pac numpy@1.3
+```
+Since it evaluates to a set containing numpy twice with two different versions.
+Now consider the following package-list.
+```
+numpy@1.1 dev
+numpy@1.3 dev
+numpy dev
+```
+If we try to add the tag `dev` in the configuration, then we must make sure that the configuration evaluates to only one version of numpy, for example in the following manner.
+```
++ tag dev
+- pac numpy@1.1
+- pac numpy@1.3
+```
+
+# Custom package managers
+The environment variable `PACUP_EXTRA_PMS` can be set to a directory, and every subdirectory of this directory will be considered as an additional package-manager which name is the name of the subdirectory. Each subdirectory should contains 4 shell scripts.
+* exists.sh - Has exit code 0 if the package manager is installed, otherwise non-zero
+* get.sh - Prints a list of all the explicitly installed packages. An explicitly installed package means one which was installed manually by the user. If a version is available it should be printed as well in the format `name@version`.
+* install.sh - Installs a given package using the package manager. The first argument is the name of the package, the second is the version of the package (optional). If the package manager does not support installing a specific version it should exit with non-zero exit code if the second parameter is provided.
+* pac-installed.sh - Has exit code 0 if a given package is installed. The first argument is the name of the package, the second is the version of the package (optional), otherwise non-zero.
+
+Note that for all of these commands `~/.cache/pacup/PACKAGE_MANAGER` can be used as a cache to make some of the above commands faster on average (ex. see pacman).
 
 # Contributing
 Feel free to contribute.
+Especially by adding support for more package managers like described above.
 
 \- William
 
-## TODO
+# TODO
 - PacUp status default all
 - script for each packagemanager that prints what features are available
 - what if a newer version of a match is installed and we try to install the match?
