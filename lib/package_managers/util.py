@@ -1,14 +1,7 @@
 import os, subprocess, sys
-from . import package_manager
 from ..util.io import print_error
 
 PACMANDIR = os.path.abspath(os.path.dirname(__file__))
-
-def get_package_managers():
-    return [
-        package_manager.PackageManager(pacman)
-        for pacman in package_manager.PackageManager.valid_package_manager_names
-    ]
 
 def get_valid_package_managers_paths():
     name2path = {}
@@ -29,6 +22,10 @@ def get_valid_package_managers_paths():
                     sys.exit(1)
                 name2path[entry] = dir
     return name2path
+
+valid_package_managers_paths = get_valid_package_managers_paths()
+valid_package_manager_names = list(valid_package_managers_paths.keys())
+valid_package_manager_names.sort()
 
 def run_command(cmd):
     res = subprocess.run(

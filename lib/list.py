@@ -2,7 +2,8 @@ from .util.io import print_normal, print_success
 from .package_managers import PackageManager
 
 def handler(args):
-    for pm in args.package_managers:
+    for i,pm in enumerate(args.package_managers):
+        if i > 0: print_normal()
         pm : PackageManager = pm
         if args.perform_count:
             count = len(pm.get_installed_packages())

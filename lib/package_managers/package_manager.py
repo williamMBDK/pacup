@@ -1,19 +1,15 @@
 import os
 from typing import Optional
-
 from ..util import package
 from ..util.package import Package
 from ..util.io import PacupInstallError, PacupUnknownError
 from ..configuration import get_config_path, get_list_path, Configuration, TaggedPackageList
-from .util import get_valid_package_managers_paths, run_command, run_command_interactive
+from .util import run_command, run_command_interactive, valid_package_managers_paths, valid_package_manager_names
 
 class PackageManager:
-    valid_package_managers_paths = get_valid_package_managers_paths()
-    valid_package_manager_names = list(valid_package_managers_paths.keys())
-    valid_package_manager_names.sort()
 
     def __init__(self, name):
-        assert(name in PackageManager.valid_package_managers_paths)
+        assert(name in valid_package_managers_paths)
         self.name = name
         self.config : Optional[Configuration] = None
         self.list : Optional[TaggedPackageList] = None
@@ -32,7 +28,7 @@ class PackageManager:
         return self.name
 
     def _get_path(self):
-        return PackageManager.valid_package_managers_paths[self.name]
+        return valid_package_managers_paths[self.name]
 
     def is_installed(self) -> bool:
         if hasattr(self, "is_installed_cache"): return self.is_installed_cache
@@ -106,3 +102,9 @@ class PackageManager:
     def get_list(self):
         assert(self.list != None)
         return self.list
+
+def get_package_managers():
+    return [
+        PackageManager(pacman)
+        for pacman in valid_package_manager_names
+    ]

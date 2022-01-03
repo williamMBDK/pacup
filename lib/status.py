@@ -5,14 +5,14 @@ from .package_managers import PackageManager
 
 def handler(args):
     status_of_user_configuration()
-    print_normal("")
+    print_normal()
     status_of_package_managers(args)
     config_middleware(args)
     list_middleware(args)
     load_configs(args)
     load_lists(args)
     for pm in args.package_managers:
-        print_normal("")
+        print_normal()
         status_of_packages_for_package_manager(pm)
 
 def status_of_user_configuration():
