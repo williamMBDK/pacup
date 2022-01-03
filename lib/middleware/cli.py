@@ -97,6 +97,24 @@ def setup_parser_generate_config(parser):
 def setup_parser_install(parser):
     setup_middleware(parser)
     parser.set_defaults(handler=install.handler)
+    # arguments
+    add_common_arguments(parser)
+    add_package_managers_argument(parser)
+    add_config_argument(parser)
+    add_list_argument(parser)
+    add_yes_argument(parser)
+    parser.add_argument(
+        "-t", "--test",
+        action="store_true",
+        default=False
+    )
+    # middleware
+    add_middleware(parser, add_package_managers_conversion_middleware)
+    add_middleware(parser, add_package_managers_is_installed_middleware)
+    add_middleware(parser, config_middleware)
+    add_middleware(parser, list_middleware)
+    add_middleware(parser, load_configs)
+    add_middleware(parser, load_lists)
 
 def setup_parser_list(parser : argparse.ArgumentParser):
     setup_middleware(parser)

@@ -3,7 +3,7 @@ from typing import Optional
 
 from ..util import package
 from ..util.package import Package
-from ..util.io import PacupUserError, PacupUnknownError
+from ..util.io import PacupInstallError, PacupUnknownError
 from ..configuration import get_config_path, get_list_path, Configuration, TaggedPackageList
 
 PACMANDIR = os.path.abspath(os.path.dirname(__file__))
@@ -88,9 +88,9 @@ class PackageManager:
             )
         )
         if exitcode == 1:
-            raise PacupUserError("while installing with {} an error for package: {}".format(self.name, package))
+            raise PacupInstallError("while installing with {} an error for package: {}".format(self.name, package))
         if exitcode == 2:
-            raise PacupUserError("{} does not support installing a specific version".format(self.name))
+            raise PacupInstallError("{} does not support installing a specific version".format(self.name))
         assert(exitcode == 0)
 
     def is_package_installed(self, package):

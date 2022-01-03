@@ -1,6 +1,10 @@
 from termcolor import colored
+import os
 
 class PacupUserError(Exception):
+    pass
+
+class PacupInstallError(Exception):
     pass
 
 class PacupUnknownError(Exception):
@@ -45,3 +49,7 @@ def lazy_confirm(question):
         elif ans == "y" or ans == "Y" or ans == "":
             return True
         print_needed_info_no_newline("Invalid input. Try again.")
+
+def print_fill_width(char):
+    w,_ = os.get_terminal_size()
+    print_normal(w * char)
