@@ -1,3 +1,6 @@
+from .configuration import TaggedPackageListFactory
+from .package_managers import PackageManager
+from .backup import backup_into_package_manager_list
 from pathlib import Path
 from .util.io import print_additional_info, lazy_confirm, print_needed_info, print_normal, print_success, print_warning
 from .package_managers import get_package_managers
@@ -42,7 +45,7 @@ def generate_config_files(args, pms):
                 f.write("+ all")
             print_success("Created file: {}".format(filename))
 
-def generate_list_files(args, pms):
+def generate_list_files(args, pms : list[PackageManager]):
     lists_dir=Path(args.lists_dir)
     print_needed_info("GENERATING PACKAGE-LIST FILES")
     print_needed_info("Using directory: {}".format(lists_dir))
@@ -54,5 +57,11 @@ def generate_list_files(args, pms):
         else:
             print_needed_info("Generating package-list file for {}: {}".format(pm.name, filename))
             print_needed_info("Backing up existing manually installed {} packages into {}".format(pm.name, filename))
-            # TODO call backup
+            pm.set_list(TaggedPackageListFactory.create_list_from_content(""))
+            backup_into_package_manager_list(type("",(object,),dict( # TODO this is a bit ugly
+                list=filename,
+                with_version=False,
+                interactive=False,
+                verbosity=0,
+            )),pm)
             print_success("Backup complete: pacup backup -qy -l {} {}".format(filename, pm.name))

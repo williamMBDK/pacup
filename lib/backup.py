@@ -5,11 +5,13 @@ from .package_managers.package_manager import PackageManager
 def handler(args):
     for i,pm in enumerate(args.package_managers):
         if i > 0: print_normal()
-        backup(args, pm)
+        backup_into_package_manager_list(args, pm)
 
-def backup(args, pm : PackageManager):
-    list_path = pm.get_list_path()
+def backup_into_package_manager_list(args, pm : PackageManager):
+    list_path = None
+    if pm.has_list(): list_path = pm.get_list_path()
     if args.list != None: list_path = args.list
+    assert(list_path != None)
     explicits = pm.get_installed_packages()
     tagged_list = pm.get_list()
     pacs_to_add = []
