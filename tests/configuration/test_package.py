@@ -1,5 +1,7 @@
 import unittest
-from configuration.package import Package, TaggedPackage
+from lib.util.io import PacupUserError
+from lib.util.package import Package
+from lib.configuration.tagged_package import TaggedPackage
 
 class TestPackage(unittest.TestCase):
 

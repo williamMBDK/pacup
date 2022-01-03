@@ -1,6 +1,7 @@
+from lib.util.io import PacupUserError
 import unittest
-from configuration.tagged_package_list import TaggedPackageList
-from configuration.package import PackageFactory
+from lib.configuration.tagged_package_list import TaggedPackageList
+from lib.util.package import PackageFactory
 
 class TestTaggedPackageList(unittest.TestCase):
     def setUp(self):
@@ -31,7 +32,7 @@ class TestTaggedPackageList(unittest.TestCase):
                 a@1 sdf sf 
                 """
             )
-        except ValueError:
+        except PacupUserError:
             err = True
         self.assertTrue(err)
 
@@ -92,4 +93,4 @@ class TestTaggedPackageList(unittest.TestCase):
         )
         def test():
             self.package_list.append_str("b@2")
-        self.assertRaises(ValueError, test)
+        self.assertRaises(PacupUserError, test)

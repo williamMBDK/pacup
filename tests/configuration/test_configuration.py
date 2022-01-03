@@ -1,6 +1,7 @@
 import unittest
-from configuration.configuration import Configuration
-from configuration.tagged_package_list import TaggedPackageList
+from lib.util.io import PacupUserError
+from lib.configuration.configuration import Configuration
+from lib.configuration.tagged_package_list import TaggedPackageList
 
 class TestConfiguration(unittest.TestCase):
     def setUp(self):
@@ -121,7 +122,7 @@ class TestConfiguration(unittest.TestCase):
         )
         def test():
             self.config.get_matching_packages(package_list)
-        self.assertRaises(ValueError, test)
+        self.assertRaises(PacupUserError, test)
 
     def test_get_matching_packages_invalid_tag(self):
         package_list = TaggedPackageList()
