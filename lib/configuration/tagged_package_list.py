@@ -36,7 +36,7 @@ class TaggedPackageList:
         return tags
     
     def contains(self, package : Package):
-        # can be optimized
+        # TODO can be optimized
         return package in self.tagged_packages
     
     def write_to_file(self, filename : str):

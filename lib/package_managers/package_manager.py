@@ -1,21 +1,32 @@
-import os, subprocess
+import os, subprocess, sys
 from typing import Optional
 
 from ..util import package
 from ..util.package import Package
-from ..util.io import PacupInstallError, PacupUnknownError
+from ..util.io import PacupInstallError, PacupUnknownError, print_error
 from ..configuration import get_config_path, get_list_path, Configuration, TaggedPackageList
 
 PACMANDIR = os.path.abspath(os.path.dirname(__file__))
 
-def get_package_manager_names():
-    names = []
+def get_valid_package_managers_paths():
+    name2path = {}
     for entry in os.listdir(PACMANDIR):
-        if os.path.isdir(os.path.join(PACMANDIR, entry)) and \
+        dir=os.path.join(PACMANDIR, entry)
+        if os.path.isdir(dir) and \
            entry != "__pycache__":
-            names.append(entry)
-    names.sort()
-    return names
+            name2path[entry] = dir
+    if "PACUP_EXTRA_PMS" in os.environ:
+        root_dir = os.environ["PACUP_EXTRA_PMS"]
+        for entry in os.listdir(root_dir):
+            dir=os.path.join(root_dir, entry)
+            if os.path.isdir(dir):
+                if entry in name2path:
+                    print_error("A package manager in $PACUP_EXTRA_PMS has the same name as a supported package manager: {}"
+                        .format(entry)
+                    )
+                    sys.exit(1)
+                name2path[entry] = dir
+    return name2path
 
 def run_command(cmd):
     res = subprocess.run(
@@ -37,10 +48,12 @@ def run_command_interactive(cmd):
     return exitcode
 
 class PackageManager:
-    valid_package_managers = get_package_manager_names()
+    valid_package_managers_paths = get_valid_package_managers_paths()
+    valid_package_manager_names = list(valid_package_managers_paths.keys())
+    valid_package_manager_names.sort()
 
     def __init__(self, name):
-        assert(name in PackageManager.valid_package_managers)
+        assert(name in PackageManager.valid_package_managers_paths)
         self.name = name
         self.config : Optional[Configuration] = None
         self.list : Optional[TaggedPackageList] = None
@@ -59,7 +72,7 @@ class PackageManager:
         return self.name
 
     def _get_path(self):
-        return "{}/{}".format(PACMANDIR, self.name)
+        return PackageManager.valid_package_managers_paths[self.name]
 
     def is_installed(self) -> bool:
         if hasattr(self, "is_installed_cache"): return self.is_installed_cache
