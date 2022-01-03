@@ -1,51 +1,11 @@
-import os, subprocess, sys
+import os
 from typing import Optional
 
 from ..util import package
 from ..util.package import Package
-from ..util.io import PacupInstallError, PacupUnknownError, print_error
+from ..util.io import PacupInstallError, PacupUnknownError
 from ..configuration import get_config_path, get_list_path, Configuration, TaggedPackageList
-
-PACMANDIR = os.path.abspath(os.path.dirname(__file__))
-
-def get_valid_package_managers_paths():
-    name2path = {}
-    for entry in os.listdir(PACMANDIR):
-        dir=os.path.join(PACMANDIR, entry)
-        if os.path.isdir(dir) and \
-           entry != "__pycache__":
-            name2path[entry] = dir
-    if "PACUP_EXTRA_PMS" in os.environ:
-        root_dir = os.environ["PACUP_EXTRA_PMS"]
-        for entry in os.listdir(root_dir):
-            dir=os.path.join(root_dir, entry)
-            if os.path.isdir(dir):
-                if entry in name2path:
-                    print_error("A package manager in $PACUP_EXTRA_PMS has the same name as a supported package manager: {}"
-                        .format(entry)
-                    )
-                    sys.exit(1)
-                name2path[entry] = dir
-    return name2path
-
-def run_command(cmd):
-    res = subprocess.run(
-        cmd,
-        capture_output=True,
-        shell=True
-    )
-    exitcode = res.returncode
-    stdout = res.stdout.decode('utf-8')
-    stderr = res.stderr.decode('utf-8')
-    return exitcode, stdout, stderr
-
-def run_command_interactive(cmd):
-    res = subprocess.run(
-        cmd,
-        shell=True
-    )
-    exitcode = res.returncode
-    return exitcode
+from .util import get_valid_package_managers_paths, run_command, run_command_interactive
 
 class PackageManager:
     valid_package_managers_paths = get_valid_package_managers_paths()
