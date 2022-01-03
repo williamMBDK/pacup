@@ -3,8 +3,15 @@
 
 from .middleware import create_parser
 from .util.io import PacupUserError, PacupUnknownError, print_error
+import signal, sys
+
+def siginthandler(sig, frame):
+    sys.exit(0)
 
 def main():
+
+    signal.signal(signal.SIGINT, siginthandler)
+
     parser = create_parser()
 
     # bash autocompletion
@@ -25,7 +32,11 @@ def main():
             args.handler(args)
         except PacupUserError as e:
             print_error(e)
+            sys.exit(1)
         except PacupUnknownError as e:
             print_error(e)
+            sys.exit(2)
     else:
         parser.print_help()
+
+    sys.exit(0)
