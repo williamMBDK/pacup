@@ -112,12 +112,12 @@ class PackageManager:
     def has_list(self):
         return os.path.exists(get_config_path(self.name))
 
-    def get_config_path(self):
-        assert(self.has_config())
+    def get_config_path(self, do_assert=True):
+        if do_assert: assert(self.has_config())
         return get_config_path(self.name)
 
-    def get_list_path(self):
-        assert(self.has_list())
+    def get_list_path(self, do_assert=True):
+        if do_assert: assert(self.has_list())
         return get_list_path(self.name)
 
     def set_config(self, config):

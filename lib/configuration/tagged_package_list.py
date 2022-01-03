@@ -61,8 +61,16 @@ class TaggedPackageListFactory:
         try:
             with open(filename) as file:
                 content = file.read()
-        except FileNotFoundError: raise PacupUserError("package list path does not exist")
-        except IsADirectoryError: raise PacupUserError("package list path is a directory")
+        except FileNotFoundError:
+            raise PacupUserError(
+                "package list path does not exist: {}"
+                .format(filename)
+            )
+        except IsADirectoryError:
+            raise PacupUserError(
+                "package list path is a directory: {}"
+                .format(filename)
+            )
         assert(content != None)
         return TaggedPackageListFactory.create_list_from_content(content)
 

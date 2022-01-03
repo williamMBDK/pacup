@@ -9,7 +9,6 @@ from .. import status
 from .configuration import *
 from .package_managers import *
 from .middleware import setup_middleware, add_middleware
-from ..configuration import get_lists_dir, get_configs_dir
 
 def add_common_arguments(parser):
     group = parser.add_mutually_exclusive_group()
@@ -27,9 +26,43 @@ def add_common_arguments(parser):
         dest="verbosity"
     )
 
+def add_with_version_argument(parser):
+    parser.add_argument(
+        "-V", "--with-version",
+        dest="with_version",
+        action="store_true",
+        default=False
+    )
+
+def add_yes_argument(parser):
+    parser.add_argument(
+        "-y", "--yes",
+        dest="yes",
+        action="store_true",
+        default=False
+    )
+
 def setup_parser_backup(parser : argparse.ArgumentParser):
     setup_middleware(parser)
     parser.set_defaults(handler=backup.handler)
+    # arguments
+    add_common_arguments(parser)
+    add_package_managers_argument(parser)
+    add_list_argument(parser)
+    add_with_version_argument(parser) 
+    # TODO these should not both be there??
+    add_yes_argument(parser) 
+    parser.add_argument(
+        "-i", "--interactive",
+        dest="interactive",
+        action="store_true",
+        default=False
+    )
+    # middleware
+    add_middleware(parser, add_package_managers_conversion_middleware)
+    add_middleware(parser, add_package_managers_is_installed_middleware)
+    add_middleware(parser, list_middleware)
+    add_middleware(parser, load_lists)
 
 def setup_parser_check(parser):
     setup_middleware(parser)
@@ -72,12 +105,7 @@ def setup_parser_list(parser : argparse.ArgumentParser):
     add_common_arguments(parser)
     add_package_managers_argument(parser)
     # TODO these two could be in a mutually exclusive group?
-    parser.add_argument(
-        "-V", "--with-version",
-        dest="with_version",
-        action="store_true",
-        default=False
-    )
+    add_with_version_argument(parser) 
     parser.add_argument(
         "-c", "--count",
         dest="perform_count",

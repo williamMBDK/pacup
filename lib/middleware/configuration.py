@@ -50,7 +50,7 @@ def load_configs(args):
             if args.verbosity >= 2:
                 print_warning(
                     "ignoring package-manager {} as it does not have a configuration file: {}"
-                    .format(pm.name, pm.get_config_path())
+                    .format(pm.name, pm.get_config_path(False))
                 )
     args.package_managers = new_package_managers
 
@@ -74,7 +74,7 @@ def load_lists(args):
             if args.verbosity >= 2:
                 print_warning(
                     "ignoring package-manager {} as it does not have a list file: {}"
-                    .format(pm.name, pm.get_lsit_path())
+                    .format(pm.name, pm.get_list_path(False))
                 )
     args.package_managers = new_package_managers
 
