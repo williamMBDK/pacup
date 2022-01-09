@@ -1,3 +1,4 @@
+import argparse, textwrap
 from ..package_managers import valid_package_manager_names, get_package_managers, PackageManager
 from ..util.io import print_warning
 
@@ -7,7 +8,12 @@ def add_package_managers_argument(parser):
         "package_managers",
         nargs="*",
         choices=valid_package_manager_names + ["all"], 
-        help="package manager: {}".format(", ".join(valid_package_manager_names)),
+        #help="package manager: {}".format(", ".join(valid_package_manager_names)),
+        help=textwrap.dedent("""\
+            provide 1 or more package managers, for which the operation should be performed.
+            The following package managers are currently supported (including custom package managers).
+                {}
+        """.format("""\n                """.join(valid_package_manager_names))),
         default="all",
         metavar="package-manager",
     )

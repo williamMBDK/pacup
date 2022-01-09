@@ -4,7 +4,8 @@ from ..util.io import print_warning
 
 def add_config_argument(parser):
     parser.add_argument(
-        "-c", "--config"
+        "-c", "--config",
+        help="provide a custom path to the configuration file (only used when 1 package manager is provided)"
     )
 
 # depends on args.package_managers
@@ -18,7 +19,9 @@ def config_middleware(args):
 
 def add_list_argument(parser):
     parser.add_argument(
-        "-l", "--list"
+        "-l", "--list",
+        help="provide a custom path to the package-list file (only used when 1 package manager is provided)",
+        metavar="PACKAGE-LIST"
     )
 
 # depends on args.package_managers
@@ -82,12 +85,14 @@ def add_configs_dir_argument(parser):
     parser.add_argument(
         "-c", "--configs-dir",
         dest="configs_dir",
-        default=get_configs_dir()
+        default=get_configs_dir(),
+        help="provide a custom path to the directory of the configuration files"
     )
     
 def add_lists_dir_argument(parser):
     parser.add_argument(
         "-l", "--lists-dir",
         dest="lists_dir",
-        default=get_lists_dir()
+        default=get_lists_dir(),
+        help="provide a custom path to the directory of the package-list files"
     )

@@ -17,13 +17,15 @@ def add_common_arguments(parser):
         "-q", "--quiet",
         action="store_const",
         const=0,
-        dest="verbosity"
+        dest="verbosity",
+        help="be quiet in terms of warnings, errors, printing information, answering questions and so on"
     )
     group.add_argument(
         "-v", "--verbose",
         action="store_const",
         const=2,
-        dest="verbosity"
+        dest="verbosity",
+        help="be verbose in terms of warnings, errors, printing information and so on"
     )
 
 def add_with_version_argument(parser):
@@ -31,7 +33,8 @@ def add_with_version_argument(parser):
         "-V", "--with-version",
         dest="with_version",
         action="store_true",
-        default=False
+        default=False,
+        help="handle packages with their version"
     )
 
 def add_yes_argument(parser):
@@ -39,7 +42,8 @@ def add_yes_argument(parser):
         "-y", "--yes",
         dest="yes",
         action="store_true",
-        default=False
+        default=False,
+        help="automatically answer yes to questions"
     )
 
 def setup_parser_backup(subparsers):
@@ -48,7 +52,8 @@ def setup_parser_backup(subparsers):
         'backup',
         epilog=EPILOG,
         description=description,
-        help=description
+        help=description,
+        formatter_class=argparse.RawTextHelpFormatter,
     )
 
     setup_middleware(parser)
@@ -78,7 +83,8 @@ def setup_parser_check(subparsers):
         'check',
         epilog=EPILOG,
         description=description,
-        help=description
+        help=description,
+        formatter_class=argparse.RawTextHelpFormatter,
     )
 
     setup_middleware(parser)
@@ -132,7 +138,8 @@ def setup_parser_install(subparsers):
         'install',
         epilog=EPILOG,
         description=description,
-        help=description
+        help=description,
+        formatter_class=argparse.RawTextHelpFormatter,
     )
 
     setup_middleware(parser)
@@ -162,7 +169,8 @@ def setup_parser_list(subparsers):
         'list',
         epilog=EPILOG,
         description=description,
-        help=description
+        help=description,
+        formatter_class=argparse.RawTextHelpFormatter,
     )
 
     setup_middleware(parser)
@@ -188,7 +196,8 @@ def setup_parser_status(subparsers):
         'status',
         epilog=EPILOG,
         description=description,
-        help=description
+        help=description,
+        formatter_class=argparse.RawTextHelpFormatter,
     )
 
     setup_middleware(parser)
@@ -208,11 +217,12 @@ def create_parser():
         prog="pacup",
         description="backup lists of explicitly installed packages from various linux package managers.",
         epilog=EPILOG,
-        allow_abbrev=False
+        allow_abbrev=False,
     )
+
     parser.add_argument(
         '--version', action='version', version='%(prog)s 1.0',
-        help="Show the pacup version and exit"
+        help="show the pacup version and exit"
     )
 
     ### subcommands ###
