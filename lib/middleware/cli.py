@@ -42,7 +42,15 @@ def add_yes_argument(parser):
         default=False
     )
 
-def setup_parser_backup(parser : argparse.ArgumentParser):
+def setup_parser_backup(subparsers):
+    description="add packages not in the package-list to the package list"
+    parser = subparsers.add_parser(
+        'backup',
+        epilog=EPILOG,
+        description=description,
+        help=description
+    )
+
     setup_middleware(parser)
     parser.set_defaults(handler=backup.handler)
     # arguments
@@ -64,7 +72,15 @@ def setup_parser_backup(parser : argparse.ArgumentParser):
     add_middleware(parser, list_middleware)
     add_middleware(parser, load_lists)
 
-def setup_parser_check(parser):
+def setup_parser_check(subparsers):
+    description="show which packages from the package-list are matched by the configuraion file"
+    parser = subparsers.add_parser(
+        'check',
+        epilog=EPILOG,
+        description=description,
+        help=description
+    )
+
     setup_middleware(parser)
     parser.set_defaults(handler=check.handler)
     # arguments
@@ -80,13 +96,29 @@ def setup_parser_check(parser):
     add_middleware(parser, load_configs)
     add_middleware(parser, load_lists)
 
-def setup_parser_clear_cache(parser):
+def setup_parser_clear_cache(subparsers):
+    description="clear cache used by pacup"
+    parser = subparsers.add_parser(
+        'clear-cache',
+        epilog=EPILOG,
+        description=description,
+        help=description
+    )
+
     setup_middleware(parser)
     parser.set_defaults(handler=clear_cache.handler)
     # arguments
     add_common_arguments(parser)
 
-def setup_parser_generate_config(parser):
+def setup_parser_generate_config(subparsers):
+    description="generate package-lists and configuration files from what is currently installed"
+    parser = subparsers.add_parser(
+        'generate-config',
+        epilog=EPILOG,
+        description=description,
+        help=description
+    )
+
     setup_middleware(parser)
     parser.set_defaults(handler=generate_config.handler)
     # arguments
@@ -94,7 +126,15 @@ def setup_parser_generate_config(parser):
     add_configs_dir_argument(parser)
     add_lists_dir_argument(parser)
 
-def setup_parser_install(parser):
+def setup_parser_install(subparsers):
+    description="install packages specified by a configuration file (and the corresponding package-list)"
+    parser = subparsers.add_parser(
+        'install',
+        epilog=EPILOG,
+        description=description,
+        help=description
+    )
+
     setup_middleware(parser)
     parser.set_defaults(handler=install.handler)
     # arguments
@@ -116,7 +156,15 @@ def setup_parser_install(parser):
     add_middleware(parser, load_configs)
     add_middleware(parser, load_lists)
 
-def setup_parser_list(parser : argparse.ArgumentParser):
+def setup_parser_list(subparsers):
+    description="list explicitly installed packages (installed directly by user)"
+    parser = subparsers.add_parser(
+        'list',
+        epilog=EPILOG,
+        description=description,
+        help=description
+    )
+
     setup_middleware(parser)
     parser.set_defaults(handler=list.handler)
     # arguments
@@ -134,7 +182,15 @@ def setup_parser_list(parser : argparse.ArgumentParser):
     add_middleware(parser, add_package_managers_conversion_middleware)
     add_middleware(parser, add_package_managers_is_installed_middleware)
 
-def setup_parser_status(parser):
+def setup_parser_status(subparsers):
+    description="show the current status of the pacup configuration (packages that are not backed up / installed and more)"
+    parser = subparsers.add_parser(
+        'status',
+        epilog=EPILOG,
+        description=description,
+        help=description
+    )
+
     setup_middleware(parser)
     parser.set_defaults(handler=status.handler)
     # arguments
@@ -162,56 +218,21 @@ def create_parser():
     ### subcommands ###
     subparsers = parser.add_subparsers(
         description="pacup has the following subcommands available. all relevant subcommands allow the names of package managers to be given as positional arguments, and only apply the operation for the given package managers.",
-        metavar="command",
+        metavar="command"
     )
 
-    parser_backup = subparsers.add_parser(
-        'backup',
-        epilog=EPILOG,
-        help="add packages not in the package-list to the package list",
-    )
-    setup_parser_backup(parser_backup)
+    setup_parser_backup(subparsers)
+    
+    setup_parser_check(subparsers)
+    
+    setup_parser_clear_cache(subparsers)
 
-    parser_check = subparsers.add_parser(
-        'check',
-        epilog=EPILOG,
-        help="show which packages from the package-list are matched by the configuraion file",
-    )
-    setup_parser_check(parser_check)
+    setup_parser_generate_config(subparsers)
 
-    parser_clear_cache = subparsers.add_parser(
-        'clear-cache',
-        epilog=EPILOG,
-        help="clear cache used by pacup",
-    )
-    setup_parser_clear_cache(parser_clear_cache)
+    setup_parser_install(subparsers)
 
-    parser_generate_config = subparsers.add_parser(
-        'generate-config',
-        epilog=EPILOG,
-        help="generate package-lists and configuration files from what is currently installed"
-    )
-    setup_parser_generate_config(parser_generate_config)
+    setup_parser_list(subparsers)
 
-    parser_install = subparsers.add_parser(
-        'install',
-        epilog=EPILOG,
-        help="install packages specified by a configuration file (and the corresponding package-list)"
-    )
-    setup_parser_install(parser_install)
-
-    parser_list = subparsers.add_parser(
-        'list',
-        epilog=EPILOG,
-        help="list explicitly installed packages (installed directly by user)"
-    )
-    setup_parser_list(parser_list)
-
-    parser_status = subparsers.add_parser(
-        'status',
-        epilog=EPILOG,
-        help="show the current status of the pacup configuration (packages that are not backed up / installed and more)"
-    )
-    setup_parser_status(parser_status)
+    setup_parser_status(subparsers)
 
     return parser
