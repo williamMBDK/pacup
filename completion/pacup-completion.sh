@@ -1,3 +1,3 @@
 #!/bin/bash
 
-eval "$(register-python-argcomplete pacup.py)"
+eval "$(register-python-argcomplete pacup)"
