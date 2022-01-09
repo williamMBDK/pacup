@@ -1,4 +1,4 @@
-import argparse, textwrap
+import textwrap
 from ..package_managers import valid_package_manager_names, get_package_managers, PackageManager
 from ..util.io import print_warning
 
