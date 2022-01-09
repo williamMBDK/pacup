@@ -145,32 +145,73 @@ def setup_parser_status(parser):
     # middleware
     add_middleware(parser, add_package_managers_conversion_middleware)
 
+EPILOG="developed by William Bille Meyling"
+
 def create_parser():
-    parser = argparse.ArgumentParser(prog="pacup")
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
+    parser = argparse.ArgumentParser(
+        prog="pacup",
+        description="backup lists of explicitly installed packages from various linux package managers.",
+        epilog=EPILOG,
+        allow_abbrev=False
+    )
+    parser.add_argument(
+        '--version', action='version', version='%(prog)s 1.0',
+        help="Show the pacup version and exit"
+    )
 
     ### subcommands ###
-    subparsers = parser.add_subparsers()
+    subparsers = parser.add_subparsers(
+        description="pacup has the following subcommands available. all relevant subcommands allow the names of package managers to be given as positional arguments, and only apply the operation for the given package managers.",
+        metavar="command",
+    )
 
-    parser_backup = subparsers.add_parser('backup')
+    parser_backup = subparsers.add_parser(
+        'backup',
+        epilog=EPILOG,
+        help="add packages not in the package-list to the package list",
+    )
     setup_parser_backup(parser_backup)
 
-    parser_check = subparsers.add_parser('check')
+    parser_check = subparsers.add_parser(
+        'check',
+        epilog=EPILOG,
+        help="show which packages from the package-list are matched by the configuraion file",
+    )
     setup_parser_check(parser_check)
 
-    parser_clear_cache = subparsers.add_parser('clear-cache')
+    parser_clear_cache = subparsers.add_parser(
+        'clear-cache',
+        epilog=EPILOG,
+        help="clear cache used by pacup",
+    )
     setup_parser_clear_cache(parser_clear_cache)
 
-    parser_generate_config = subparsers.add_parser('generate-config')
+    parser_generate_config = subparsers.add_parser(
+        'generate-config',
+        epilog=EPILOG,
+        help="generate package-lists and configuration files from what is currently installed"
+    )
     setup_parser_generate_config(parser_generate_config)
 
-    parser_install = subparsers.add_parser('install')
+    parser_install = subparsers.add_parser(
+        'install',
+        epilog=EPILOG,
+        help="install packages specified by a configuration file (and the corresponding package-list)"
+    )
     setup_parser_install(parser_install)
 
-    parser_list = subparsers.add_parser('list')
+    parser_list = subparsers.add_parser(
+        'list',
+        epilog=EPILOG,
+        help="list explicitly installed packages (installed directly by user)"
+    )
     setup_parser_list(parser_list)
 
-    parser_status = subparsers.add_parser('status')
+    parser_status = subparsers.add_parser(
+        'status',
+        epilog=EPILOG,
+        help="show the current status of the pacup configuration (packages that are not backed up / installed and more)"
+    )
     setup_parser_status(parser_status)
 
     return parser
