@@ -48,7 +48,7 @@ def lazy_confirm(question):
             return False
         elif ans == "y" or ans == "Y" or ans == "":
             return True
-        print_needed_info_no_newline("Invalid input. Try again.")
+        print_needed_info("Invalid input. Try again.\n")
 
 def print_fill_width(char):
     w,_ = os.get_terminal_size()
