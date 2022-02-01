@@ -38,7 +38,7 @@ def print_cyan(s):
     print(colored(s, "cyan"))
 
 def print_blue(s):
-    print(colored(s, "blue"))
+    print(colored(s, "cyan"))
 
 def lazy_confirm(question):
     while True:
