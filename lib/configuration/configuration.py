@@ -2,6 +2,7 @@ from ..util.package import Package
 from .configuration_element import ConfigurationElementFactory, ConfigurationElement
 from .tagged_package_list import TaggedPackageList
 from ..util.io import PacupUserError
+from .util import remove_comments
 
 class Configuration:
     def __init__(self):
@@ -12,6 +13,7 @@ class Configuration:
         lines = content.split("\n")
         seen = set()
         for line in lines:
+            line = remove_comments(line)
             if len(line.split()) == 0: continue
             element = ConfigurationElementFactory.create_configuration_element_from_string(line)
             key = (

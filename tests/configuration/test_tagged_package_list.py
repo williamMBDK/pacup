@@ -94,3 +94,20 @@ class TestTaggedPackageList(unittest.TestCase):
         def test():
             self.package_list.append_str("b@2")
         self.assertRaises(PacupUserError, test)
+
+    def test_comments(self):
+        self.package_list.init_with_file_content(
+            """
+            a@1 e f g a # this is a comment
+
+            # hello
+            # hello 123
+            b@2#comment 
+            c@3 tag# hey there
+            # hello 123
+            """
+        )
+        self.assertEqual(3, len(self.package_list.tagged_packages))
+        self.assertEqual("a", self.package_list.tagged_packages[0].name)
+        self.assertEqual("b", self.package_list.tagged_packages[1].name)
+        self.assertEqual("c", self.package_list.tagged_packages[2].name)

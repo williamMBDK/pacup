@@ -1,4 +1,5 @@
 from .configuration.tagged_package import TaggedPackageFactory
+from .configuration.tagged_package_list import TaggedPackageListFactory
 from .util.io import lazy_confirm, print_green, print_needed_info, print_normal, print_success
 from .package_managers.package_manager import PackageManager
 
@@ -31,10 +32,11 @@ def backup_into_package_manager_list(args, pm : PackageManager):
         print_needed_info("Packages installed but not in package list ({})".format(list_path))
         for pac in pacs_to_add: print_green(pac)
         if not args.yes and not lazy_confirm("Do you wish to add the above packages to {}?".format(list_path)): return
+    append_tagged_list = TaggedPackageListFactory.create_empty_list()
     for pac in pacs_to_add:
         tagged_pac = TaggedPackageFactory.create_tagged_package_from_values(
             pac.get_name(), pac.version, []
         )
-        tagged_list.append(tagged_pac)
-    tagged_list.write_to_file(list_path)
+        append_tagged_list.append(tagged_pac)
+    append_tagged_list.append_to_file(list_path)
     if args.verbosity >= 1: print_success("Added packages to package-list ({})".format(list_path))

@@ -141,3 +141,28 @@ class TestConfiguration(unittest.TestCase):
         )
         packages = self.config.get_matching_packages(package_list)
         self.assertEqual(0, len(packages))
+
+    def test_init_with_file_content(self):
+        self.config.init_with_file_content(
+            """
+
+            + all # hey 123
+
+            - tag a#hey 123
+
+            + tag b# hey 123
+
+            # hello there
+            #hey there
+            + pac pa@1.2 #hey 123
+
+            - pac pb@2.1
+            
+            + pac pbdf
+            """
+        )
+        self.assertEqual(6, len(self.config.configuration_elements))
+        self.assertEqual("pa", self.config.configuration_elements[3].package.name)
+        self.assertEqual("pac", self.config.configuration_elements[5].type)
+        self.assertEqual("-", self.config.configuration_elements[4].modifier)
+

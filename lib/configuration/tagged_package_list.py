@@ -1,6 +1,7 @@
 from .tagged_package import TaggedPackageFactory, TaggedPackage
 from ..util.package import PackageFactory, Package
 from ..util.io import PacupUserError
+from .util import remove_comments
 
 class TaggedPackageList:
     def __init__(self):
@@ -12,6 +13,7 @@ class TaggedPackageList:
         lines = content.split("\n")
         seen = set()
         for line in lines:
+            line = remove_comments(line)
             if len(line.split()) == 0: continue
             pac = TaggedPackageFactory.create_tagged_package_from_string(line)
             key = (pac.name, pac.version)
@@ -41,6 +43,10 @@ class TaggedPackageList:
     
     def write_to_file(self, filename : str):
         with open(filename, 'w') as file:
+            file.write(str(self))
+
+    def append_to_file(self, filename : str):
+        with open(filename, 'a') as file:
             file.write(str(self))
 
     def append(self, tagged_package : TaggedPackage):
@@ -79,3 +85,7 @@ class TaggedPackageListFactory:
         paclist = TaggedPackageList()
         paclist.init_with_file_content(content)
         return paclist
+
+    @staticmethod
+    def create_empty_list() -> TaggedPackageList:
+        return TaggedPackageListFactory.create_list_from_content("")

@@ -19,3 +19,10 @@ def get_lists_dir() -> str:
 def get_list_path(pacmanname) -> str:
     filename="{}.list".format(pacmanname)
     return os.path.join(get_lists_dir(), filename)
+
+def remove_comments(line):
+    try:
+        idx = line.index('#')
+        return line[:idx]
+    except:
+        return line
