@@ -103,6 +103,9 @@ class PackageManager:
         assert(self.list != None)
         return self.list
 
+    def is_ready(self):
+        return self.is_installed() and self.has_config() and self.has_list()
+
 def get_package_managers():
     return [
         PackageManager(pacman)

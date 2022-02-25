@@ -63,7 +63,7 @@ class ConfigurationFactory:
     def create_configuration_from_filename(filename) -> Configuration:
         content = None
         try:
-            with open(filename) as file:
+            with open(filename, 'r') as file:
                 content = file.read()
         except FileNotFoundError: raise PacupUserError("config path does not exist")
         except IsADirectoryError: raise PacupUserError("config path is a directory")

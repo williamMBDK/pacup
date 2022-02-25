@@ -47,7 +47,7 @@ class TaggedPackageList:
 
     def append_to_file(self, filename : str):
         with open(filename, 'a') as file:
-            file.write(str(self))
+            file.write("\n" + str(self))
 
     def append(self, tagged_package : TaggedPackage):
         # todo?: this can be done faster

@@ -1,3 +1,4 @@
+from .middleware.package_managers import add_package_managers_is_installed_middleware
 from .middleware.configuration import load_configs, load_lists, config_middleware, list_middleware
 from .util.io import print_cyan, print_needed_info, print_green, print_warning, print_success, print_blue, print_normal
 from .configuration import get_configs_dir, get_lists_dir
@@ -9,6 +10,7 @@ def handler(args):
     status_of_package_managers(args)
     config_middleware(args)
     list_middleware(args)
+    add_package_managers_is_installed_middleware(args)
     load_configs(args)
     load_lists(args)
     for pm in args.package_managers:
