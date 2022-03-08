@@ -79,6 +79,7 @@ class PackageManager:
         return os.path.exists(get_config_path(self.name))
 
     def has_list(self):
+        print(get_list_path(self.name))
         return os.path.exists(get_list_path(self.name))
 
     def get_config_path(self, do_assert=True):
