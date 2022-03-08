@@ -1,7 +1,7 @@
 from .middleware.package_managers import add_package_managers_is_installed_middleware
 from .middleware.configuration import load_configs, load_lists, config_middleware, list_middleware
 from .util.io import print_cyan, print_needed_info, print_green, print_warning, print_success, print_blue, print_normal
-from .configuration import get_configs_dir, get_lists_dir
+from .configuration import get_configs_dir, get_lists_dir, get_general_config
 from .package_managers import PackageManager
 
 def handler(args):
@@ -20,10 +20,14 @@ def handler(args):
 def status_of_user_configuration():
     print_needed_info("STATUS OF USER CONFIGURATION")
     print_green("USER CONFIGS DIRECTORY: {}".format(get_configs_dir()))
+    general_config=get_general_config()
+    if  general_config != None:
+        print_green("    Using general configuration: {}".format(general_config))
     print_green("USER LISTS DIRECTORY: {}".format(get_lists_dir()))
 
 def status_of_package_managers(args):
     print_needed_info("STATUS OF SUPPORTED PACKAGE MANAGERS")
+    using_general_config = get_general_config() != None
     for pm in args.package_managers:
         pm : PackageManager = pm
         if not pm.is_installed():
@@ -35,7 +39,7 @@ def status_of_package_managers(args):
                 "{} is installed and has a package list, but not a config"
                 .format(pm.name)
             )
-        elif not pm.has_list():
+        elif not pm.has_list() and not using_general_config:
             print_warning(
                 "{} is installed and has a config, but not a package list"
                 .format(pm.name)

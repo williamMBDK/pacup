@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 def get_configs_dir() -> str:
     dirname=os.path.expanduser("~/.config/pacup/configs")
@@ -7,6 +8,9 @@ def get_configs_dir() -> str:
     return dirname
 
 def get_config_path(pacmanname) -> str:
+    general_config=get_general_config()
+    if general_config != None:
+        return general_config
     filename="{}.conf".format(pacmanname)
     return os.path.join(get_configs_dir(), filename)
 
@@ -26,3 +30,11 @@ def remove_comments(line):
         return line[:idx]
     except:
         return line
+
+def get_general_config() -> Optional[str]:
+    dir = get_configs_dir()
+    general_config_path = os.path.join(dir, "all.conf")
+    if os.path.exists(general_config_path):
+        return general_config_path
+    else:
+        return None

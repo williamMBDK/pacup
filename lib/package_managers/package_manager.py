@@ -79,7 +79,7 @@ class PackageManager:
         return os.path.exists(get_config_path(self.name))
 
     def has_list(self):
-        return os.path.exists(get_config_path(self.name))
+        return os.path.exists(get_list_path(self.name))
 
     def get_config_path(self, do_assert=True):
         if do_assert: assert(self.has_config())

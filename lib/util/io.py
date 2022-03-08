@@ -13,7 +13,7 @@ colorcodes = {
 }
 
 def colored(text, color):
-    return colorcodes[color] + text + colorcodes["reset"]
+    return "{}{}{}".format(colorcodes[color], text, colorcodes["reset"])
 
 class PacupUserError(Exception):
     pass
