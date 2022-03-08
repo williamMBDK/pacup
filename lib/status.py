@@ -39,7 +39,7 @@ def status_of_package_managers(args):
                 "{} is installed and has a package list, but not a config"
                 .format(pm.name)
             )
-        elif not pm.has_list() and not using_general_config:
+        elif not pm.has_list():
             print_warning(
                 "{} is installed and has a config, but not a package list"
                 .format(pm.name)
