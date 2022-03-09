@@ -10,8 +10,10 @@ fi
 
 cachedir="$HOME/.cache/pacup/nix"
 
-if [[ $(find "$cachedir/installed.txt" -newermt '-10 seconds' 2>/dev/null) == "" ]]; then
+mkdir -p $cachedir
+
+if [[ $(find "$cachedir/installed.txt" -newermt '-5 seconds' 2>/dev/null) == "" ]]; then
     $SCRIPT_DIR/get.sh > $cachedir/installed.txt
 fi
 
-cat $cachedir/installed.txt | grep "^$pac@notsupported" > /dev/null
+cat $cachedir/installed.txt | grep "^$pac@unsupported" > /dev/null
