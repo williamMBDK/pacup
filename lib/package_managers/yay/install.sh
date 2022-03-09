@@ -5,5 +5,5 @@ if [ "$#" -eq 2 ]; then
     exit 1
 else
     # yay --asexplicit -S "$1"
-    yay -S "$1"
+    yay --noconfirm -S "$1"
 fi
