@@ -184,5 +184,5 @@ Especially by adding support for more package managers like described above.
 
 # IDEAS
 - Config file combined for all package managers?
-- Uninstall script?
+- Uninstall script??
 - Ignored packages (ex. packages that are already installed explicitely in kali)
